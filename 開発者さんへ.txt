@@ -1,0 +1,27 @@
+クッキーを得るコードは
+
+GetCookie(new Uri("http://live.nicovideo.jp/"), "user_session")
+or
+GetCookieCollection(new Uri("http://live.nicovideo.jp/")
+
+返り値を接続の都度、CookieContainerにセットしてください。
+
+
+
+なるべく独自にブラウザリストを生成しないで
+comboBox1.Items.AddRange(CookieGetter.CreateInstances(true));
+のようにCreateInstancesメソッドから動的にリストを生成してください。
+
+
+
+Hal.CookieGetterSharp.BrowserTypeを設定の保存復元に使わないでください。
+
+
+
+ComboBoxを継承したComboBoxNicoBrowserを用意していました。
+ComboBoxNicoBrowserはCookieGetterSharp.dllを参照するとツールボックスにでてきます。
+これ使ってる開発者さんはいらっしゃるのでしょうか？
+もしいらっしゃったらものすごく使いにくいユーザーコントロールですみませんでした・・・。
+ComboBoxNicoBrowserはフォームに表示されることによって使えるようになるものです。
+よく考えたらメインフォームにブラウザ選択のComboboxを表示してるツールってほとんどありませんよね・・・
+CookieGetterDemonstrationのほうにオプションフォームからComboBoxNicoBrowserを使ったソースを公開してます。

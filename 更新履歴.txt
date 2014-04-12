@@ -1,0 +1,242 @@
+2014/02/23
+修正者 うつろ
+GoogleChrome Cookie Version 7対応
+Tungsten対応
+
+2014/02/02
+修正者 うつろ
+・Sleipnir5Blink対応
+
+2013/11/10
+修正者 うつろ
+・IE系の処理を微調整
+・ブラウザを追加したり削除したり
+
+2013/10/19
+修正者 うつろ
+・IEの拡張保護モード追加（windows8以降）
+
+2013/07/03
+修正者 うつろ
+・IEのCookie取得処理見直し
+・ComboBoxNicoBrowser修正
+・Opera Webkit追加
+
+2013/02/02
+修正者 うつろ
+・IEのCookie取得処理見直し
+・ComboBoxNicoBrowser機能追加・修正
+
+2013/01/19
+修正者 うつろ
+・IEで2重にCookieが登録されていた場合の処理を見直し
+
+2013/01/06
+修正者 うつろ
+・ComboBoxNicoBrowserのバグ修正
+
+2012/06/29
+修正者 うつろ
+・Sleipnir3 Webkit対応
+
+2012/06/18
+修正者 うつろ
+・Opera x64対応
+
+2012/05/01fix1
+修正者 うつろ
+・ComboBoxNicoBrowser更新
+
+2012/05/01
+修正者 うつろ
+・NwhoisLoginSystem、niconicoの仕様変更に対応
+（プロフィール名取得のところ）
+
+2012/04/29fix3
+修正者 うつろ
+・ブラウザ未導入のとき例外が発生する不具合を修正
+・今までクッキーファイルがないと例外が発生してましたけどそれを抑制
+（クッキーファイルを指定する前に例外がでて指定ができなくなってた）
+
+2012/04/29
+修正者 うつろ
+・Chromium系のProfileに対応
+・使いものにならないComboBoxNicoBrowserを作成
+
+2012/01/11
+修正者 うつろ
+・ChromePlusの仕様変更に対応（CoolNovo対応）
+
+2011/12/07
+修正者 うつろ
+・ChromePlusの仕様変更に対応
+
+2011/11/23
+修正者 うつろ
+・ニコ生に限定してapiを使うように修正した箇所にバグがありましたので修正
+
+2011/11/20
+修正者 うつろ
+・IECookie高速取得するためapiを使いましたが実際のツールで共有できなくなる現象がありましたので
+ニコ生に限定してapiを使うように修正しました。
+
+2011/11/19fix1
+修正者 うつろ
+・Operaの処理がだめすぎなのでロールバックしようと思ったけど修正したらよくなったみたいなので採用
+
+2011/11/19
+修正者 うつろ
+・Operaのクッキー取得アルゴリズムをへぼいメソッド経由（ニコ生専用）に変更（GetCookieメソッドを使った場合）
+・Sleipnir3Gecko追加
+
+2011/11/16
+修正者 うつろ
+・IEのクッキー取得を高速化
+
+2011/09/29
+修正者 うつろ
+・NwhoisLoginSystem、ニコニコ動画の仕様変更による名前取得正規表現を修正。
+
+2011/08/25
+修正者 うつろ
+・System.Data.SQLite版x86 x64自動切替対応を採用しリビルド
+・機能追加などはありません。
+
+2011/08/10
+修正者 うつろ
+・KB2559049対応
+・IElSafemodeの廃止
+
+2011/08/09
+修正者 うつろ
+・Safari5.1対応の修正（環境によっては取得できないかもしれません）
+
+2011/08/08
+修正者 うつろ
+・Safari5.1対応
+
+2011/07/30
+修正者 うつろ
+・開発終了宣言したのにSafari5.1の仕様が変わって涙目
+・Safari5.1暫定対応
+・SqlCookieGetterを除外、SqlCookieGetterNT追加、参照からSystem.Data.SQLiteを削除、継承をNT（2ヶ所）にするとankoSQLiteバージョンに戻せます。
+
+2011/06/18
+修正者 うつろ
+・最新のSystem.Data.SQLiteを採用。（ankoSQLite3はいらない子になりました）
+・System.Data.SQLiteの野良ビルドを同梱（付属のreadmeをお読みください）
+・今後の開発はブラウザのバージョンが上がってクッキーが取得できなくなるまで凍結です。皆さま、どうもご利用ありがとうございました。
+
+2011/06/17
+修正者 うつろ
+・スリム化しました（バージョン表記をなくした）
+・次はSystem.Data.SQLite使った版を作製予定。
+
+2011/05/25
+修正者 うつろ
+・Comodo Dragon対応
+
+2011/05/17
+修正者 うつろ
+・Songbird対応
+・ギッシリアンコちゃんに最適化
+・AnyCPUビルドのみの配布に変更
+・32bitモード、64bitモード自動判別対応
+
+2011/05/14fix1
+修正者 うつろ
+・SQLite3.6系のクッキー取得時ゴミが残る場合がある不具合を修正したつもり。これによる取得効率に影響はないはず。
+
+2011/05/14
+修正者 うつろ
+・AnyCPU、x86ビルド
+・カスタムsqlite3.dll→ankoSQLite3.dll（オリジナルと区別するため）
+・カスタムsqlite3.dllのx64版ankoSQLite3x64.dll同梱
+
+2011/05/11
+修正者 うつろ
+・IElSafemodeを統合。内部処理変更によりさらにIE9に対応したつもり。
+・Google Chrome11追加。
+・SQLiteのカラム属性処理ミスの修正。
+・カスタムsqlite3.dllの使用。（必要な関数のみエクスポート）
+
+2011/05/01
+修正者 うつろ
+・SQLiteの処理で一時ファイルの生成方法を変更
+
+2011/04/29
+修正者 うつろ
+・SQLiteの処理を若干手直し
+・unstable版IElSafemode追加（ユーザーディレクトリ以下全部IE系のクッキーを検索する）
+
+2011/04/16
+修正者 うつろ
+・Maxthon3対応（TridentとWebKitデュアルみたいで同時にクッキー書き出されているような気もするが気にしない）
+・Firefox3クッキー取得できなくなっていた不具合を修正（4/11版からだと思う）
+
+2011/04/15
+修正者 うつろ
+・SeaMonkey対応
+・RockMelt対応
+・Safari5追加
+・GoogleChrome10追加
+
+2011/04/11
+修正者 うつろ
+・System.Data.SQLite.DLL廃止
+・.NET Framework2系と4のビルド済同梱
+
+2011/04/04
+修正者 うつろ
+・PaleMoon4対応
+
+2011/04/01
+修正者 うつろ
+・SQLite3cs.dll廃止
+・Firefox4NTはFirefox4へ変更
+・Firefox4NTでFirefox3.x.xのクッキーが取得できない場合がある不具合を修正
+・Google ChromeやLunascapeなどがSQLite3.7系を採用した場合に備えた。
+（備えただけで対応はしていない、cookieファイルの場所が変わるかもしれないから）
+
+2011/03/30
+修正者 うつろ
+・一時ファイルの処理元に戻す Firefox4NT
+
+2011/03/29
+修正者 うつろ
+・日本語ユーザー名に対応 Firefox4NT
+
+2011/03/28
+修正者 うつろ
+・sqlite3.dllのAPIを直接C#から操作式追加 Firefox4NT
+
+2011/03/27 fix1
+修正者 うつろ
+・Firefox4についてニコニコ生放送専用にしていた不具合を修正
+
+2011/03/27
+修正者 にょんにょんさん
+内容
+・Firefox4についてはうつろ方式　その他SQLite利用ブラウザについては既存方式を使うように修正
+
+2011/03/25
+修正者 うつろ
+内容
+・Firefox4対応　別コンポーネントの処理を追加
+sqlite3.dll	3.7.5
+SQLite3cs.dll	http://www5.pf-x.net/~mikeo410x/lumadcms/index.php/content_pages/displayurl/~Home
+
+2011/03/23
+修正者 にょんにょんさん
+内容（履歴を作成するまえのも含む)
+・chrome plus対応
+・Opera11ベータ対応
+・Firefox4対応
+
+
+
+オリジナルは炬燵犬さん作成のクッキー取得クラス「CookieGetter」
+http://homepage2.nifty.com/kotatuinu/contents/computer/program/CookieGetter/cookiegetter.html
+それを大幅に改造しライブラリにしたのがhalxxxxさん作成の「CookieGetterSharp」
+http://d.hatena.ne.jp/halxxxx/20091212/1260649353
+そしてさらにそれを改造したのがこの配布物です。
