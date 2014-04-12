@@ -212,11 +212,8 @@ namespace Hal.CookieGetterSharp
 		public const uint INTERNET_COOKIE_HTTPONLY = 0x00002000;
 		public const uint INTERNET_FLAG_RESTRICTED_ZONE = 0x00020000;
 
-		[DllImport("Kernel32", CharSet = CharSet.Unicode)]
-		public static extern uint GetLastError();
-
-		[DllImport("Wininet", CharSet = CharSet.Unicode)]
-		public static extern bool InternetGetCookieEx(string lpszURL, string lpszCookieName, StringBuilder lpszCookieData, ref uint lpdwSize, uint dwFlags, IntPtr lpReserved);
+        [DllImport("Wininet", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern bool InternetGetCookieEx(string lpszURL, string lpszCookieName, StringBuilder lpszCookieData, ref int lpdwSize, uint dwFlags, IntPtr lpReserved);
 
 		[DllImport("Wininet", CharSet = CharSet.Unicode)]
 		public static extern bool InternetGetCookie(string lpszURL, string lpszCookieName, StringBuilder lpszCookieData, ref uint lpdwSize);
@@ -232,7 +229,7 @@ namespace Hal.CookieGetterSharp
 		 * );
 		 */
 		[DllImport("ieframe.dll", CharSet = CharSet.Unicode)]
-		public static extern uint IEGetProtectedModeCookie(string lpszURL, string lpszCookieName, StringBuilder pszCookieData, ref uint pcchCookieData, uint dwFlags);
+		public static extern int IEGetProtectedModeCookie(string lpszURL, string lpszCookieName, StringBuilder pszCookieData, ref int pcchCookieData, uint dwFlags);
 		
 
 

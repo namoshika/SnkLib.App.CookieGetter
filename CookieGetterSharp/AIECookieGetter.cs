@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 namespace Hal.CookieGetterSharp {
 
 	/// <summary>
-	/// IEやトライデントエンジンを利用しているブラウザのクッキーを取得する
+	/// IE(非保護モード)やトライデントエンジンを利用しているブラウザのクッキーを取得する(ファイル探索版)
 	/// </summary>
 	abstract class AIECookieGetter : CookieGetter {
 		protected bool _checkSubDirectory;

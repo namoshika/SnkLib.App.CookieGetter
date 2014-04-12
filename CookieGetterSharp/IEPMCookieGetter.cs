@@ -82,23 +82,30 @@ namespace Hal.CookieGetterSharp {
 		protected override List<System.Net.Cookie> GetCookiesWinApi(Uri url, string key) {
 			List<System.Net.Cookie> cookies = new List<System.Net.Cookie>();
 
-			int cookieMaxSize = 4096;
-			StringBuilder lpszCookieData = new StringBuilder(cookieMaxSize);
-			uint dwSize = (uint)lpszCookieData.Capacity;
-			IntPtr dwSizeP = new IntPtr(cookieMaxSize);
+			int cookieSize = 4096;
+			StringBuilder lpszCookieData = new StringBuilder(cookieSize);
+			IntPtr dwSizeP = new IntPtr(cookieSize);
 
-			try {
-				uint HRESULT = win32api.IEGetProtectedModeCookie(url.OriginalString, key, lpszCookieData, ref dwSize, win32api.INTERNET_COOKIE_THIRD_PARTY);
-				if(HRESULT != 0) {
-					uint errorNo = win32api.GetLastError();
-					Debug.WriteLine("IEGetProtectedModeCookie error code: " + errorNo);
-				}
-			}
-			catch(Exception e) {
-				Debug.WriteLine(e.Message);
-			}
+            do {
+                int hResult = win32api.IEGetProtectedModeCookie(url.OriginalString, key, lpszCookieData, ref cookieSize, win32api.INTERNET_COOKIE_HTTPONLY);
+                switch((uint)hResult) {
+                    case 0x00000000://S_OK
+                    case 0x80070103://データ無し
+                    case 0x80070057://E_INVALIDARG: IEが非保護モードだと出てきたりする
+                        break;
+                    case 0x8007007A://バッファー不足
+                        cookieSize *= 2;
+                        lpszCookieData.Capacity = cookieSize;
+                        continue;
+                    default:
+                        Debug.WriteLine("IEGetProtectedModeCookie error code: " + hResult);
+                        break;
+                }
+                break;
+            }
+            while(true);
 
-			if(lpszCookieData.Length != 0 && lpszCookieData.Length < 4096) {
+			if(lpszCookieData.Length != 0) {
 				Debug.WriteLine(lpszCookieData);
 				string[] cookieDatas = lpszCookieData.ToString().Split(';');
 				foreach(var data in cookieDatas) {

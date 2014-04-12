@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 namespace Hal.CookieGetterSharp {
 
 	/// <summary>
-	/// ノーマルIEやトライデントエンジンを利用しているブラウザのクッキーを取得する
+    /// IEやトライデントエンジンを利用しているブラウザのクッキーを取得する
 	/// </summary>
 	class IECookieGetter : AIECookieGetter {
 		public IECookieGetter(CookieStatus status, bool checkSubDirectory)
@@ -81,23 +81,37 @@ namespace Hal.CookieGetterSharp {
 		protected override List<System.Net.Cookie> GetCookiesWinApi(Uri url, string key) {
 			List<System.Net.Cookie> cookies = new List<System.Net.Cookie>();
 
-			int cookieMaxSize = 4096;
-			StringBuilder lpszCookieData = new StringBuilder(cookieMaxSize);
-			uint dwSize = (uint)lpszCookieData.Capacity;
-			IntPtr dwSizeP = new IntPtr(cookieMaxSize);
+			int cookieSize = 8;
+			StringBuilder lpszCookieData = new StringBuilder(cookieSize);
+			IntPtr dwSizeP = new IntPtr(cookieSize);
 
-			try {
-				bool bResult = win32api.InternetGetCookie(url.OriginalString, key, lpszCookieData, ref dwSize);
-				if(!bResult) {
-					uint errorNo = win32api.GetLastError();
-					Debug.WriteLine("InternetGetCookie error code: " + errorNo);
-				}
-			}
-			catch(Exception e) {
-				Debug.WriteLine(e.Message);
-			}
+            //クッキー文字列取得
+            do {
+                bool bResult;
+                if(bResult = win32api.InternetGetCookieEx(url.OriginalString, key, lpszCookieData, ref cookieSize, win32api.INTERNET_COOKIE_HTTPONLY, IntPtr.Zero))
+                    break;
+                else {
+                    int errorNo = Marshal.GetHRForLastWin32Error();
+                    switch((uint)errorNo) {
+                        case 0x00000000:
+                        case 0x80070103:
+                            break;
+                        case 0x8007007A:
+                            //バッファーサイズ拡張。無限ループが怖いので一応必ずサイズが増えるようにしておく
+                            cookieSize += 512;
+                            lpszCookieData.Capacity = cookieSize;
+                            continue;
+                        default:
+                            Debug.WriteLine("InternetGetCookie error code: " + errorNo);
+                            break;
+                    }
+                }
+                break;
+            }
+            while(true);
 
-			if(lpszCookieData.Length != 0 && lpszCookieData.Length < 4096) {
+            //オブジェクト化
+			if(lpszCookieData.Length != 0) {
 				Debug.WriteLine(lpszCookieData);
 				string[] cookieDatas = lpszCookieData.ToString().Split(';');
 				foreach(var data in cookieDatas) {
