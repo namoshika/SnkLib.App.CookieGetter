@@ -8,7 +8,7 @@ using Microsoft.Win32;
 namespace Hal.CookieGetterSharp {
 	class CoolNovoBrowserManager : IBrowserManager {
 		const string COOKIEPATH = "%APPDATA%\\ChromePlus\\ChromePlusUserData\\Default\\Cookies";
-		static readonly string NEWCOOKIEPATH = "%LOCALAPPDATA%\\MapleStudio\\ChromePlus\\User Data\\Default\\Cookies";	// 2011-12-07
+		const string NEWCOOKIEPATH = "%LOCALAPPDATA%\\MapleStudio\\ChromePlus\\User Data\\Default\\Cookies";	// 2011-12-07
 		const string rKeyName = @"Software\ChromePlus";
 		const string rGetValueName = "Install_Dir";
 

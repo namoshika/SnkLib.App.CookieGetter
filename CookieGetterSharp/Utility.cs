@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
@@ -7,6 +7,9 @@ using System.Runtime.InteropServices;
 
 namespace Hal.CookieGetterSharp
 {
+    /// <summary>
+    /// 小規模関数群
+    /// </summary>
 	public class Utility
 	{
 		/// <summary>

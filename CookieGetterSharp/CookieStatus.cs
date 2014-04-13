@@ -27,15 +27,21 @@ namespace Hal.CookieGetterSharp
 	[Serializable]
 	public class CookieStatus
 	{
+        /// <summary>Name</summary>
 		protected string _name;
+        /// <summary>BrowserType</summary>
 		protected BrowserType _browserType;
+        /// <summary>PathType</summary>
 		protected PathType _pathType;
+        /// <summary>CookiePath</summary>
 		protected string _path;
+        /// <summary>DisplayName</summary>
 		protected string _displayName;
 
-		protected CookieStatus() { 
-		}
-
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        protected CookieStatus() { }
 		internal CookieStatus(string name, string path, BrowserType browserType, PathType pathType)
 		{
 			_name = name;

@@ -101,6 +101,9 @@ namespace Hal.CookieGetterSharp {
 			return results.ToArray();
 		}
 
+        /// <summary>
+        /// 捕捉された例外群
+        /// </summary>
 		public static Queue<Exception> Exceptions = new Queue<Exception>();
 
 		#endregion [静的メンバー]
