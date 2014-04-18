@@ -4,13 +4,11 @@
 
 オリジナルは炬燵犬さん作成のクッキー取得クラス [CookieGetter](http://homepage2.nifty.com/kotatuinu/contents/computer/program/CookieGetter/cookiegetter.html)、それを大幅に改造しライブラリにしたhalxxxxさん、うつろさんの[CookieGetterSharp](http://d.hatena.ne.jp/halxxxx/20091212/1260649353)、そしてさらにそれを改造したのがこの配布物です。ライセンスはCookieGetterSharpのを継承させます。
 
----
 ## ライセンス
 コードは自由にご利用ください。ですが悪用は厳禁です。  
 またこのライブラリを使用したことによっていかなる損害が発生しても責任は一切持ちません。  
 あと、C#の更なる発展のため、改造したソースは公開してください。  
 
----
 ##使い方
 
 ###各クラスの役割
