@@ -65,9 +65,9 @@ namespace Hal.CookieGetterSharp
 			cookie.Domain = data[2] as string;
 			cookie.Path = data[3] as string;
 
-			if (cookie.Value != null) {
-				cookie.Value = Uri.EscapeDataString(cookie.Value);
-			}
+            if (cookie.Value != null) {
+                cookie.Value = cookie.Value.Replace(";", "%3b").Replace(",", "%2c");
+            }
 
 			try {
 				long exp = long.Parse(data[4].ToString());

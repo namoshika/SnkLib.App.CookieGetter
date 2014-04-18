@@ -81,7 +81,21 @@ namespace Hal.CookieGetterSharp
 
 			container.Add(cookie);
 			if (cookie.Domain.StartsWith(".")) {
-				container.Add(new System.Net.Cookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain.Substring(1)));
+                container.Add(new System.Net.Cookie() {
+                    Comment = cookie.Comment,
+                    CommentUri = cookie.CommentUri,
+                    Discard = cookie.Discard,
+                    Domain = cookie.Domain.Substring(1),
+                    Expired = cookie.Expired,
+                    Expires = cookie.Expires,
+                    HttpOnly = cookie.HttpOnly,
+                    Name = cookie.Name,
+                    Path = cookie.Path,
+                    Port = cookie.Port,
+                    Secure = cookie.Secure,
+                    Value = cookie.Value,
+                    Version = cookie.Version,
+                });
 			}
 
 		}
