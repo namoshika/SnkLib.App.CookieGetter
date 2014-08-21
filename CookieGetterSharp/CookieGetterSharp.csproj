@@ -103,10 +103,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\SystemDataSQLite10811\NET4\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\CookieGetterSharp.x86Proxy\IX86ProxyService.cs">
+      <Link>IX86ProxyService.cs</Link>
+    </Compile>
     <Compile Include="BrowserType.cs" />
     <Compile Include="ChromiumBrowserManager.cs" />
     <Compile Include="ComboBoxBrowser.cs">
@@ -186,6 +190,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\CookieGetterSharp.x86Proxy\bin\Release\CookieGetterSharp.x86Proxy.exe">
+      <Link>CookieGetterSharp.x86Proxy.exe</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="Win32\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -33,3 +33,6 @@ using System.Runtime.InteropServices;
 // 既定値にすることができます:
 [assembly: AssemblyVersion("4.51.5.0")]
 [assembly: AssemblyFileVersion("4.51.5.0")]
+
+//x86Serviceへは内部要素も公開する
+[assembly: InternalsVisibleTo("CookieGetterSharp.x86Service")]

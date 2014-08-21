@@ -79,36 +79,10 @@ namespace Hal.CookieGetterSharp {
 		/// <param name="key"></param>
 		/// <returns></returns>
 		protected override List<System.Net.Cookie> GetCookiesWinApi(Uri url, string key) {
-			List<System.Net.Cookie> cookies = new List<System.Net.Cookie>();
-
-			int cookieSize = 8;
-			StringBuilder lpszCookieData = new StringBuilder(cookieSize);
-			IntPtr dwSizeP = new IntPtr(cookieSize);
-
-            //クッキー文字列取得
-            do {
-                bool bResult;
-                if(bResult = win32api.InternetGetCookieEx(url.OriginalString, key, lpszCookieData, ref cookieSize, win32api.INTERNET_COOKIE_HTTPONLY, IntPtr.Zero))
-                    break;
-                else {
-                    int errorNo = Marshal.GetHRForLastWin32Error();
-                    switch((uint)errorNo) {
-                        case 0x00000000:
-                        case 0x80070103:
-                            break;
-                        case 0x8007007A:
-                            //バッファーサイズ拡張。無限ループが怖いので一応必ずサイズが増えるようにしておく
-                            cookieSize += 512;
-                            lpszCookieData.Capacity = cookieSize;
-                            continue;
-                        default:
-                            Debug.WriteLine("InternetGetCookie error code: " + errorNo);
-                            break;
-                    }
-                }
-                break;
-            }
-            while(true);
+            string lpszCookieData;
+			var cookies = new List<System.Net.Cookie>();
+            var hResult = win32api.GetCookiesFromIE(out lpszCookieData, url, key);
+            Debug.WriteLineIf(lpszCookieData == null, "InternetGetCookie error code: " + hResult);
 
             //オブジェクト化
 			if(lpszCookieData.Length != 0) {
@@ -133,7 +107,6 @@ namespace Hal.CookieGetterSharp {
 					}
 				}
 			}
-
 			return cookies;
 		}
 
