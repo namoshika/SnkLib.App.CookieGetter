@@ -214,11 +214,13 @@ namespace Hal.CookieGetterSharp {
 
     }
     internal static class win32api {
-        /// <summary>保護モードIEからCookieを取得する</summary>
+        /// <summary>
+        /// 保護モードIEからCookieを取得する
+        /// </summary>
         /// <param name="cookiesText">取得したCookieの代入先</param>
         /// <param name="targetUrl">Cookieを送りたいページのURL</param>
         /// <param name="valueKey">読み出したいCookieのキー値</param>
-        /// <returns></returns>
+        /// <returns>引数targetUrlに対して使えるCookieヘッダー値</returns>
         public static int GetCookiesFromProtectedModeIE(out string cookiesText, Uri targetUrl, string valueKey = null) {
             var cookieSize = 4096;
             var lpszCookieData = new StringBuilder(cookieSize);
@@ -244,6 +246,14 @@ namespace Hal.CookieGetterSharp {
             }
             while(true);
         }
+
+        /// <summary>
+        /// 従来モードIEからCookieを取得する
+        /// </summary>
+        /// <param name="cookiesText">取得したCookieの代入先</param>
+        /// <param name="targetUrl">Cookieを送りたいページのURL</param>
+        /// <param name="valueKey">読み出したいCookieのキー値</param>
+        /// <returns>引数targetUrlに対して使えるCookieヘッダー値</returns>
         public static int GetCookiesFromIE(out string cookiesText, Uri targetUrl, string valueKey = null) {
             var cookieSize = 4096;
             var lpszCookieData = new StringBuilder(cookieSize);
@@ -276,6 +286,11 @@ namespace Hal.CookieGetterSharp {
             }
             while(true);
         }
+
+        /// <summary>
+        /// IEのバージョンを取得する
+        /// </summary>
+        /// <returns>ex:11.0.9600.17239</returns>
         public static Version GetIEVersion() {
             try {
                 using(var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Internet Explorer"))

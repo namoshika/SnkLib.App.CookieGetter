@@ -123,51 +123,48 @@ namespace Hal.CookieGetterSharp {
             //IE11以上はクッキー取得APIを使用する。IE11からはx64モード下でも使用可能になっている。
             //IE8以上もx86環境では問題ないので一緒に取得させておく。
             if((ieVersion.Major >= 11 || ieVersion.Major >= 8 && Environment.Is64BitProcess == false) && specifyPath_Debug < 0 || specifyPath_Debug == 0) {
-                var lpszCookieData = string.Empty;
+                string lpszCookieData;
                 var hResult = win32api.GetCookiesFromProtectedModeIE(out lpszCookieData, url, key);
                 Debug.WriteLineIf(
                     lpszCookieData == null, string.Format("win32api.GetCookieFromProtectedModeIE error code:{0}", hResult));
-                return lpszCookieData;
+                return lpszCookieData ?? string.Empty;
             }
             //IE8以上はクッキー取得APIを使用する。
             //x64モード下での使用は未対応なのでx86の子プロセスを経由させる
             else if(ieVersion.Major >= 8 && specifyPath_Debug < 0 || specifyPath_Debug == 1) {
-                var threadId = _proxyIdGenerator.Next().ToString();
-                var endpointUrl = new Uri(string.Format("net.pipe://localhost/CookieGetterSharp.x86Proxy/{0}/Service/", threadId));
+                var processId = Process.GetCurrentProcess().Id.ToString();
+                var endpointUrl = new Uri(string.Format("net.pipe://localhost/CookieGetterSharp.x86Proxy/{0}/Service/", processId));
                 var lpszCookieData = string.Empty;
                 ChannelFactory<IX86ProxyService> proxyFactory = null;
-                using(var proxyProcess = Process.Start(
-                    new System.Diagnostics.ProcessStartInfo() {
-                        FileName = ".\\CookieGetterSharp.x86Proxy.exe",
-                        Arguments = threadId,
-                        CreateNoWindow = true,
-                        UseShellExecute = false
-                    }))
-                    //失敗しても2度目の正直を狙う
-                    for(var i = 0; i < 2; i++)
-                        try {
-                            proxyFactory = new ChannelFactory<IX86ProxyService>(new NetNamedPipeBinding(), endpointUrl.AbsoluteUri);
-                            var proxy = proxyFactory.CreateChannel();
-                            var hResult = proxy.GetCookiesFromProtectedModeIE(out lpszCookieData, url, key);
-                            Debug.WriteLineIf(
-                                lpszCookieData == null, string.Format("proxy.GetCookieFromProtectedModeIE error code:{0}", hResult));
-                            break;
+                Process proxyProcess = null;
+                //多重呼び出しされる事がよくあるため、既に起動しているx86ProxyServiceの存在を期待する。
+                //初回呼び出しなど期待外れもあり得るので2回は試行する。
+                for(var i = 0; i < 2; i++)
+                    try {
+                        proxyFactory = new ChannelFactory<IX86ProxyService>(new NetNamedPipeBinding(), endpointUrl.AbsoluteUri);
+                        var proxy = proxyFactory.CreateChannel();
+                        var hResult = proxy.GetCookiesFromProtectedModeIE(out lpszCookieData, url, key);
+                        Debug.WriteLineIf(
+                            lpszCookieData == null, string.Format("proxy.GetCookieFromProtectedModeIE error code:{0}", hResult));
+                        break;
+                    }
+                    catch(CommunicationException) {
+                        //x86Serviceからの起動完了通知受信用
+                        using(var pipeServer = new System.IO.Pipes.AnonymousPipeServerStream(
+                            System.IO.Pipes.PipeDirection.In, HandleInheritability.Inheritable)) {
+                            proxyProcess = Process.Start(
+                                new System.Diagnostics.ProcessStartInfo() {
+                                    FileName = ".\\CookieGetterSharp.x86Proxy.exe",
+                                    //サービス側のendpointUrlに必要な情報をコマンドライン引数として渡す
+                                    Arguments = string.Join(" ", new[] { processId, pipeServer.GetClientHandleAsString(), }),
+                                    CreateNoWindow = true,
+                                    UseShellExecute = false,
+                                });
+                            pipeServer.ReadByte();
                         }
-                        catch(EndpointNotFoundException) {
-                            //x86Serviceが起動しきっていない場合は少し待ってから再試行する。
-                            //苦しい作りだが指定時間スリープで完全に起動し切るのを待つ
-                            System.Threading.Thread.Sleep(300);
-                        }
-                        catch(CommunicationException) {
-                            //x86Serviceが起動しきっていない場合は少し待ってから再試行する。
-                            //苦しい作りだが指定時間スリープで完全に起動し切るのを待つ
-                            System.Threading.Thread.Sleep(300);
-                        }
-                        finally {
-                            proxyFactory.Abort();
-                            proxyProcess.CloseMainWindow();
-                        }
-                return lpszCookieData;
+                    }
+                    finally { proxyFactory.Abort(); }
+                return lpszCookieData ?? string.Empty;
             }
             else
                 return string.Empty;
