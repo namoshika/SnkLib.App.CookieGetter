@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BB3F3039-E8C2-4CB8-9257-59B92F03A87C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SunokoLibrary.Application</RootNamespace>
+    <AssemblyName>SnkLib.App.CookieGetter</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\SnkLib.App.CookieGetter.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\lib\SystemDataSQLite10811\NET4\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BrowserConfig.cs" />
+    <Compile Include="CookieGetters.cs" />
+    <Compile Include="Getters\BlinkCookieGetter.cs" />
+    <Compile Include="Getters\CookieGetterBase.cs" />
+    <Compile Include="Getters\GeckoCookieGetter.cs" />
+    <Compile Include="Getters\IECookieGetter.cs" />
+    <Compile Include="Getters\IEPMCookieGetter.cs" />
+    <Compile Include="Getters\SqlCookieGetter.cs" />
+    <Compile Include="Getters\WebkitCookieGetter.cs" />
+    <Compile Include="Getters\WebkitQtCookieGetter.cs" />
+    <Compile Include="Interfaces.cs" />
+    <Compile Include="IProxyService.cs" />
+    <Compile Include="Managers\ChromiumBrowserManager.cs" />
+    <Compile Include="Managers\ComodoDragonBrowserManager.cs" />
+    <Compile Include="Managers\ComodoIceDragonBrowserManager.cs" />
+    <Compile Include="Managers\CoolNovoBrowserManager.cs" />
+    <Compile Include="Managers\FirefoxBrowserManager.cs" />
+    <Compile Include="Managers\GeckoBrowserManager.cs" />
+    <Compile Include="Managers\GoogleChromeBrowserManager.cs" />
+    <Compile Include="Managers\IEBrowserManager.cs" />
+    <Compile Include="Managers\LunascapeGeckoBrowserManager.cs" />
+    <Compile Include="Managers\LunascapeWebkitBrowserManager.cs" />
+    <Compile Include="Managers\MaxthonBrowserManager.cs" />
+    <Compile Include="Managers\OperaWebkitBrowserManager.cs" />
+    <Compile Include="Managers\PaleMoonBrowserManager.cs" />
+    <Compile Include="Managers\SeaMonkeyBrowserManager.cs" />
+    <Compile Include="Managers\Sleipnir3GeckoBrowserManager.cs" />
+    <Compile Include="Managers\Sleipnir3WekitBrowserManager.cs" />
+    <Compile Include="Managers\Sleipnir4BlinkBrowserManager.cs" />
+    <Compile Include="Managers\Sleipnir5BlinkBrowserManager.cs" />
+    <Compile Include="Managers\TungstenBrowserManager.cs" />
+    <Compile Include="Managers\WebkitBrowserManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\lib\systemdatasqlite10811\net4\win32\SQLite.Interop.dll">
+      <Link>Win32\SQLite.Interop.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\lib\systemdatasqlite10811\net4\x64\SQLite.Interop.dll">
+      <Link>x64\SQLite.Interop.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\SnkLib.App.CookieGetter.x86Proxy\bin\Release\SnkLib.App.CookieGetter.x86Proxy.exe">
+      <Link>SnkLib.App.CookieGetter.x86Proxy.exe</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

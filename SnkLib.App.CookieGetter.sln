@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CookieGetterSharp", "CookieGetterSharp\CookieGetterSharp.csproj", "{ACB84F0E-B482-46B0-8C29-1FAC6C85D622}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{BCBC7A76-8A57-4723-87BC-0EFE6E37E542}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csproj", "{7A4CC4FE-BB58-4783-87DA-0D98F6081B94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NwhoisLoginSystem", "NwhoisLoginSystem\NwhoisLoginSystem.csproj", "{FAA80ADB-F755-4D64-9669-D251726FFD97}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkLib.App.CookieGetter", "SnkLib.App.CookieGetter\SnkLib.App.CookieGetter.csproj", "{BB3F3039-E8C2-4CB8-9257-59B92F03A87C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6B024D6D-EE44-4E98-8612-ECDE351E5182} = {6B024D6D-EE44-4E98-8612-ECDE351E5182}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkLib.App.CookieGetter.x86Proxy", "SnkLib.App.CookieGetter.x86Proxy\SnkLib.App.CookieGetter.x86Proxy.csproj", "{6B024D6D-EE44-4E98-8612-ECDE351E5182}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ACB84F0E-B482-46B0-8C29-1FAC6C85D622}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACB84F0E-B482-46B0-8C29-1FAC6C85D622}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACB84F0E-B482-46B0-8C29-1FAC6C85D622}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACB84F0E-B482-46B0-8C29-1FAC6C85D622}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCBC7A76-8A57-4723-87BC-0EFE6E37E542}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCBC7A76-8A57-4723-87BC-0EFE6E37E542}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCBC7A76-8A57-4723-87BC-0EFE6E37E542}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCBC7A76-8A57-4723-87BC-0EFE6E37E542}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A4CC4FE-BB58-4783-87DA-0D98F6081B94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A4CC4FE-BB58-4783-87DA-0D98F6081B94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A4CC4FE-BB58-4783-87DA-0D98F6081B94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A4CC4FE-BB58-4783-87DA-0D98F6081B94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAA80ADB-F755-4D64-9669-D251726FFD97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAA80ADB-F755-4D64-9669-D251726FFD97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAA80ADB-F755-4D64-9669-D251726FFD97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAA80ADB-F755-4D64-9669-D251726FFD97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB3F3039-E8C2-4CB8-9257-59B92F03A87C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB3F3039-E8C2-4CB8-9257-59B92F03A87C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB3F3039-E8C2-4CB8-9257-59B92F03A87C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB3F3039-E8C2-4CB8-9257-59B92F03A87C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B024D6D-EE44-4E98-8612-ECDE351E5182}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{6B024D6D-EE44-4E98-8612-ECDE351E5182}.Debug|Any CPU.Build.0 = Release|Any CPU
+		{6B024D6D-EE44-4E98-8612-ECDE351E5182}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B024D6D-EE44-4E98-8612-ECDE351E5182}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

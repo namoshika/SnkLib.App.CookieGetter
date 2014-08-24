@@ -1,163 +1,72 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Hal.CookieGetterSharp
 {
-	/// <summary>
-	/// PathがFileとDirectoryのどちらを示しているかを表す
-	/// </summary>
-	public enum PathType
-	{
+    using SunokoLibrary.Application;
+    using SunokoLibrary.Application.Browsers;
 
-		/// <summary>
-		/// ファイル
-		/// </summary>
-		File,
+    public class CookieStatus
+    {
+#pragma warning disable 0618 //Obsolete属性の警告を無効化"
+        public CookieStatus(CookieGetter owner, IBrowserManager manager)
+        {
+            _owner = owner;
+            BrowserType = manager.BrowserType;
+        }
+        CookieGetter _owner;
+        string _displayName;
 
-		/// <summary>
-		/// ディレクトリ
-		/// </summary>
-		Directory
-	}
+        public BrowserType BrowserType { get; private set; }
+        public PathType PathType
+        { get { return (PathType)Enum.Parse(typeof(PathType), GetValue(() => _owner.Importer.CookiePathType).ToString()); } }
+        public bool IsAvailable
+        { get { return GetValue(() => _owner.Importer.IsAvailable); } }
+        public string Name
+        {
+            get { return GetValue(() => _owner.Importer.Config.BrowserName); }
+            internal set { Refresh(value); }
+        }
+        public string CookiePath
+        {
+            get { return GetValue(() => _owner.Importer.Config.CookiePath); }
+            set { Refresh(cookiePath: value); }
+        }
+        public string DisplayName
+        {
+            get { return string.IsNullOrEmpty(_displayName) ? Name : _displayName; }
+            set { _displayName = this.Name.Equals(value) ? null : value; }
+        }
 
-	/// <summary>
-	/// CookieGetterの状態を表すインターフェース
-	/// </summary>
-	[Serializable]
-	public class CookieStatus
-	{
-        /// <summary>Name</summary>
-		protected string _name;
-        /// <summary>BrowserType</summary>
-		protected BrowserType _browserType;
-        /// <summary>PathType</summary>
-		protected PathType _pathType;
-        /// <summary>CookiePath</summary>
-		protected string _path;
-        /// <summary>DisplayName</summary>
-		protected string _displayName;
-
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        protected CookieStatus() { }
-		internal CookieStatus(string name, string path, BrowserType browserType, PathType pathType)
-		{
-			_name = name;
-			_path = path;
-			_browserType = browserType;
-			_pathType = pathType;
-			_displayName = null;
-		}
-
-		/// <summary>
-		/// ブラウザの種類を取得する
-		/// </summary>
-		public BrowserType BrowserType
-		{
-			get { return _browserType; }
-		}
-
-		/// <summary>
-		/// 利用可能かどうかを取得する
-		/// </summary>
-		public bool IsAvailable
-		{
-			get {
-				if (string.IsNullOrEmpty(this.CookiePath)) return false;
-
-				if (_pathType == PathType.File) {
-					return System.IO.File.Exists(this.CookiePath);
-				} else {
-					return System.IO.Directory.Exists(this.CookiePath);
-				}
-			}
-		}
-
-		/// <summary>
-		/// 識別名を取得する
-		/// </summary>
-		public string Name
-		{
-			get { return _name; }
-			internal set { _name = value; }
-		}
-
-		/// <summary>
-		/// クッキーが保存されているフォルダを取得、設定する
-		/// </summary>
-		public string CookiePath
-		{
-			get { return _path; }
-			set { _path = value; }
-		}
-
-		/// <summary>
-		/// CookiePathがFileを表すのか、Directoryを表すのかを取得する
-		/// </summary>
-		public PathType PathType {
-			get { return _pathType; }
-		}
-
-		/// <summary>
-		/// ToStringで表示される名前。nullにするとNameが表示されるようになる。
-		/// </summary>
-		public string DisplayName {
-			get {
-				if (string.IsNullOrEmpty(_displayName)) {
-					return this.Name;
-				} else {
-					return _displayName;
-				}
-			}
-			set {
-				if (this.Name.Equals(value)) {
-					_displayName = null;
-				} else {
-					_displayName = value;
-				}
-			}
-		}
-
-		#region Objectのオーバーライド
-
-		/// <summary>
-		/// DisplayNameを返します
-		/// </summary>
-		/// <returns></returns>
-		public override string ToString()
-		{
-			return this.DisplayName;
-		}
-
-		/// <summary>
-		/// ブラウザ名、クッキー保存先が等しいかを調べます
-		/// </summary>
-		/// <param name="obj"></param>
-		/// <returns></returns>
-		public override bool Equals(object obj)
-		{
-			if (this.Name == null || this.CookiePath == null || obj == null || !(obj is CookieStatus)) {
-				return false;
-			}
-			CookieStatus bi = (CookieStatus)obj;
-
-			return this.Name.Equals(bi.Name) && this.CookiePath.Equals(bi.CookiePath);
-		}
-
-		/// <summary>
-		/// ハッシュコードを返します
-		/// </summary>
-		/// <returns></returns>
-		public override int GetHashCode()
-		{
-			string x = this.Name + this.CookiePath;
-			return x.GetHashCode();
-		}
-
-		#endregion
-
-
-	}
+        TResult GetValue<TResult>(Func<TResult> getter)
+        {
+            try { return getter(); }
+            catch(CookieImportException e)
+            { throw new CookieGetterException(e); }
+        }
+        void Refresh(string name = null, string profileName = null, string cookiePath = null)
+        {
+            try
+            {
+                _owner.Importer = _owner.Importer.Generate(
+                    _owner.Importer.Config.GenerateCopy(name, profileName, cookiePath));
+            }
+            catch(CookieImportException e)
+            { throw new CookieGetterException(e); }
+        }
+        public override bool Equals(object obj)
+        {
+            if (Name == null || CookiePath == null || obj == null || !(obj is CookieStatus))
+                return false;
+            var bi = (CookieStatus)obj;
+            return Name.Equals(bi.Name) && CookiePath.Equals(bi.CookiePath);
+        }
+        public override int GetHashCode() { return (Name + CookiePath).GetHashCode(); }
+        public override string ToString() { return this.DisplayName; }
+#pragma warning restore 0618
+    }
+    public enum PathType { File, Directory }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace NwhoisLoginSystem
+namespace Sample
 {
     static class Program
     {
@@ -14,7 +14,7 @@ namespace NwhoisLoginSystem
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new MainWindow());
         }
     }
 }

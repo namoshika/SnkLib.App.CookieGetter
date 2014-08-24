@@ -1,6 +1,6 @@
-﻿namespace NwhoisLoginSystem
+﻿namespace Sample
 {
-    partial class Form1
+    partial class MainWindow
     {
         /// <summary>
         /// 必要なデザイナ変数です。
@@ -27,42 +27,40 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.cbShowAll = new System.Windows.Forms.CheckBox();
+            this.checkBoxShowAll = new System.Windows.Forms.CheckBox();
             this.gbBrowser = new System.Windows.Forms.GroupBox();
-            this.cmbBrowser = new System.Windows.Forms.ComboBox();
-            this.btnCheck = new System.Windows.Forms.Button();
+            this.cmbBxBrowserSelector = new System.Windows.Forms.ComboBox();
+            this.btnReload = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.btnRef = new System.Windows.Forms.Button();
-            this.txtPath = new System.Windows.Forms.TextBox();
+            this.btnOpenCookieFileDialog = new System.Windows.Forms.Button();
+            this.txtCookiePath = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.txtUserSession = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.gbBrowser.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // cbShowAll
+            // checkBoxShowAll
             // 
-            this.cbShowAll.AutoSize = true;
-            this.cbShowAll.Location = new System.Drawing.Point(6, 18);
-            this.cbShowAll.Name = "cbShowAll";
-            this.cbShowAll.Size = new System.Drawing.Size(151, 16);
-            this.cbShowAll.TabIndex = 8;
-            this.cbShowAll.Text = "すべてのブラウザを表示する";
-            this.cbShowAll.UseVisualStyleBackColor = true;
-            this.cbShowAll.CheckedChanged += new System.EventHandler(this.cbShowAll_CheckedChanged);
+            this.checkBoxShowAll.AutoSize = true;
+            this.checkBoxShowAll.Location = new System.Drawing.Point(6, 18);
+            this.checkBoxShowAll.Name = "checkBoxShowAll";
+            this.checkBoxShowAll.Size = new System.Drawing.Size(151, 16);
+            this.checkBoxShowAll.TabIndex = 8;
+            this.checkBoxShowAll.Text = "すべてのブラウザを表示する";
+            this.checkBoxShowAll.UseVisualStyleBackColor = true;
             // 
             // gbBrowser
             // 
-            this.gbBrowser.Controls.Add(this.cbShowAll);
-            this.gbBrowser.Controls.Add(this.cmbBrowser);
-            this.gbBrowser.Controls.Add(this.btnCheck);
+            this.gbBrowser.Controls.Add(this.checkBoxShowAll);
+            this.gbBrowser.Controls.Add(this.cmbBxBrowserSelector);
+            this.gbBrowser.Controls.Add(this.btnReload);
             this.gbBrowser.Controls.Add(this.label3);
-            this.gbBrowser.Controls.Add(this.btnRef);
-            this.gbBrowser.Controls.Add(this.txtPath);
+            this.gbBrowser.Controls.Add(this.btnOpenCookieFileDialog);
+            this.gbBrowser.Controls.Add(this.txtCookiePath);
             this.gbBrowser.Location = new System.Drawing.Point(12, 12);
             this.gbBrowser.Name = "gbBrowser";
             this.gbBrowser.Size = new System.Drawing.Size(326, 105);
@@ -70,27 +68,25 @@
             this.gbBrowser.TabStop = false;
             this.gbBrowser.Text = "ブラウザ";
             // 
-            // cmbBrowser
+            // cmbBxBrowserSelector
             // 
-            this.cmbBrowser.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbBrowser.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbBrowser.FormattingEnabled = true;
-            this.cmbBrowser.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.cmbBrowser.Location = new System.Drawing.Point(6, 41);
-            this.cmbBrowser.Name = "cmbBrowser";
-            this.cmbBrowser.Size = new System.Drawing.Size(247, 20);
-            this.cmbBrowser.TabIndex = 0;
-            this.cmbBrowser.SelectedIndexChanged += new System.EventHandler(this.cmbBrowser_SelectedIndexChanged);
+            this.cmbBxBrowserSelector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbBxBrowserSelector.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbBxBrowserSelector.FormattingEnabled = true;
+            this.cmbBxBrowserSelector.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.cmbBxBrowserSelector.Location = new System.Drawing.Point(6, 41);
+            this.cmbBxBrowserSelector.Name = "cmbBxBrowserSelector";
+            this.cmbBxBrowserSelector.Size = new System.Drawing.Size(247, 20);
+            this.cmbBxBrowserSelector.TabIndex = 0;
             // 
-            // btnCheck
+            // btnReload
             // 
-            this.btnCheck.Location = new System.Drawing.Point(259, 40);
-            this.btnCheck.Name = "btnCheck";
-            this.btnCheck.Size = new System.Drawing.Size(46, 23);
-            this.btnCheck.TabIndex = 1;
-            this.btnCheck.Text = "更新";
-            this.btnCheck.UseVisualStyleBackColor = true;
-            this.btnCheck.Click += new System.EventHandler(this.btnCheck_Click);
+            this.btnReload.Location = new System.Drawing.Point(259, 40);
+            this.btnReload.Name = "btnReload";
+            this.btnReload.Size = new System.Drawing.Size(46, 23);
+            this.btnReload.TabIndex = 1;
+            this.btnReload.Text = "更新";
+            this.btnReload.UseVisualStyleBackColor = true;
             // 
             // label3
             // 
@@ -101,25 +97,25 @@
             this.label3.TabIndex = 3;
             this.label3.Text = "取得先";
             // 
-            // btnRef
+            // btnOpenCookieFileDialog
             // 
-            this.btnRef.Enabled = false;
-            this.btnRef.Location = new System.Drawing.Point(259, 70);
-            this.btnRef.Name = "btnRef";
-            this.btnRef.Size = new System.Drawing.Size(46, 23);
-            this.btnRef.TabIndex = 3;
-            this.btnRef.Text = "参照";
-            this.btnRef.UseVisualStyleBackColor = true;
-            this.btnRef.Click += new System.EventHandler(this.btnRef_Click);
+            this.btnOpenCookieFileDialog.Enabled = false;
+            this.btnOpenCookieFileDialog.Location = new System.Drawing.Point(259, 70);
+            this.btnOpenCookieFileDialog.Name = "btnOpenCookieFileDialog";
+            this.btnOpenCookieFileDialog.Size = new System.Drawing.Size(46, 23);
+            this.btnOpenCookieFileDialog.TabIndex = 3;
+            this.btnOpenCookieFileDialog.Text = "参照";
+            this.btnOpenCookieFileDialog.UseVisualStyleBackColor = true;
+            this.btnOpenCookieFileDialog.Click += new System.EventHandler(this.btnOpenCookieFileDialog_Click);
             // 
-            // txtPath
+            // txtCookiePath
             // 
-            this.txtPath.Enabled = false;
-            this.txtPath.Location = new System.Drawing.Point(51, 72);
-            this.txtPath.Name = "txtPath";
-            this.txtPath.ReadOnly = true;
-            this.txtPath.Size = new System.Drawing.Size(202, 19);
-            this.txtPath.TabIndex = 2;
+            this.txtCookiePath.Enabled = false;
+            this.txtCookiePath.Location = new System.Drawing.Point(51, 72);
+            this.txtCookiePath.Name = "txtCookiePath";
+            this.txtCookiePath.ReadOnly = true;
+            this.txtCookiePath.Size = new System.Drawing.Size(202, 19);
+            this.txtCookiePath.TabIndex = 2;
             // 
             // groupBox1
             // 
@@ -148,14 +144,6 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "ユーザーセッション";
             // 
-            // backgroundWorker1
-            // 
-            this.backgroundWorker1.WorkerReportsProgress = true;
-            this.backgroundWorker1.WorkerSupportsCancellation = true;
-            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
-            this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
-            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
-            // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
@@ -175,8 +163,6 @@
             this.Controls.Add(this.gbBrowser);
             this.Name = "Form1";
             this.Text = "Form1";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.gbBrowser.ResumeLayout(false);
             this.gbBrowser.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -187,17 +173,16 @@
 
         #endregion
 
-        private System.Windows.Forms.CheckBox cbShowAll;
+        private System.Windows.Forms.CheckBox checkBoxShowAll;
         private System.Windows.Forms.GroupBox gbBrowser;
-        private System.Windows.Forms.ComboBox cmbBrowser;
-        private System.Windows.Forms.Button btnCheck;
+        private System.Windows.Forms.ComboBox cmbBxBrowserSelector;
+        private System.Windows.Forms.Button btnReload;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button btnRef;
-        private System.Windows.Forms.TextBox txtPath;
+        private System.Windows.Forms.Button btnOpenCookieFileDialog;
+        private System.Windows.Forms.TextBox txtCookiePath;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox txtUserSession;
         private System.Windows.Forms.Label label1;
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
 
