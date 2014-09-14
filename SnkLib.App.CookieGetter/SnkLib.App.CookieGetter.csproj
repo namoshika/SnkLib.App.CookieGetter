@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="BrowserConfig.cs" />
     <Compile Include="CookieGetters.cs" />
+    <Compile Include="Getters\IEFindCacheCookieGetter.cs" />
     <Compile Include="Getters\BlinkCookieGetter.cs" />
     <Compile Include="Getters\CookieGetterBase.cs" />
     <Compile Include="Getters\GeckoCookieGetter.cs" />
@@ -99,6 +100,9 @@
       <Link>SnkLib.App.CookieGetter.x86Proxy.exe</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Getters\IEFindCacheCookieGetter.Memo.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
