@@ -7,6 +7,6 @@ namespace SunokoLibrary.Application.Browsers
     public class ComodoDragonBrowserManager : WebkitBrowserManager
     {
         public ComodoDragonBrowserManager()
-            : base(inf => new BlinkCookieGetter(inf), "ComodoDragon", "%LOCALAPPDATA%\\Comodo\\Dragon\\User Data") { }
+            : base(conf => new BlinkCookieGetter(conf), "ComodoDragon", "%LOCALAPPDATA%\\Comodo\\Dragon\\User Data") { }
     }
 }

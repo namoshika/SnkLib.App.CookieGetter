@@ -8,6 +8,6 @@ namespace SunokoLibrary.Application.Browsers
     public class TungstenBrowserManager : WebkitBrowserManager
     {
         public TungstenBrowserManager()
-            : base(inf => new BlinkCookieGetter(inf), "TungstenBlink", "%APPDATA%\\Tungsten\\profile") { }
+            : base(conf => new BlinkCookieGetter(conf), "TungstenBlink", "%APPDATA%\\Tungsten\\profile") { }
     }
 }

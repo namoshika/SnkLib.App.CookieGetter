@@ -7,6 +7,6 @@ namespace SunokoLibrary.Application.Browsers
     public class GoogleChromeBrowserManager : WebkitBrowserManager
     {
         public GoogleChromeBrowserManager()
-            : base(inf => new BlinkCookieGetter(inf), "GoogleChrome", "%LOCALAPPDATA%\\Google\\Chrome\\User Data") { }
+            : base(conf => new BlinkCookieGetter(conf), "GoogleChrome", "%LOCALAPPDATA%\\Google\\Chrome\\User Data") { }
     }
 }

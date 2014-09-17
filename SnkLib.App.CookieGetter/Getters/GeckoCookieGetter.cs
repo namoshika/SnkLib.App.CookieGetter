@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SunokoLibrary.Application.Browsers
 {
@@ -10,44 +13,45 @@ namespace SunokoLibrary.Application.Browsers
     /// </summary>
     public class GeckoCookieGetter : SqlCookieGetter
     {
-        public GeckoCookieGetter(BrowserConfig status) : base(status) { }
+        public GeckoCookieGetter(BrowserConfig config) : base(config) { }
         const string SELECT_QUERY = "SELECT value, name, host, path, expiry FROM moz_cookies";
 
-        public override bool GetCookies(Uri targetUrl, System.Net.CookieContainer container)
-        {
-            if (IsAvailable == false)
-                return false;
-            try
-            {
-                container.Add(LookupCookies(Config.CookiePath, MakeQuery(targetUrl)));
-                return true;
-            }
-            catch { return false; }
-        }
         public override ICookieImporter Generate(BrowserConfig config)
         { return new GeckoCookieGetter(config); }
-        protected override Cookie DataToCookie(object[] data)
+        protected override async Task<ImportResult> ProtectedGetCookiesAsync(Uri targetUrl, System.Net.CookieContainer container)
         {
-            var cookie = new Cookie();
-            if (string.IsNullOrEmpty((string)data[0]) || string.IsNullOrEmpty((string)data[1]))
-                return null;
-            cookie.Value = Uri.UnescapeDataString((string)data[0]).Replace(";", "%3b").Replace(",", "%2c");
-            cookie.Name = data[1] as string;
-            cookie.Domain = data[2] as string;
-            cookie.Path = data[3] as string;
-
+            if (IsAvailable == false)
+                return ImportResult.Unavailable;
             try
             {
-                long exp = long.Parse(data[4].ToString());
-                cookie.Expires = Utility.UnixTimeToDateTime((int)exp);
+                var query = string.Format("{0} {1} ORDER BY expiry", SELECT_QUERY, MakeWhere(targetUrl));
+                container.Add(await LookupCookiesAsync(Config.CookiePath, query));
+                return ImportResult.Success;
             }
-            catch (Exception ex)
-            { throw new CookieImportException("Firefoxのexpires変換に失敗しました", ex); }
+            catch (CookieImportException ex)
+            {
+                TraceFail(this, "取得に失敗しました。", ex.ToString());
+                return ex.Result;
+            }
+        }
+        protected override Cookie DataToCookie(object[] data)
+        {
+            if (data.Length < 5 || data.Take(4).Where(rec => rec is string == false).Any() || data[4] is long == false)
+                throw new CookieImportException(
+                    "レコードからCookieオブジェクトへの変換に失敗しました。", ImportResult.ConvertError);
+            if (string.IsNullOrEmpty((string)data[0]) || string.IsNullOrEmpty((string)data[1]))
+                return null;
 
+            var cookie = new Cookie()
+            {
+                Value = Uri.UnescapeDataString((string)data[0]).Replace(";", "%3b").Replace(",", "%2c"),
+                Name = (string)data[1],
+                Domain = (string)data[2],
+                Path = (string)data[3],
+                Expires = Utility.UnixTimeToDateTime((int)(long)data[4]),
+            };
             return cookie;
         }
-        protected override string MakeQuery(Uri url)
-        { return string.Format("{0} {1} ORDER BY expiry", SELECT_QUERY, MakeWhere(url)); }
         protected string MakeWhere(Uri url)
         {
             Stack<string> hostStack = new Stack<string>(url.Host.Split('.'));

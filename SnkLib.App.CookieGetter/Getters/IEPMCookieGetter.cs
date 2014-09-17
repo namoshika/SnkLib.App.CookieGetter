@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.ServiceModel;
-using System.Text;
 using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace SunokoLibrary.Application.Browsers
 {
@@ -14,27 +15,37 @@ namespace SunokoLibrary.Application.Browsers
     /// </summary>
     public class IEPMCookieGetter : IECookieGetter
     {
-        public IEPMCookieGetter(BrowserConfig option) : base(option) { }
+        public IEPMCookieGetter(BrowserConfig config) : base(config) { }
 
         public override bool IsAvailable { get { return Win32Api.GetIEVersion().Major >= 8; } }
-        public override bool GetCookies(Uri targetUrl, CookieContainer container)
-        {
-            var lpszCookieData = PrivateGetCookiesWinApi(targetUrl, null);
-            Debug.WriteLineIf(lpszCookieData == null, "IEGetProtectedModeCookie: error");
-            if (lpszCookieData != null)
-            {
-                Debug.WriteLine(lpszCookieData);
-                var cookies = new CookieCollection();
-                foreach(var item in ParseCookies(lpszCookieData, targetUrl))
-                    cookies.Add(item);
-                container.Add(cookies);
-                return true;
-            }
-            else
-                return false;
-        }
         public override ICookieImporter Generate(BrowserConfig config)
         { return new IEPMCookieGetter(config); }
+        protected override async Task<ImportResult> ProtectedGetCookiesAsync(Uri targetUrl, CookieContainer container)
+        {
+            if (IsAvailable == false)
+                return ImportResult.Unavailable;
+            try
+            {
+                await Task.Yield();
+                var cookiesText = PrivateGetCookiesWinApi(targetUrl, null);
+                Debug.Assert(cookiesText != null, "IEGetProtectedModeCookie: error");
+                if (cookiesText != null)
+                {
+                    var cookies = new CookieCollection();
+                    foreach (var item in ParseCookies(cookiesText, targetUrl))
+                        cookies.Add(item);
+                    container.Add(cookies);
+                    return ImportResult.Success;
+                }
+                else
+                    return ImportResult.AccessError;
+            }
+            catch (CookieImportException ex)
+            {
+                TraceFail(this, "Cookie読み込みに失敗。", ex.ToString());
+                return ex.Result;
+            }
+        }
 
         string PrivateGetCookiesWinApi(Uri url, string key)
         {
@@ -53,8 +64,8 @@ namespace SunokoLibrary.Application.Browsers
             {
                 string lpszCookieData;
                 var hResult = Win32Api.GetCookiesFromProtectedModeIE(out lpszCookieData, url, key);
-                Debug.WriteLineIf(
-                    lpszCookieData == null, string.Format("win32api.GetCookieFromProtectedModeIE error code:{0}", hResult));
+                Debug.Assert(
+                    lpszCookieData != null, string.Format("win32api.GetCookieFromProtectedModeIE error code:{0}", hResult));
                 return lpszCookieData ?? string.Empty;
             }
             //IE8以上はクッキー取得APIを使用する。
@@ -74,8 +85,8 @@ namespace SunokoLibrary.Application.Browsers
                         proxyFactory = new ChannelFactory<IProxyService>(new NetNamedPipeBinding(), endpointUrl.AbsoluteUri);
                         var proxy = proxyFactory.CreateChannel();
                         var hResult = proxy.GetCookiesFromProtectedModeIE(out lpszCookieData, url, key);
-                        Debug.WriteLineIf(
-                            lpszCookieData == null, string.Format("proxy.GetCookieFromProtectedModeIE error code:{0}", hResult));
+                        Debug.Assert(
+                            lpszCookieData != null, string.Format("proxy.GetCookieFromProtectedModeIE error code:{0}", hResult));
                         break;
                     }
                     catch (CommunicationException)

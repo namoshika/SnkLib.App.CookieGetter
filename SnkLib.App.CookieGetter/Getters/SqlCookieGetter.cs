@@ -1,9 +1,10 @@
 ﻿﻿using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Data.SQLite;
+using System.Threading.Tasks;
 
 namespace SunokoLibrary.Application.Browsers
 {
@@ -12,7 +13,7 @@ namespace SunokoLibrary.Application.Browsers
     /// </summary>
     public abstract class SqlCookieGetter : CookieGetterBase
     {
-        public SqlCookieGetter(BrowserConfig status) : base(status, PathType.File) { }
+        public SqlCookieGetter(BrowserConfig config) : base(config, PathType.File) { }
 
         /// <summary>
         /// DBから指定したクエリでCookieを取得する
@@ -20,10 +21,11 @@ namespace SunokoLibrary.Application.Browsers
         /// <param name="path">参照先DBファイル</param>
         /// <param name="query">実行するクエリ</param>
         /// <returns>取得されたCookies</returns>
-        protected CookieCollection LookupCookies(string path, string query)
+        /// <exception cref="CookieImportException" />
+        protected async Task<CookieCollection> LookupCookiesAsync(string path, string query)
         {
             var result = new CookieCollection();
-            foreach (var record in LookupEntry(path, query))
+            foreach (var record in await LookupEntryAsync(path, query))
             {
                 var cookie = DataToCookie(record);
                 if (cookie == null)
@@ -33,15 +35,21 @@ namespace SunokoLibrary.Application.Browsers
             return result;
         }
         /// <summary>
+        /// SQLから取得したデータをクッキーに変換する
+        /// </summary>
+        /// <param name="data">指定されたQueryで取得した１行分のデータ</param>
+        /// <exception cref="CookieImportException">未知の形式のレコードを入力された。</exception>
+        protected abstract Cookie DataToCookie(object[] data);
+        /// <summary>
         /// DBに対してエントリ照会を行う
         /// </summary>
         /// <param name="path">参照先DBファイル</param>
         /// <param name="query">実行するクエリ</param>
         /// <exception cref="CookieImportException">一時ファイル生成失敗。DB照会失敗。</exception>
-        protected static List<object[]> LookupEntry(string path, string query)
+        protected static async Task<List<object[]>> LookupEntryAsync(string path, string query)
         {
-            if (System.IO.File.Exists(path) == false)
-                throw new CookieImportException("クッキーパスが正しく設定されていません。");
+            if (File.Exists(path) == false)
+                throw new InvalidOperationException(string.Format("ファイルが存在しません。{0}", path));
 
             string temp = null;
             try
@@ -59,15 +67,15 @@ namespace SunokoLibrary.Application.Browsers
                 }
 
                 var results = new List<object[]>();
-                System.Threading.Thread.Sleep(5);
+                await Task.Delay(5);
                 using (var sqlConnection = new SQLiteConnection(string.Format("Data Source={0}", temp)))
                 {
-                    sqlConnection.Open();
+                    await sqlConnection.OpenAsync();
                     var command = sqlConnection.CreateCommand();
                     command.Connection = sqlConnection;
                     command.CommandText = query;
-                    using (var sdr = command.ExecuteReader())
-                        while (sdr.Read())
+                    using (var sdr = await command.ExecuteReaderAsync())
+                        while (await sdr.ReadAsync())
                         {
                             var items = new object[sdr.FieldCount];
                             for (int i = 0; i < sdr.FieldCount; i++)
@@ -78,9 +86,15 @@ namespace SunokoLibrary.Application.Browsers
                 return results;
             }
             catch (IOException ex)
-            { throw new CookieImportException("クッキーを取得中、一時ファイルの生成に失敗しました。", ex); }
+            {
+                throw new CookieImportException(
+                  "クッキーを取得中、一時ファイルの生成に失敗しました。", ImportResult.AccessError, ex);
+            }
             catch (SQLiteException ex)
-            { throw new CookieImportException("クッキーを取得中、Sqliteアクセスでエラーが発生しました。", ex); }
+            {
+                throw new CookieImportException(
+                  "クッキーを取得中、Sqliteアクセスでエラーが発生しました。", ImportResult.ConvertError, ex);
+            }
             finally
             {
                 if (temp != null)
@@ -88,14 +102,5 @@ namespace SunokoLibrary.Application.Browsers
                     catch (IOException) { }
             }
         }
-        /// <summary>
-        /// SQLから取得したデータをクッキーに変換する
-        /// </summary>
-        /// <param name="data">指定されたQueryで取得した１行分のデータ</param>
-        protected abstract System.Net.Cookie DataToCookie(object[] data);
-        /// <summary>
-        /// 指定されたURLに関連したクッキーを取得するためのクエリーを生成する
-        /// </summary>
-        protected abstract string MakeQuery(Uri url);
     }
 }

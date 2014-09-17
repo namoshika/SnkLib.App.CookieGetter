@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SunokoLibrary.Application.Browsers
 {
     public class MaxthonBrowserManager : ICookieImporterFactory
     {
         const string COOKIEPATH = "%APPDATA%\\Maxthon3\\Users\\guest\\Cookie\\Cookie.dat";
-        public ICookieImporter[] CreateCookieImporters()
+        public IEnumerable<ICookieImporter> CreateCookieImporters()
         {
             var name = "Maxthon webkit";
             var path = Utility.ReplacePathSymbols(COOKIEPATH);

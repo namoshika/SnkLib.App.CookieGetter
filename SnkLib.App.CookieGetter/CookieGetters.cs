@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SunokoLibrary.Application
 {
@@ -43,20 +44,20 @@ namespace SunokoLibrary.Application
         /// すべてのクッキーゲッターを取得する
         /// </summary>
         /// <param name="availableOnly">利用可能なものだけを選択するかどうか</param>
-        public static IEnumerable<ICookieImporter> CreateInstances(bool availableOnly)
+        public static Task<ICookieImporter[]> CreateInstancesAsync(bool availableOnly)
         {
-            return BrowserManagers
+            return Task.Run(() => BrowserManagers
                 .SelectMany(item => item.CreateCookieImporters())
-                .Where(item => !availableOnly || item.IsAvailable);
+                .Where(item => item.IsAvailable || !availableOnly).ToArray());
         }
         /// <summary>
         /// 設定値復元用。直前まで使用していたCookieGetterのConfigを保存しておいたりすると起動時に最適な既定値を選んでくれる。
         /// </summary>
         /// <param name="targetConfig">任意のブラウザ環境設定</param>
         /// <param name="allowDefault">生成不可の場合に既定のCookieImporterを返すか</param>
-        public static ICookieImporter CreateInstance(BrowserConfig targetConfig, bool allowDefault = true)
+        public static async Task<ICookieImporter> CreateInstanceAsync(BrowserConfig targetConfig, bool allowDefault = true)
         {
-            var getterList = CreateInstances(false).ToArray();
+            var getterList = await CreateInstancesAsync(false);
             ICookieImporter foundGetter = null;
             if (targetConfig != null
                 && string.IsNullOrEmpty(targetConfig.BrowserName) == false
@@ -71,7 +72,8 @@ namespace SunokoLibrary.Application
                     foundGetter = foundGetter.Generate(targetConfig.GenerateCopy());
             }
             if (allowDefault)
-                foundGetter = foundGetter ?? CreateInstances(true).FirstOrDefault();
+                foundGetter = foundGetter
+                    ?? getterList.Where(importer => importer.IsAvailable).FirstOrDefault();
 
             return foundGetter;
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace UnitTest
@@ -13,83 +14,83 @@ namespace UnitTest
     public class GetterManagerTests
     {
         [TestMethod]
-        public void GoogleChromeTest()
+        public async Task GoogleChromeTest()
         {
             var manager = new GoogleChromeBrowserManager();
             var getters = manager.CreateCookieImporters();
-            CheckGetters(getters, true);
+            await CheckGetters(getters, true);
         }
         [TestMethod]
-        public void InternetExplorerTest()
+        public async Task InternetExplorerTest()
         {
             var manager = new IEBrowserManager();
             var getters = manager.CreateCookieImporters();
-            CheckGetters(getters.OfType<IECookieGetter>(), true);
+            await CheckGetters(getters.OfType<IECookieGetter>(), true);
         }
         [TestMethod]
-        public void InternetExplorerTest_ProtectedMode()
+        public async Task InternetExplorerTest_ProtectedMode()
         {
             var manager = new IEBrowserManager();
             var getters = manager.CreateCookieImporters();
-            CheckGetters(getters.OfType<IEPMCookieGetter>(), true);
+            await CheckGetters(getters.OfType<IEPMCookieGetter>(), true);
         }
         [TestMethod]
-        public void FirefoxTest()
+        public async Task FirefoxTest()
         {
             var manager = new FirefoxBrowserManager();
             var getters = manager.CreateCookieImporters();
-            CheckGetters(getters, true);
+            await CheckGetters(getters, true);
         }
         [TestMethod]
-        public void Sleipnir5BlinkTest()
+        public async Task Sleipnir5BlinkTest()
         {
             var manager = new Sleipnir5BlinkBrowserManager();
             var getters = manager.CreateCookieImporters();
-            CheckGetters(getters, true);
+            await CheckGetters(getters, true);
         }
         [TestMethod]
-        public void Lunascape6GeckoTest()
+        public async Task Lunascape6GeckoTest()
         {
             var manager = new LunascapeGeckoBrowserManager();
             var getters = manager.CreateCookieImporters();
-            CheckGetters(getters, true);
+            await CheckGetters(getters, true);
         }
         [TestMethod]
-        public void Lunascape6WebkitTest()
+        public async Task Lunascape6WebkitTest()
         {
             var manager = new LunascapeWebkitBrowserManager();
             var getters = manager.CreateCookieImporters();
-            CheckGetters(getters, true);
+            await CheckGetters(getters, true);
         }
         [TestMethod]
-        public void OperaWebkitBlinkTest()
+        public async Task OperaWebkitBlinkTest()
         {
             var manager = new OperaWebkitBrowserManager();
             var getters = manager.CreateCookieImporters();
-            CheckGetters(getters, true);
+            await CheckGetters(getters, true);
         }
         [TestMethod]
-        public void AvailableAllBrowserTest()
+        public async Task AvailableAllBrowserTest()
         {
-            var getters = CookieGetters.CreateInstances(true)
+            var getters = (await CookieGetters.CreateInstancesAsync(true))
                 .Where(getter => getter is IECookieGetter == false).ToArray();
-            CheckGetters(getters, true);
+            await CheckGetters(getters, true);
         }
         [TestMethod]
-        public void NotAvailableAllBrowserTest()
+        public async Task NotAvailableAllBrowserTest()
         {
-            var getters = CookieGetters.CreateInstances(false)
+            var getters = (await CookieGetters.CreateInstancesAsync(false))
                 .Where(getter => getter.IsAvailable == false).ToArray();
-            CheckGetters(getters, false);
+            await CheckGetters(getters, false);
         }
 
-        void CheckGetters(IEnumerable<ICookieImporter> getters, bool expectedIsAvailable)
+        async Task CheckGetters(IEnumerable<ICookieImporter> getters, bool expectedIsAvailable)
         {
             foreach (var item in getters)
             {
                 var cookies = new CookieContainer();
                 var url = new Uri("http://nicovideo.jp/");
-                item.GetCookies(url, cookies);
+                await item.GetCookiesAsync(url, cookies);
                 if (expectedIsAvailable)
                 {
                     Assert.IsTrue(item.IsAvailable);

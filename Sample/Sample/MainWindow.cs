@@ -51,34 +51,30 @@ namespace Sample
 
         async void RefreshBrowseSelector()
         {
+            var selectedBrowserItem = cmbBxBrowserSelector.SelectedIndex >= 0
+                ? _browsers[cmbBxBrowserSelector.SelectedIndex] : null;
+            var importers = await CookieGetters.CreateInstancesAsync(!checkBoxShowAll.Checked);
+            var nicknames = Task.Factory.ContinueWhenAll(
+                importers.Select(item => item.IsAvailable ? GetUserName(item) : Task.FromResult<string>(null)).ToArray(),
+                tsks => tsks.Select((tsk, idx) => new { Value = tsk.Result, Index = idx }));
+
             try
             {
+                //UI更新
                 await _semaph.WaitAsync();
-                var selectedBrowserItem = cmbBxBrowserSelector.SelectedIndex >= 0
-                    ? _browsers[cmbBxBrowserSelector.SelectedIndex] : null;
-                await Task.Run(() => _browsers = CookieGetters.CreateInstances(!checkBoxShowAll.Checked)
-                    .Select(getter => new BrowserSelectItem() { Getter = getter }).ToArray());
-
-                //ニックネーム取得
-                var nicknames = Task.Factory
-                    .ContinueWhenAll(_browsers.Select(item => item.Getter.IsAvailable ? GetUserName(item.Getter) : Task.FromResult<string>(null)).ToArray(),
-                    tsks => tsks.Select((tsk, idx) => new { Value = tsk.Result, Index = idx }));
+                _browsers = importers.Select(getter => new BrowserSelectItem() { Getter = getter }).ToArray();
                 foreach (var nickname in await nicknames)
                     _browsers[nickname.Index].AccountName = nickname.Value;
-
-                //UI更新
                 cmbBxBrowserSelector.Items.Clear();
                 cmbBxBrowserSelector.Items.AddRange(_browsers.Select(item => item.DisplayName).ToArray());
                 var configs = _browsers.Select(item => item.Getter.Config).ToList();
+
                 //選択項目の設定
                 if (_inited)
                 {
                     //前回起動時の設定を復元
                     _inited = false;
-                    var currentGetter = CookieGetters.CreateInstance(new BrowserConfig(
-                        Sample.Properties.Settings.Default.BrowserName,
-                        Sample.Properties.Settings.Default.ProfileName,
-                        Sample.Properties.Settings.Default.CookiePath));
+                    var currentGetter = await CookieGetters.CreateInstanceAsync(Properties.Settings.Default.SelectedBrowserConfig);
                     if (currentGetter.Config.IsCustomized == false)
                         cmbBxBrowserSelector.SelectedIndex = configs.IndexOf(currentGetter.Config);
                     else
@@ -112,7 +108,7 @@ namespace Sample
                 var cookieGetter = browserItem.Getter;
                 var cookieContainer = new CookieContainer();
                 var targetUrl = new Uri("http://live.nicovideo.jp/");
-                cookieGetter.GetCookies(targetUrl, cookieContainer);
+                var result = await cookieGetter.GetCookiesAsync(targetUrl, cookieContainer);
                 var cookie = cookieContainer.GetCookies(targetUrl)["user_session"];
 
                 //UI更新
@@ -120,12 +116,12 @@ namespace Sample
                 txtCookiePath.Enabled = true;
                 btnOpenCookieFileDialog.Enabled = true;
                 txtUserSession.Text = cookie != null ? cookie.Value : null;
+                txtUserSession.Enabled = result == ImportResult.Success;
 
                 if(cmbBxBrowserSelector.SelectedIndex >= 0 && cmbBxBrowserSelector.SelectedIndex < _browsers.Length)
                 {
-                    Properties.Settings.Default.BrowserName = _browsers[cmbBxBrowserSelector.SelectedIndex].Getter.Config.BrowserName;
-                    Properties.Settings.Default.ProfileName = _browsers[cmbBxBrowserSelector.SelectedIndex].Getter.Config.ProfileName;
-                    Properties.Settings.Default.CookiePath = _browsers[cmbBxBrowserSelector.SelectedIndex].Getter.Config.CookiePath;
+                    Properties.Settings.Default.SelectedBrowserConfig =
+                        _browsers[cmbBxBrowserSelector.SelectedIndex].Getter.Config;
                     Properties.Settings.Default.Save();
                 }
             }
@@ -139,7 +135,7 @@ namespace Sample
                 var url = new Uri("http://www.nicovideo.jp/my/channel");
                 var container = new CookieContainer();
                 var client = new HttpClient(new HttpClientHandler() { CookieContainer = container });
-                cookieGetter.GetCookies(url, container);
+                await cookieGetter.GetCookiesAsync(url, container);
                 var res = await client.GetStringAsync(url);
 
                 if (string.IsNullOrEmpty(res))

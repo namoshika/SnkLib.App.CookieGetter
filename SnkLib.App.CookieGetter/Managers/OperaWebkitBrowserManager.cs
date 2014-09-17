@@ -7,7 +7,7 @@ namespace SunokoLibrary.Application.Browsers
     public class OperaWebkitBrowserManager : WebkitBrowserManager
     {
         public OperaWebkitBrowserManager()
-            : base(inf => new BlinkCookieGetter(inf), "Opera Webkit",
+            : base(conf => new BlinkCookieGetter(conf), "Opera Webkit",
             "%APPDATA%\\Opera Software\\Opera Stable", defaultFolder: string.Empty) { }
     }
 }

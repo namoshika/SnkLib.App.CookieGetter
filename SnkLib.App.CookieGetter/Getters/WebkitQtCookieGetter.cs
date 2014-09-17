@@ -2,34 +2,43 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SunokoLibrary.Application.Browsers
 {
     public class WebkitQtCookieGetter : CookieGetterBase
     {
-        public WebkitQtCookieGetter(BrowserConfig option) : base(option, PathType.File) { }
-        public override bool GetCookies(Uri targetUrl, CookieContainer container)
+        public WebkitQtCookieGetter(BrowserConfig config) : base(config, PathType.File) { }
+        public override ICookieImporter Generate(BrowserConfig config)
+        { return new WebkitQtCookieGetter(config); }
+        protected override async Task<ImportResult> ProtectedGetCookiesAsync(Uri targetUrl, CookieContainer container)
         {
             if (IsAvailable == false)
-                return false;
+                return ImportResult.Unavailable;
             try
             {
-                var res = false;
+                var res = ImportResult.ConvertError;
                 using (var sr = new System.IO.StreamReader(Config.CookiePath))
                     while (!sr.EndOfStream)
                     {
-                        var line = sr.ReadLine();
+                        var line = await sr.ReadLineAsync();
                         if (line.StartsWith("cookies="))
                             container.Add(ParseCookieSettings(line));
-                        res = true;
+                        res = ImportResult.Success;
                     }
                 return res;
             }
+            catch (System.IO.IOException ex)
+            {
+                TraceFail(this, "読み込みでエラーが発生しました。", ex.ToString());
+                return ImportResult.AccessError;
+            }
             catch (Exception ex)
-            { throw new CookieImportException("Webkitのクッキー取得でエラーが発生しました。", ex); }
+            {
+                TraceFail(this, "読み込みでエラーが発生しました。", ex.ToString());
+                return ImportResult.ConvertError;
+            }
         }
-        public override ICookieImporter Generate(BrowserConfig config)
-        { return new WebkitQtCookieGetter(config); }
 
         CookieCollection ParseCookieSettings(string line)
         {

@@ -11,7 +11,7 @@ namespace SunokoLibrary.Application.Browsers
     public class CoolNovoBrowserManager : WebkitBrowserManager
     {
         public CoolNovoBrowserManager()
-            : base(inf => new BlinkCookieGetter(inf), "CoolNovo")
+            : base(conf => new BlinkCookieGetter(conf), "CoolNovo")
         {
             string folder = null;
             try

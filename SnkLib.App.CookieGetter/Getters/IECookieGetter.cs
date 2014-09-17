@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
-using System.Text;
 using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace SunokoLibrary.Application.Browsers
 {
@@ -13,61 +14,71 @@ namespace SunokoLibrary.Application.Browsers
     /// </summary>
     public class IECookieGetter : CookieGetterBase
     {
-        public IECookieGetter(BrowserConfig option) : base(option, PathType.Directory) { }
+        public IECookieGetter(BrowserConfig config) : base(config, PathType.Directory) { }
         public override bool IsAvailable { get { return true; } }
-        public override bool GetCookies(Uri targetUrl, System.Net.CookieContainer container)
-        {
-            string lpszCookieData;
-            var hResult = Win32Api.GetCookiesFromIE(out lpszCookieData, targetUrl, null);
-            Debug.WriteLineIf(lpszCookieData == null, "InternetGetCookie error code: " + hResult);
-
-            if (lpszCookieData != null)
-            {
-                Debug.WriteLine(lpszCookieData);
-                var cookies = new CookieCollection();
-                foreach (var item in ParseCookies(lpszCookieData, targetUrl))
-                    cookies.Add(item);
-                container.Add(cookies);
-                return true;
-            }
-            else
-                return false;
-        }
         public override ICookieImporter Generate(BrowserConfig config)
         { return new IECookieGetter(config); }
+        protected override async Task<ImportResult> ProtectedGetCookiesAsync(Uri targetUrl, System.Net.CookieContainer container)
+        {
+            string cookiesText;
+            var hResult = Win32Api.GetCookiesFromIE(out cookiesText, targetUrl, null);
+            Debug.Assert(cookiesText != null, "InternetGetCookie error code: " + hResult);
+
+            if (cookiesText == null)
+                return ImportResult.AccessError;
+            try
+            {
+                await Task.Yield();
+                var cookies = new CookieCollection();
+                foreach (var item in ParseCookies(cookiesText, targetUrl))
+                    cookies.Add(item);
+                container.Add(cookies);
+                return ImportResult.Success;
+            }
+            catch (CookieImportException ex)
+            {
+                TraceFail(this, "Cookie読み込みに失敗。", ex.ToString());
+                return ex.Result;
+            }
+        }
 
         /// <summary>
         /// 渡されたcookieヘッダーをcookieに変換する。CookieContainer.SetCookies()は不都合が生じる。
         /// </summary>
-        protected List<Cookie> ParseCookies(string cookieHeader, Uri url)
+        /// <exception cref="CookieImportException" />
+        protected virtual IEnumerable<Cookie> ParseCookies(string cookieHeader, Uri url)
         {
-            var cookies = new List<Cookie>();
-            if (string.IsNullOrEmpty(cookieHeader) == false)
-            {
-                Debug.WriteLine(cookieHeader);
-                var cookieDatas = cookieHeader.ToString().Split(';');
-                foreach (var data in cookieDatas)
-                {
-                    var cookie = new Cookie();
-                    var chunks = data.ToString().Split('=');
-                    if (2 > chunks.Length)
-                        continue;
-                    try
-                    {
-                        cookie.Name = chunks[0].Trim();
-                        cookie.Value = chunks[1].Trim();
-                        cookie.Domain = url.Host;
-                        cookie.Path = url.Segments[0];    // このほうがいいきがする 2011-11-19
-                        //cookie.Path = url.AbsolutePath;
-                        cookie.Expires = DateTime.Now.AddDays(30);    // 有効期限適当付与 2013-07-03
-                        cookies.Add(cookie);
-                    }
-                    catch (System.Net.CookieException e)
-                    { Debug.WriteLine(e.Message); }
-                }
-            }
+            if (string.IsNullOrEmpty(cookieHeader))
+                yield break;
 
-            return cookies;
+            var cookiesText = cookieHeader.Split(';');
+            foreach (var data in cookiesText)
+            {
+                var cookie = new Cookie();
+                var chunks = data.ToString().Split('=');
+                if (2 > chunks.Length)
+                {
+                    TraceFail(this, "IEクッキーの解析に失敗。", string.Format("cookieHeader: {0}\r\nurl: {1}", cookieHeader, url));
+                    throw new CookieImportException("IEクッキーの解析に失敗。", ImportResult.ConvertError);
+                }
+                var name = chunks[0].Trim();
+                var value = chunks[1].Trim();
+                if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(value))
+                {
+                    TraceFail(this, "IEクッキーの解析に失敗。", string.Format("cookieHeader: {0}\r\nurl: {1}", cookieHeader, url));
+                    throw new CookieImportException("IEクッキーの解析に失敗。", ImportResult.ConvertError);
+                }
+
+                cookie.Name = name;
+                cookie.Value = value;
+                cookie.Domain = url.Host;
+                //cookie.Path = url.AbsolutePath;
+                //このほうがいいきがする 2011-11-19
+                cookie.Path = url.Segments[0];
+                //有効期限適当付与 2013-07-03
+                cookie.Expires = DateTime.Now.AddDays(30);
+                yield return cookie;
+            }
         }
     }
 }

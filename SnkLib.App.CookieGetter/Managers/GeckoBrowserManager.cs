@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SunokoLibrary.Application.Browsers
 {
@@ -24,7 +25,7 @@ namespace SunokoLibrary.Application.Browsers
         protected string IniFileName;
         protected string CookieFileName;
 
-        public ICookieImporter[] CreateCookieImporters()
+        public IEnumerable<ICookieImporter> CreateCookieImporters()
         {
             var getters = UserProfile.GetProfiles(DataFolder, IniFileName)
                 .Select(prof => new BrowserConfig(Name, prof.Name, Path.Combine(prof.Path, CookieFileName)))

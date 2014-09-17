@@ -7,7 +7,7 @@ namespace SunokoLibrary.Application.Browsers
     public class Sleipnir3WekitBrowserManager : WebkitBrowserManager
     {
         public Sleipnir3WekitBrowserManager()
-            : base(inf => new BlinkCookieGetter(inf),
+            : base(conf => new BlinkCookieGetter(conf),
             "Sleipnir3 Wekit", "%APPDATA%\\Fenrir Inc\\Sleipnir\\setting\\modules\\ChromiumViewer") { }
     }
 }

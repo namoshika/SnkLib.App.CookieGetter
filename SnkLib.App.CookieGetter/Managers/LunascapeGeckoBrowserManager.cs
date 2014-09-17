@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.IO;
 using System.Text;
 
 namespace SunokoLibrary.Application.Browsers
@@ -12,11 +12,11 @@ namespace SunokoLibrary.Application.Browsers
         const string LUNASCAPE_PLUGIN_FOLDER6 = "%APPDATA%\\Lunascape\\Lunascape6\\plugins";
         const string COOKIEPATH = "data\\cookies.sqlite";
 
-        public ICookieImporter[] CreateCookieImporters()
+        public IEnumerable<ICookieImporter> CreateCookieImporters()
         {
             var path = SearchCookieDirectory();
             var status = new BrowserConfig("Lunascape Gecko", "Default", path);
-            return new[] { new GeckoCookieGetter(status) };
+            return new ICookieImporter[] { new GeckoCookieGetter(status) };
         }
         /// <summary>
         /// Lunascape6のプラグインフォルダからFirefoxのクッキーが保存されているパスを検索する

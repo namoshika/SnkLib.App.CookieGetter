@@ -38,6 +38,7 @@
     <Reference Include="System.Data.SQLite">
       <HintPath>..\lib\SystemDataSQLite10811\NET4\System.Data.SQLite.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -55,7 +56,6 @@
     <Compile Include="Getters\IECookieGetter.cs" />
     <Compile Include="Getters\IEPMCookieGetter.cs" />
     <Compile Include="Getters\SqlCookieGetter.cs" />
-    <Compile Include="Getters\WebkitCookieGetter.cs" />
     <Compile Include="Getters\WebkitQtCookieGetter.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="IProxyService.cs" />

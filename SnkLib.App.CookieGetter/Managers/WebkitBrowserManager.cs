@@ -27,11 +27,8 @@ namespace SunokoLibrary.Application.Browsers
         protected string DefaultFolderName;
         protected string ProfileFolderStarts;
 
-        public ICookieImporter[] CreateCookieImporters()
-        {
-            return GetDefaultProfiles(_getterGenerator)
-                .Concat(GetProfiles(_getterGenerator)).ToArray();
-        }
+        public IEnumerable<ICookieImporter> CreateCookieImporters()
+        { return GetDefaultProfiles(_getterGenerator).Concat(GetProfiles(_getterGenerator)); }
         /// <summary>
         /// ユーザのデフォルト環境設定を用いたICookieImporter生成。
         /// </summary>

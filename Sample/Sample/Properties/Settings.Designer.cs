@@ -22,41 +22,5 @@ namespace Sample.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string BrowserName {
-            get {
-                return ((string)(this["BrowserName"]));
-            }
-            set {
-                this["BrowserName"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ProfileName {
-            get {
-                return ((string)(this["ProfileName"]));
-            }
-            set {
-                this["ProfileName"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string CookiePath {
-            get {
-                return ((string)(this["CookiePath"]));
-            }
-            set {
-                this["CookiePath"] = value;
-            }
-        }
     }
 }

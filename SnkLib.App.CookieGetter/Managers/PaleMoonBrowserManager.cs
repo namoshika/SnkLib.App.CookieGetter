@@ -7,6 +7,6 @@ namespace SunokoLibrary.Application.Browsers
     public class PaleMoonBrowserManager : GeckoBrowserManager
     {
         public PaleMoonBrowserManager()
-            : base(inf => new GeckoCookieGetter(inf), "PaleMoon", "%APPDATA%\\Moonchild Productions\\Pale Moon") { }
+            : base(conf => new GeckoCookieGetter(conf), "PaleMoon", "%APPDATA%\\Moonchild Productions\\Pale Moon") { }
     }
 }

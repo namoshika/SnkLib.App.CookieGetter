@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.IO;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SunokoLibrary.Application.Browsers
 {
@@ -25,17 +26,34 @@ namespace SunokoLibrary.Application.Browsers
                     ? false : System.IO.Directory.Exists(Config.CookiePath);
             }
         }
-        public override bool GetCookies(Uri targetUrl, CookieContainer container)
+        public override ICookieImporter Generate(BrowserConfig config)
+        { return new IEFindCacheCookieGetter(config); }
+        protected override async Task<ImportResult> ProtectedGetCookiesAsync(Uri targetUrl, CookieContainer container)
         {
             if (IsAvailable == false)
-                return false;
+                return ImportResult.Unavailable;
 
-            //関係のあるファイルだけ調べることによってパフォーマンスを向上させる
-            var cookies = Directory.EnumerateFiles(Config.CookiePath, "*.txt")
-                .Select(filePath => ReadAllTextIfHasSendableCookie(filePath, targetUrl))
-                .Where(data => string.IsNullOrEmpty(data) == false)
-                .SelectMany(data => ParseCookies(data))
-                .ToList();
+            await Task.Yield();
+            List<Cookie> cookies;
+            try
+            {
+                //関係のあるファイルだけ調べることによってパフォーマンスを向上させる
+                cookies = Directory.EnumerateFiles(Config.CookiePath, "*.txt")
+                    .Select(filePath => ReadAllTextIfHasSendableCookie(filePath, targetUrl))
+                    .Where(data => string.IsNullOrEmpty(data) == false)
+                    .SelectMany(data => ParseCookies(data))
+                    .ToList();
+            }
+            catch (CookieImportException ex)
+            {
+                TraceFail(this, "Cookie読み込みに失敗。", ex.ToString());
+                return ex.Result;
+            }
+            catch (IOException ex)
+            {
+                TraceFail(this, "Cookie読み込みに失敗。", ex.ToString());
+                return ImportResult.AccessError;
+            }
 
             //クッキーを有効期限で昇順に並び替えて、Expiresが最新のもので上書きされるようにする
             cookies.Sort((a, b) =>
@@ -46,16 +64,16 @@ namespace SunokoLibrary.Application.Browsers
 
             foreach (var cookie in cookies)
                 container.Add(cookie);
-            return true;
+            return ImportResult.Success;
         }
-        public override ICookieImporter Generate(BrowserConfig config)
-        { return new IEFindCacheCookieGetter(config); }
         /// <summary>
         /// IEのCookieテキストからCookieを取得する
         /// </summary>
-        static IEnumerable<Cookie> ParseCookies(string cacheText)
+        /// <exception cref="CookieImporterException" />
+        IEnumerable<Cookie> ParseCookies(string cacheCookiesText)
         {
-            var blocks = cacheText.Split('*');
+            var cookies = new List<Cookie>();
+            var blocks = cacheCookiesText.Split(new string[] { "*\r\n" }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var block in blocks)
             {
                 var lines = block.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
@@ -75,18 +93,17 @@ namespace SunokoLibrary.Application.Browsers
                     cookie.Domain = domain;
 
                     // 有効期限を取得する
-                    long uexp = 0, lexp = 0;
-                    if (long.TryParse(lines[4], out lexp) && long.TryParse(lines[5], out uexp))
-                        try
-                        {
-                            long ticks = ((long)uexp << 32) + lexp;
-                            cookie.Expires = DateTime.FromFileTimeUtc(ticks);
-                        }
-                        catch (ArgumentOutOfRangeException ex)
-                        { throw new CookieImportException("IEクッキーの解析に失敗しました。", ex); }
-                    yield return cookie;
+                    long uexp, lexp;
+                    if (long.TryParse(lines[5], out uexp) == false || long.TryParse(lines[4], out lexp) == false)
+                        throw new CookieImportException("キャッシュCookieの解析に失敗しました。", ImportResult.ConvertError);
+                    var ticks = ((long)uexp << 32) + lexp;
+                    cookie.Expires = DateTime.FromFileTimeUtc(ticks);
+                    cookies.Add(cookie);
                 }
+                else
+                    throw new CookieImportException("キャッシュCookieの解析に失敗しました。", ImportResult.ConvertError);
             }
+            return cookies;
         }
         /// <summary>
         /// IEのCookieファイルを読み込む。この時、引数sendingTargetへ送信できるCookieが含まれるファイルのみ読み込む。
@@ -94,6 +111,8 @@ namespace SunokoLibrary.Application.Browsers
         /// <param name="cacheFilePath">Cookieファイル</param>
         /// <param name="sendingTarget">通信したいURL</param>
         /// <returns>Cookieファイル本文。</returns>
+        /// <exception cref="CookieImporterException" />
+        /// <exception cref="OutOfMemoryException" />
         static string ReadAllTextIfHasSendableCookie(string cacheFilePath, Uri sendingTarget)
         {
             Exception ex = null;
@@ -119,10 +138,10 @@ namespace SunokoLibrary.Application.Browsers
                         return null;
                 }
             }
+            catch (OutOfMemoryException) { throw; }
             catch (IOException e) { ex = e; }
-            catch (OutOfMemoryException e) { ex = e; }
             catch (System.Security.SecurityException e) { ex = e; }
-            throw new CookieImportException("IEクッキーの参照に失敗しました。", ex);
+            throw new CookieImportException("キャッシュCookieの読み込みに失敗。", ImportResult.AccessError, ex);
         }
     }
 }

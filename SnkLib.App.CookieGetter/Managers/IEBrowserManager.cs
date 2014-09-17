@@ -10,7 +10,7 @@ namespace SunokoLibrary.Application.Browsers
     /// </summary>
     public class IEBrowserManager : ICookieImporterFactory
     {
-        public ICookieImporter[] CreateCookieImporters()
+        public IEnumerable<ICookieImporter> CreateCookieImporters()
         {
             var cookieFolder = Environment.GetFolderPath(Environment.SpecialFolder.Cookies);
             return new[]{

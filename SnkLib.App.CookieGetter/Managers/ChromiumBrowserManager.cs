@@ -7,6 +7,6 @@ namespace SunokoLibrary.Application.Browsers
     public class ChromiumBrowserManager : WebkitBrowserManager
     {
         public ChromiumBrowserManager()
-            : base(inf => new BlinkCookieGetter(inf), "Chromium", "%LOCALAPPDATA%\\Chromium\\User Data\\") { }
+            : base(conf => new BlinkCookieGetter(conf), "Chromium", "%LOCALAPPDATA%\\Chromium\\User Data\\") { }
     }
 }
