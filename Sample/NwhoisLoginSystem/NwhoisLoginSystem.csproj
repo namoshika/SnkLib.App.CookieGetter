@@ -114,7 +114,7 @@
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CookieGetterSharp\CookieGetterSharp.csproj">
+    <ProjectReference Include="..\..\CookieGetterSharp\CookieGetterSharp.csproj">
       <Project>{ACB84F0E-B482-46B0-8C29-1FAC6C85D622}</Project>
       <Name>CookieGetterSharp</Name>
     </ProjectReference>
