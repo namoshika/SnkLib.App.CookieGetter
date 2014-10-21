@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SunokoLibrary.Application.Browsers
 {
-    public class TungstenBrowserManager : WebkitBrowserManager
+    public class TungstenBrowserManager : BlinkBrowserManager
     {
         public TungstenBrowserManager()
             : base(conf => new BlinkCookieGetter(conf), "TungstenBlink", "%APPDATA%\\Tungsten\\profile") { }

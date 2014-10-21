@@ -8,7 +8,7 @@ using Microsoft.Win32;
 
 namespace SunokoLibrary.Application.Browsers
 {
-    public class CoolNovoBrowserManager : WebkitBrowserManager
+    public class CoolNovoBrowserManager : BlinkBrowserManager
     {
         public CoolNovoBrowserManager()
             : base(conf => new BlinkCookieGetter(conf), "CoolNovo")

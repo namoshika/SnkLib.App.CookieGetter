@@ -30,7 +30,7 @@ namespace Sample
             {
                 case "SelectedIndex":
                     var cookieContainer = new CookieContainer();
-                    var currentGetter = await nicoSessionComboBox1.Selector.GetSelectedImporter();
+                    var currentGetter = await nicoSessionComboBox1.Selector.GetSelectedImporterAsync();
                     var result = await currentGetter.GetCookiesAsync(TargetUrl, cookieContainer);
                     var cookie = cookieContainer.GetCookies(TargetUrl)["user_session"];
 
@@ -53,7 +53,7 @@ namespace Sample
         void btnReload_Click(object sender, EventArgs e)
         { var tsk = nicoSessionComboBox1.Selector.UpdateAsync(); }
         void btnOpenCookieFileDialog_Click(object sender, EventArgs e)
-        { nicoSessionComboBox1.ShowCookieDialogAsync(); }
+        { var tsk = nicoSessionComboBox1.ShowCookieDialogAsync(); }
         void checkBoxShowAll_CheckedChanged(object sender, EventArgs e)
         { nicoSessionComboBox1.IsAllBrowserMode = checkBoxShowAll.Checked; }
     }

@@ -8,8 +8,15 @@ using System.Threading.Tasks;
 
 namespace SunokoLibrary.Application
 {
+    /// <summary>
+    /// ブラウザ選択UI用ViewModel。CookieGettersとUIの間を取り持ち、UI側の状態遷移を保持します。
+    /// </summary>
     public class BrowserSelector : INotifyPropertyChanged
     {
+        /// <summary>
+        /// 内容を指定してインスタンスを生成
+        /// </summary>
+        /// <param name="itemGenerator">Cookie取得用インスタンスからUI上でのブラウザ選択項目を生成します。</param>
         public BrowserSelector(Func<ICookieImporter, BrowserItem> itemGenerator)
         {
             _itemGenerator = itemGenerator;
@@ -73,20 +80,20 @@ namespace SunokoLibrary.Application
             try
             {
                 //設定復元用に選択中のブラウザを取得。
-                currentGetter = await GetSelectedImporter();
+                currentGetter = await GetSelectedImporterAsync();
                 currentConfig = currentGetter != null ? currentGetter.Config : null;
                 //Items更新
                 await _updateSyncer.WaitAsync();
                 _addedCustom = false;
                 IsUpdating = true;
                 Items.Clear();
-                var browserItems = await Task.Factory.ContinueWhenAll((await CookieGetters.CreateInstancesAsync(!IsAllBrowserMode)).Select(async getter =>
+                var browserItems = await Task.Factory.ContinueWhenAll((await CookieGetters.GetInstancesAsync(!IsAllBrowserMode)).Select(async getter =>
                     {
                         BrowserItem item;
                         try
                         {
                             item = _itemGenerator(getter);
-                            await item.Initialize();
+                            await item.InitializeAsync();
                             return item;
                         }
                         catch (Exception e)
@@ -115,7 +122,7 @@ namespace SunokoLibrary.Application
         /// <summary>
         /// 選択中のブラウザのICookieImporterを取得します。
         /// </summary>
-        public async Task<ICookieImporter> GetSelectedImporter()
+        public async Task<ICookieImporter> GetSelectedImporterAsync()
         {
             try
             {
@@ -127,6 +134,11 @@ namespace SunokoLibrary.Application
             finally
             { _updateSyncer.Release(); }
         }
+        /// <summary>
+        /// 任意のブラウザ構成を設定します。カスタム設定の構成も設定可能です。
+        /// </summary>
+        /// <param name="config">ブラウザの構成設定</param>
+        /// <returns></returns>
         public async Task SetConfigAsync(BrowserConfig config)
         {
             try
@@ -137,7 +149,7 @@ namespace SunokoLibrary.Application
                 //引数configが使えるGetterを取得する。無い場合は適当なのを見繕う
                 //取得したGetterのItems内での場所を検索する。
                 //idxがどのItemsも指定していない場合はカスタム設定を生成
-                var getter = await CookieGetters.CreateInstanceAsync(config);
+                var getter = await CookieGetters.GetInstanceAsync(config);
                 var idx = Items.Select(item => item.Getter.Config).TakeWhile(conf => conf != getter.Config).Count();
                 if (idx == Items.Count)
                 {
@@ -145,7 +157,7 @@ namespace SunokoLibrary.Application
                     try
                     {
                         customItem = _itemGenerator(getter);
-                        await customItem.Initialize();
+                        await customItem.InitializeAsync();
                     }
                     catch (Exception e)
                     {
@@ -175,8 +187,15 @@ namespace SunokoLibrary.Application
         protected virtual void OnPropertyChanged([CallerMemberName]string memberName = null)
         { PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(memberName)); }
     }
+    /// <summary>
+    /// ブラウザ選択UIにおける各ブラウザ項目用ViewModel。任意のICookieImporterを持ち、UI上での項目表示を保持します。
+    /// </summary>
     public abstract class BrowserItem : INotifyPropertyChanged
     {
+        /// <summary>
+        /// 内容を指定してインスタンスを生成
+        /// </summary>
+        /// <param name="getter">任意のCookie取得用インスタンス</param>
         public BrowserItem(ICookieImporter getter)
         {
             Getter = getter;
@@ -186,7 +205,13 @@ namespace SunokoLibrary.Application
         bool _isCustomized;
         string _browserName;
 
+        /// <summary>
+        /// Cookie取得用インスタンスを取得します。
+        /// </summary>
         public ICookieImporter Getter { get; private set; }
+        /// <summary>
+        /// 既存の項目に設定変更を行って生成した項目かどうかを取得します。
+        /// </summary>
         public bool IsCustomized
         {
             get { return _isCustomized; }
@@ -196,6 +221,9 @@ namespace SunokoLibrary.Application
                 OnPropertyChanged();
             }
         }
+        /// <summary>
+        /// ブラウザの名前を取得します。
+        /// </summary>
         public string BrowserName
         {
             get { return _browserName; }
@@ -205,8 +233,14 @@ namespace SunokoLibrary.Application
                 OnPropertyChanged();
             }
         }
+        /// <summary>
+        /// 画面上で表示される文字列を取得します。
+        /// </summary>
         public abstract string DisplayText { get; protected set; }
-        public abstract Task Initialize();
+        /// <summary>
+        /// 初期化を行う際に呼び出されます。呼び出す必要はありません。オーバーライドして使用してください。
+        /// </summary>
+        public abstract Task InitializeAsync();
 
         public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
         protected virtual void OnPropertyChanged([CallerMemberName]string memberName = null)

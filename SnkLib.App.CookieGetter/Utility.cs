@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.IO;
@@ -34,6 +35,40 @@ namespace SunokoLibrary.Application
     }
     static class Win32Api
     {
+        /// <summary>
+        /// CryptUnprotectDataで暗号化されたデータを復号化する。
+        /// </summary>
+        /// <param name="cipher">暗号化されたデータ</param>
+        /// <returns>復号化されたデータ</returns>
+        public static byte[] DecryptProtectedData(byte[] cipher)
+        {
+            //リソース確保
+            Win32Api.DATA_BLOB input;
+            input.pbData = Marshal.AllocHGlobal(cipher.Length);
+            input.cbData = (uint)cipher.Length;
+            Marshal.Copy(cipher, 0, input.pbData, cipher.Length);
+            var output = new Win32Api.DATA_BLOB();
+            var dammy = new Win32Api.DATA_BLOB();
+
+            //復号化
+            bool isSucc;
+            isSucc = Win32Api.CryptUnprotectData(ref input, null, ref dammy, IntPtr.Zero, IntPtr.Zero, 0, ref output);
+            Debug.Assert(isSucc, "CryptUnprotectData error: データ復号に失敗。");
+            if (isSucc == false)
+                return null;
+
+            //リソース解放
+            var decryptedBytes = new byte[output.cbData];
+            Marshal.Copy(output.pbData, decryptedBytes, 0, (int)output.cbData);
+            //output解放
+            isSucc = Win32Api.LocalFree(output.pbData) == IntPtr.Zero;
+            Debug.Assert(isSucc, "CryptUnprotectData error: データ復号後のoutputリソース解放に失敗。");
+            //input解放
+            isSucc = Win32Api.LocalFree(input.pbData) == IntPtr.Zero;
+            Debug.Assert(isSucc, "CryptUnprotectData error: データ復号後のinputリソース解放に失敗。");
+
+            return decryptedBytes;
+        }
         /// <summary>
         /// 保護モードIEからCookieを取得する
         /// </summary>
@@ -138,14 +173,14 @@ namespace SunokoLibrary.Application
         static extern int IEGetProtectedModeCookie(string lpszURL, string lpszCookieName, StringBuilder pszCookieData, ref int pcchCookieData, uint dwFlags);
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct DATA_BLOB
+        struct DATA_BLOB
         {
             public uint cbData;
             public IntPtr pbData;
         }
         [DllImport("Crypt32.dll", CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Unicode)]
-        public static extern bool CryptUnprotectData(ref DATA_BLOB pDataIn, string ppszDataDescr, ref  DATA_BLOB pOptionalEntropy, IntPtr pvReserved, IntPtr pPromptStruct, uint dwFlags, [In, Out]ref DATA_BLOB pDataOut);
+        static extern bool CryptUnprotectData(ref DATA_BLOB pDataIn, string ppszDataDescr, ref  DATA_BLOB pOptionalEntropy, IntPtr pvReserved, IntPtr pPromptStruct, uint dwFlags, [In, Out]ref DATA_BLOB pDataOut);
         [DllImport("Kernel32.dll")]
-        public static extern IntPtr LocalFree(IntPtr hMem);
+        static extern IntPtr LocalFree(IntPtr hMem);
     }
 }

@@ -17,69 +17,69 @@ namespace UnitTest
         public async Task GoogleChromeTest()
         {
             var manager = new GoogleChromeBrowserManager();
-            var getters = manager.CreateCookieImporters();
+            var getters = manager.GetCookieImporters();
             await CheckGetters(getters, true);
         }
         [TestMethod]
         public async Task InternetExplorerTest()
         {
             var manager = new IEBrowserManager();
-            var getters = manager.CreateCookieImporters();
+            var getters = manager.GetCookieImporters();
             await CheckGetters(getters.OfType<IECookieGetter>(), true);
         }
         [TestMethod]
         public async Task InternetExplorerTest_ProtectedMode()
         {
             var manager = new IEBrowserManager();
-            var getters = manager.CreateCookieImporters();
+            var getters = manager.GetCookieImporters();
             await CheckGetters(getters.OfType<IEPMCookieGetter>(), true);
         }
         [TestMethod]
         public async Task FirefoxTest()
         {
             var manager = new FirefoxBrowserManager();
-            var getters = manager.CreateCookieImporters();
+            var getters = manager.GetCookieImporters();
             await CheckGetters(getters, true);
         }
         [TestMethod]
         public async Task Sleipnir5BlinkTest()
         {
             var manager = new Sleipnir5BlinkBrowserManager();
-            var getters = manager.CreateCookieImporters();
+            var getters = manager.GetCookieImporters();
             await CheckGetters(getters, true);
         }
         [TestMethod]
         public async Task Lunascape6GeckoTest()
         {
             var manager = new LunascapeGeckoBrowserManager();
-            var getters = manager.CreateCookieImporters();
+            var getters = manager.GetCookieImporters();
             await CheckGetters(getters, true);
         }
         [TestMethod]
         public async Task Lunascape6WebkitTest()
         {
             var manager = new LunascapeWebkitBrowserManager();
-            var getters = manager.CreateCookieImporters();
+            var getters = manager.GetCookieImporters();
             await CheckGetters(getters, true);
         }
         [TestMethod]
         public async Task OperaWebkitBlinkTest()
         {
             var manager = new OperaWebkitBrowserManager();
-            var getters = manager.CreateCookieImporters();
+            var getters = manager.GetCookieImporters();
             await CheckGetters(getters, true);
         }
         [TestMethod]
         public async Task AvailableAllBrowserTest()
         {
-            var getters = (await CookieGetters.CreateInstancesAsync(true))
+            var getters = (await CookieGetters.GetInstancesAsync(true))
                 .Where(getter => getter is IECookieGetter == false).ToArray();
             await CheckGetters(getters, true);
         }
         [TestMethod]
         public async Task NotAvailableAllBrowserTest()
         {
-            var getters = (await CookieGetters.CreateInstancesAsync(false))
+            var getters = (await CookieGetters.GetInstancesAsync(false))
                 .Where(getter => getter.IsAvailable == false).ToArray();
             await CheckGetters(getters, false);
         }

@@ -25,7 +25,7 @@ namespace Hal.CookieGetterSharp
             try
             {
 #pragma warning disable 0618 //Obsolete属性の警告を無効化"
-                return _factory.CreateCookieImporters()
+                return _factory.GetCookieImporters()
                     .Select(importer => new CookieGetter(importer, this))
                     .ToArray();
 #pragma warning restore 0618

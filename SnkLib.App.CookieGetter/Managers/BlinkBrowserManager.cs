@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace SunokoLibrary.Application.Browsers
 {
-    public class WebkitBrowserManager : ICookieImporterFactory
+    public class BlinkBrowserManager : ICookieImporterFactory
     {
-        public WebkitBrowserManager(Func<BrowserConfig, ICookieImporter> getterGenerator,
+        public BlinkBrowserManager(Func<BrowserConfig, ICookieImporter> getterGenerator,
             string name = null, string dataFolder = null, string cookieFileName = "Cookies",
             string defaultFolder = "Default", string profileFolderStarts = "Profile")
         {
@@ -27,7 +27,7 @@ namespace SunokoLibrary.Application.Browsers
         protected string DefaultFolderName;
         protected string ProfileFolderStarts;
 
-        public IEnumerable<ICookieImporter> CreateCookieImporters()
+        public IEnumerable<ICookieImporter> GetCookieImporters()
         { return GetDefaultProfiles(_getterGenerator).Concat(GetProfiles(_getterGenerator)); }
         /// <summary>
         /// ユーザのデフォルト環境設定を用いたICookieImporter生成。

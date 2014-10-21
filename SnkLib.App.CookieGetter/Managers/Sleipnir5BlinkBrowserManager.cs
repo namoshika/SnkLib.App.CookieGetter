@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SunokoLibrary.Application.Browsers
 {
-    public class Sleipnir5BlinkBrowserManager : WebkitBrowserManager
+    public class Sleipnir5BlinkBrowserManager : BlinkBrowserManager
     {
         public Sleipnir5BlinkBrowserManager()
             : base(conf => new BlinkCookieGetter(conf),

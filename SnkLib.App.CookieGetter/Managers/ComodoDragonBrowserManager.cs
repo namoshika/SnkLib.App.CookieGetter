@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SunokoLibrary.Application.Browsers
 {
-    public class ComodoDragonBrowserManager : WebkitBrowserManager
+    public class ComodoDragonBrowserManager : BlinkBrowserManager
     {
         public ComodoDragonBrowserManager()
             : base(conf => new BlinkCookieGetter(conf), "ComodoDragon", "%LOCALAPPDATA%\\Comodo\\Dragon\\User Data") { }

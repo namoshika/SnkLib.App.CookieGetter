@@ -62,7 +62,7 @@ namespace SunokoLibrary.Windows.Forms
 
         public async Task ShowCookieDialogAsync()
         {
-            var currentGetter = await Selector.GetSelectedImporter();
+            var currentGetter = await Selector.GetSelectedImporterAsync();
             var currentCookiePath = currentGetter.Config.CookiePath;
             BrowserConfig newConfig = null;
             DialogResult res;

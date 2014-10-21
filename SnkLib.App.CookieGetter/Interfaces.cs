@@ -14,13 +14,16 @@ namespace SunokoLibrary.Application
     /// </summary>
     public interface ICookieImporter
     {
+        /// <summary>
+        /// Cookieを取得するブラウザに関する情報を取得する。
+        /// </summary>
         BrowserConfig Config { get; }
         /// <summary>
-        /// Cookie保存の形態を取得する
+        /// Cookie保存の形態を取得する。
         /// </summary>
         PathType CookiePathType { get; }
         /// <summary>
-        /// 利用可能かどうかを取得する
+        /// 利用可能かどうかを取得する。
         /// </summary>
         bool IsAvailable { get; }
         /// <summary>
@@ -31,10 +34,13 @@ namespace SunokoLibrary.Application
         /// <returns>処理の成功不成功</returns>
         Task<ImportResult> GetCookiesAsync(Uri targetUrl, CookieContainer container);
         /// <summary>
-        /// 自身と設定の異なるICookieImporterを生成する
+        /// 自身と設定の異なるICookieImporterを生成する。
         /// </summary>
         ICookieImporter Generate(BrowserConfig config);
     }
+    /// <summary>
+    /// パス指定対象の種類を定義します。
+    /// </summary>
     public enum PathType { File, Directory }
     /// <summary>
     /// Cookie取得の実行結果を定義します。
@@ -59,14 +65,13 @@ namespace SunokoLibrary.Application
     public interface ICookieImporterFactory
     {
         /// <summary>
-        /// 利用可能なすべてのCookieGetterを取得します
+        /// 利用可能なすべてのICookieImporterを取得します。
         /// </summary>
-        /// <returns></returns>
-        IEnumerable<ICookieImporter> CreateCookieImporters();
+        IEnumerable<ICookieImporter> GetCookieImporters();
     }
 
     /// <summary>
-    /// クッキー取得に関する例外
+    /// クッキー取得に関する例外。
     /// </summary>
     [Serializable]
     public class CookieImportException : Exception

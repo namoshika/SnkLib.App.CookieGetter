@@ -11,7 +11,7 @@ namespace SunokoLibrary.Application.Browsers
         const string LUNASCAPE_PLUGIN_FOLDER = "%APPDATA%\\Lunascape\\Lunascape6\\plugins";
         const string COOKIEPATH = "data\\cookies.ini";
 
-        public IEnumerable<ICookieImporter> CreateCookieImporters()
+        public IEnumerable<ICookieImporter> GetCookieImporters()
         {
             var path = SearchCookieDirectory();
             var option = new BrowserConfig("Lunascape Webkit", "Default", path);

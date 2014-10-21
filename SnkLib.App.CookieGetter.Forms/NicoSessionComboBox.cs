@@ -39,7 +39,7 @@ namespace SunokoLibrary.Windows.Forms
                     OnPropertyChanged();
                 }
             }
-            public async override Task Initialize()
+            public async override Task InitializeAsync()
             {
                 AccountName = await GetUserName(Getter);
                 DisplayText = (Getter.Config.IsCustomized ? "カスタム設定 " : string.Empty) + Getter.Config.BrowserName

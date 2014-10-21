@@ -12,7 +12,7 @@ namespace SunokoLibrary.Application.Browsers
         const string LUNASCAPE_PLUGIN_FOLDER6 = "%APPDATA%\\Lunascape\\Lunascape6\\plugins";
         const string COOKIEPATH = "data\\cookies.sqlite";
 
-        public IEnumerable<ICookieImporter> CreateCookieImporters()
+        public IEnumerable<ICookieImporter> GetCookieImporters()
         {
             var path = SearchCookieDirectory();
             var status = new BrowserConfig("Lunascape Gecko", "Default", path);

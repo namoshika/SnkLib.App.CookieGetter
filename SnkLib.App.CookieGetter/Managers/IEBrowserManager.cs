@@ -10,27 +10,27 @@ namespace SunokoLibrary.Application.Browsers
     /// </summary>
     public class IEBrowserManager : ICookieImporterFactory
     {
-        public IEnumerable<ICookieImporter> CreateCookieImporters()
+        public IEnumerable<ICookieImporter> GetCookieImporters()
         {
             var cookieFolder = Environment.GetFolderPath(Environment.SpecialFolder.Cookies);
             return new[]{
-                CreateIECookieGetter(),
-                CreateIEPMCookieGetter(),
-                CreateIEEPMCookieGetter(),
+                GetIECookieGetter(),
+                GetIEPMCookieGetter(),
+                GetIEEPMCookieGetter(),
             };
         }
-        public ICookieImporter CreateIECookieGetter()
+        public ICookieImporter GetIECookieGetter()
         {
             var cookieFolder = Environment.GetFolderPath(Environment.SpecialFolder.Cookies);
             return new IECookieGetter(new BrowserConfig("IE Normal", "Default", cookieFolder));
         }
-        public ICookieImporter CreateIEPMCookieGetter()
+        public ICookieImporter GetIEPMCookieGetter()
         {
             var cookieFolder = System.IO.Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.Cookies), "low");
             return new IEPMCookieGetter(new BrowserConfig("IE Protected", "Default", cookieFolder));
         }
-        public ICookieImporter CreateIEEPMCookieGetter()
+        public ICookieImporter GetIEEPMCookieGetter()
         {
             var cookieFolder = Utility.ReplacePathSymbols(
                 @"%LOCALAPPDATA%\Packages\windows_ie_ac_001\AC\INetCookies");

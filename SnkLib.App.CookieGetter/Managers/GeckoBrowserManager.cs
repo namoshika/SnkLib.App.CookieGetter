@@ -25,7 +25,7 @@ namespace SunokoLibrary.Application.Browsers
         protected string IniFileName;
         protected string CookieFileName;
 
-        public IEnumerable<ICookieImporter> CreateCookieImporters()
+        public IEnumerable<ICookieImporter> GetCookieImporters()
         {
             var getters = UserProfile.GetProfiles(DataFolder, IniFileName)
                 .Select(prof => new BrowserConfig(Name, prof.Name, Path.Combine(prof.Path, CookieFileName)))

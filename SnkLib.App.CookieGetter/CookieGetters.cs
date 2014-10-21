@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -10,13 +10,13 @@ namespace SunokoLibrary.Application
     using SunokoLibrary.Application.Browsers;
     
     /// <summary>
-    /// 使用可能なCookieGetterを提供します。
+    /// 使用可能なICookieImporterを提供します。
     /// </summary>
     public static class CookieGetters
     {
         static CookieGetters()
         {
-            BrowserManagers = new List<ICookieImporterFactory>(new ICookieImporterFactory[] {
+            BrowserManagers = new ConcurrentQueue<ICookieImporterFactory>(new ICookieImporterFactory[] {
                 new IEBrowserManager(),
                 new FirefoxBrowserManager(),
                 new PaleMoonBrowserManager(),
@@ -37,27 +37,27 @@ namespace SunokoLibrary.Application
         }
         
         /// <summary>
-        /// 登録されているCookieGetterのリスト
+        /// 対応するブラウザのリスト
         /// </summary>
-        public static List<ICookieImporterFactory> BrowserManagers { get; private set; }
+        public static ConcurrentQueue<ICookieImporterFactory> BrowserManagers { get; private set; }
         /// <summary>
-        /// すべてのクッキーゲッターを取得する
+        /// Cookie取得用インスタンスのリストを取得する
         /// </summary>
         /// <param name="availableOnly">利用可能なものだけを選択するかどうか</param>
-        public static Task<ICookieImporter[]> CreateInstancesAsync(bool availableOnly)
+        public static Task<ICookieImporter[]> GetInstancesAsync(bool availableOnly)
         {
             return Task.Run(() => BrowserManagers
-                .SelectMany(item => item.CreateCookieImporters())
+                .SelectMany(item => item.GetCookieImporters())
                 .Where(item => item.IsAvailable || !availableOnly).ToArray());
         }
         /// <summary>
-        /// 設定値復元用。直前まで使用していたCookieGetterのConfigを保存しておいたりすると起動時に最適な既定値を選んでくれる。
+        /// 設定値を復元したCookie取得用インスタンスを取得する。直前まで使用していたICookieImporterのConfigを保存しておいたりすると起動時に最適な既定値を選んでくれる。
         /// </summary>
         /// <param name="targetConfig">任意のブラウザ環境設定</param>
         /// <param name="allowDefault">生成不可の場合に既定のCookieImporterを返すか</param>
-        public static async Task<ICookieImporter> CreateInstanceAsync(BrowserConfig targetConfig, bool allowDefault = true)
+        public static async Task<ICookieImporter> GetInstanceAsync(BrowserConfig targetConfig, bool allowDefault = true)
         {
-            var getterList = await CreateInstancesAsync(false);
+            var getterList = await GetInstancesAsync(false);
             ICookieImporter foundGetter = null;
             if (targetConfig != null
                 && string.IsNullOrEmpty(targetConfig.BrowserName) == false
