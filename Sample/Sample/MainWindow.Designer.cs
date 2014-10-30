@@ -29,7 +29,7 @@
         {
             this.checkBoxShowAll = new System.Windows.Forms.CheckBox();
             this.gbBrowser = new System.Windows.Forms.GroupBox();
-            this.cmbBxBrowserSelector = new System.Windows.Forms.ComboBox();
+            this.nicoSessionComboBox1 = new SunokoLibrary.Windows.Forms.NicoSessionComboBox();
             this.btnReload = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.btnOpenCookieFileDialog = new System.Windows.Forms.Button();
@@ -37,8 +37,6 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.txtUserSession = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.gbBrowser.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -52,11 +50,12 @@
             this.checkBoxShowAll.TabIndex = 8;
             this.checkBoxShowAll.Text = "すべてのブラウザを表示する";
             this.checkBoxShowAll.UseVisualStyleBackColor = true;
+            this.checkBoxShowAll.CheckedChanged += new System.EventHandler(this.checkBoxShowAll_CheckedChanged);
             // 
             // gbBrowser
             // 
+            this.gbBrowser.Controls.Add(this.nicoSessionComboBox1);
             this.gbBrowser.Controls.Add(this.checkBoxShowAll);
-            this.gbBrowser.Controls.Add(this.cmbBxBrowserSelector);
             this.gbBrowser.Controls.Add(this.btnReload);
             this.gbBrowser.Controls.Add(this.label3);
             this.gbBrowser.Controls.Add(this.btnOpenCookieFileDialog);
@@ -68,16 +67,17 @@
             this.gbBrowser.TabStop = false;
             this.gbBrowser.Text = "ブラウザ";
             // 
-            // cmbBxBrowserSelector
+            // nicoSessionComboBox1
             // 
-            this.cmbBxBrowserSelector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbBxBrowserSelector.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbBxBrowserSelector.FormattingEnabled = true;
-            this.cmbBxBrowserSelector.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.cmbBxBrowserSelector.Location = new System.Drawing.Point(6, 41);
-            this.cmbBxBrowserSelector.Name = "cmbBxBrowserSelector";
-            this.cmbBxBrowserSelector.Size = new System.Drawing.Size(247, 20);
-            this.cmbBxBrowserSelector.TabIndex = 0;
+            this.nicoSessionComboBox1.DisplayMember = "DisplayText";
+            this.nicoSessionComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.nicoSessionComboBox1.Enabled = false;
+            this.nicoSessionComboBox1.FormattingEnabled = true;
+            this.nicoSessionComboBox1.IsAllBrowserMode = false;
+            this.nicoSessionComboBox1.Location = new System.Drawing.Point(6, 42);
+            this.nicoSessionComboBox1.Name = "nicoSessionComboBox1";
+            this.nicoSessionComboBox1.Size = new System.Drawing.Size(247, 20);
+            this.nicoSessionComboBox1.TabIndex = 9;
             // 
             // btnReload
             // 
@@ -87,6 +87,7 @@
             this.btnReload.TabIndex = 1;
             this.btnReload.Text = "更新";
             this.btnReload.UseVisualStyleBackColor = true;
+            this.btnReload.Click += new System.EventHandler(this.btnReload_Click);
             // 
             // label3
             // 
@@ -144,25 +145,15 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "ユーザーセッション";
             // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            this.openFileDialog1.Title = "クッキーが保存されているファイルを指定してください。";
-            // 
-            // folderBrowserDialog1
-            // 
-            this.folderBrowserDialog1.Description = "クッキーが保存されているフォルダを指定してください。";
-            this.folderBrowserDialog1.ShowNewFolderButton = false;
-            // 
-            // Form1
+            // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(347, 216);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.gbBrowser);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "MainWindow";
+            this.Text = "CookieGetter Demo";
             this.gbBrowser.ResumeLayout(false);
             this.gbBrowser.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -175,7 +166,6 @@
 
         private System.Windows.Forms.CheckBox checkBoxShowAll;
         private System.Windows.Forms.GroupBox gbBrowser;
-        private System.Windows.Forms.ComboBox cmbBxBrowserSelector;
         private System.Windows.Forms.Button btnReload;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btnOpenCookieFileDialog;
@@ -183,8 +173,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox txtUserSession;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private SunokoLibrary.Windows.Forms.NicoSessionComboBox nicoSessionComboBox1;
 
     }
 }

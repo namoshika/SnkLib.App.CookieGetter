@@ -49,6 +49,8 @@ namespace SunokoLibrary.Application
         AccessError,
         /// <summary>データの解析に失敗。処理は中断されています。</summary>
         ConvertError,
+        /// <summary>処理に失敗。想定されていないエラーが発生しています。</summary>
+        UnknownError,
     }
     
     /// <summary>

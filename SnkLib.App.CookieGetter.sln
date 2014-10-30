@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample\Sam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NwhoisLoginSystem", "Sample\NwhoisLoginSystem\NwhoisLoginSystem.csproj", "{FAA80ADB-F755-4D64-9669-D251726FFD97}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkLib.App.CookieGetter.Forms", "SnkLib.App.CookieGetter.Forms\SnkLib.App.CookieGetter.Forms.csproj", "{21C104C4-9DDD-4449-B3CE-BD69068333DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +50,10 @@ Global
 		{FAA80ADB-F755-4D64-9669-D251726FFD97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FAA80ADB-F755-4D64-9669-D251726FFD97}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FAA80ADB-F755-4D64-9669-D251726FFD97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21C104C4-9DDD-4449-B3CE-BD69068333DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21C104C4-9DDD-4449-B3CE-BD69068333DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21C104C4-9DDD-4449-B3CE-BD69068333DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21C104C4-9DDD-4449-B3CE-BD69068333DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

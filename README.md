@@ -24,6 +24,7 @@ masterで本家との互換性を追究しつつ、Gecko, Webkit系のIBrowserMa
 * NwhoisLoginSystem: 本家に付いてるデモアプリ。
 * Sample: 新クラスに対応させたデモアプリ。
 * SnkLib.App.CookieGetter: 本体。
+* SnkLib.App.CookieGetter.Forms: ブラウザ選択UIなどの部品。
 * SnkLib.App.CookieGetter.x86Proxy: 本体が内部で使用する子プロセス。
 * UnitTests: 動作確認。
 
@@ -34,6 +35,8 @@ masterで本家との互換性を追究しつつ、Gecko, Webkit系のIBrowserMa
   * Win32, x64フォルダを中身ごと(必須)。
   * SnkLib.App.CookieGetter.dll.config(必須)。
   * SnkLib.App.CookieGetter.xml(オプション。あると幸せ)。
+* SnkLib.App.CookieGetter.Formsを参照に追加する  
+  (オプション。Windows Forms向けのUI部品が入っています。)。
 * CookieGetterSharp.dllを参照へ追加します(不要。本家流の時のみ必須)。
 
 以下の解説は新クラス流の使い方です。本家流の使い方は本家のページを読んでください。

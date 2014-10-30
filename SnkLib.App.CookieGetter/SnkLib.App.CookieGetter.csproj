@@ -41,7 +41,6 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -49,6 +48,7 @@
   <ItemGroup>
     <Compile Include="BrowserConfig.cs" />
     <Compile Include="CookieGetters.cs" />
+    <Compile Include="BrowserSelector.cs" />
     <Compile Include="Getters\IEFindCacheCookieGetter.cs" />
     <Compile Include="Getters\BlinkCookieGetter.cs" />
     <Compile Include="Getters\CookieGetterBase.cs" />
