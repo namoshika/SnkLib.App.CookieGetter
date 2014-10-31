@@ -34,15 +34,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Data.SQLite">
-      <HintPath>..\lib\SystemDataSQLite10811\NET4\System.Data.SQLite.dll</HintPath>
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.94.0\lib\net451\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -83,17 +84,10 @@
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\lib\systemdatasqlite10811\net4\win32\SQLite.Interop.dll">
-      <Link>Win32\SQLite.Interop.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="app.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\lib\systemdatasqlite10811\net4\x64\SQLite.Interop.dll">
-      <Link>x64\SQLite.Interop.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="packages.config" />
+    <None Include="SnkLib.App.CookieGetter.nuspec" />
+    <None Include="SnkLib.App.CookieGetter.targets" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\SnkLib.App.CookieGetter.x86Proxy\bin\Release\SnkLib.App.CookieGetter.x86Proxy.exe">
@@ -102,9 +96,16 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Getters\IEFindCacheCookieGetter.Memo.txt" />
+    <None Include="Getters\IEFindCacheCookieGetter.Memo.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.94.0\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.94.0\build\net451\System.Data.SQLite.Core.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>このプロジェクトは、このコンピューターにはない NuGet パッケージを参照しています。これらをダウンロードするには、NuGet パッケージの復元を有効にしてください。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。不足しているファイルは {0} です。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.94.0\build\net451\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.94.0\build\net451\System.Data.SQLite.Core.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

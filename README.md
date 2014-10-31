@@ -3,12 +3,10 @@
 ブラウザのCookieを.NETアプリで使えるようにするライブラリです。  
 <http://com.nicovideo.jp/community/co235502> で配布されているCookieGetterSharpを元に、互換性を維持した上での設計の改善を施したものです。
 
-オリジナルは炬燵犬さん作成のクッキー取得クラス [CookieGetter](http://homepage2.nifty.com/kotatuinu/contents/computer/program/CookieGetter/cookiegetter.html)、それを大幅に改造しライブラリにしたhalxxxxさん、うつろさんの[CookieGetterSharp](http://d.hatena.ne.jp/halxxxx/20091212/1260649353)が存在します。ライセンスはCookieGetterSharpのを継承させます。
+オリジナルとして炬燵犬さん作成のクッキー取得クラス [CookieGetter](http://homepage2.nifty.com/kotatuinu/contents/computer/program/CookieGetter/cookiegetter.html)、それを大幅に改造しライブラリにしたhalxxxxさん、うつろさんの[CookieGetterSharp](http://d.hatena.ne.jp/halxxxx/20091212/1260649353)が存在します。ライセンスはCookieGetterSharpのを恣意的な解釈で継承させます。
 
 ## ライセンス
-コードは自由にご利用ください。ですが悪用は厳禁です。  
-またこのライブラリを使用したことによっていかなる損害が発生しても責任は一切持ちません。  
-あと、C#の更なる発展のため、改造したソースは公開してください。  
+GNU Lesser GPL
 
 ##方針
 現在、以下のブランチの方針下にあります。
@@ -29,15 +27,11 @@ masterで本家との互換性を追究しつつ、Gecko, Webkit系のIBrowserMa
 * UnitTests: 動作確認。
 
 ##使い方
-* ライブラリを使用したいプロジェクトの参照にSnkLib.App.CookieGetter.dllを追加します(必須)。
-* ビルド結果のSnkLib.App.CookieGetter.dllと同階層には以下のファイル、フォルダも配置します。
-  * SnkLib.App.CookieGetter.x86Proxy.exe(必須)。
-  * Win32, x64フォルダを中身ごと(必須)。
-  * SnkLib.App.CookieGetter.dll.config(必須)。
-  * SnkLib.App.CookieGetter.xml(オプション。あると幸せ)。
-* SnkLib.App.CookieGetter.Formsを参照に追加する  
+使用したいプロジェクトへNuGetで以下のパッケージをインストールします。
+* [SnkLib.App.CookieGetter](https://www.nuget.org/packages/SnkLib.App.CookieGetter/)を追加する(必須)。
+* [SnkLib.App.CookieGetter.Forms](https://www.nuget.org/packages/SnkLib.App.CookieGetter.Forms/)を追加する  
   (オプション。Windows Forms向けのUI部品が入っています。)。
-* CookieGetterSharp.dllを参照へ追加します(不要。本家流の時のみ必須)。
+* [SnkLib.App.CookieGetter.Sharp](https://www.nuget.org/packages/SnkLib.App.CookieGetter.Sharp/)を追加する(不要。本家流の時のみ必須)。
 
 以下の解説は新クラス流の使い方です。本家流の使い方は本家のページを読んでください。
 

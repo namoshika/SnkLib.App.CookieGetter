@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // アセンブリに関する一般情報は以下の属性セットをとおして制御されます。 
 // アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更してください。
-[assembly: AssemblyTitle("CookieGetterSharp")]
-[assembly: AssemblyDescription("クッキーを取得するライブラリ")]
+[assembly: AssemblyTitle("SnkLib.App.CookieGetter.Sharp")]
+[assembly: AssemblyDescription("CookieGetterSharpと互換性を持たせるためのラッパー")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("halxxxx")]
-[assembly: AssemblyProduct("CookieGetterSharp.dll")]
-[assembly: AssemblyCopyright("Copyright (C)  2009-2013")]
+[assembly: AssemblyCompany("namoshika")]
+[assembly: AssemblyProduct("SnkLib.App.CookieGetter.Sharp")]
+[assembly: AssemblyCopyright("Copyright © 2014 namoshika")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 //
 // すべての値を指定するか、下のように '*' を使ってリビジョンおよびビルド番号を 
 // 既定値にすることができます:
-[assembly: AssemblyVersion("4.51.5.0")]
-[assembly: AssemblyFileVersion("4.51.5.0")]
+[assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

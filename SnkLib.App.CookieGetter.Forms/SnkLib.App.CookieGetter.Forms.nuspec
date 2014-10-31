@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>$id$</id>
+        <version>$version$</version>
+        <title>$title$</title>
+        <authors>$author$</authors>
+        <owners>$author$</owners>
+        <summary>$description$</summary>
+        <projectUrl>https://github.com/namoshika/SnkLib.App.CookieGetter</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>SnkLib.App.CookieGetterを使用し、ブラウザのCookieを取り込む際に使えるUI部品を提供します。</description>
+        <copyright>Copyright 2014 namoshika</copyright>
+        <tags>Browser Cookie Getter</tags>
+        <references>
+            <reference file="$id$.dll"/>
+        </references>
+    </metadata>
+</package>

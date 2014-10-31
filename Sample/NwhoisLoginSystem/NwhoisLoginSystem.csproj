@@ -33,6 +33,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>47c95eaa</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -81,8 +82,20 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CookieGetterSharp, Version=1.0.5420.2282, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\SnkLib.App.CookieGetter.Sharp.1.0.5420.2282\lib\net451\CookieGetterSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="SnkLib.App.CookieGetter, Version=1.0.5420.2282, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\SnkLib.App.CookieGetter.1.0.5420.2282\lib\net451\SnkLib.App.CookieGetter.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite, Version=1.0.94.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\System.Data.SQLite.Core.1.0.94.0\lib\net451\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -114,12 +127,6 @@
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CookieGetterSharp\CookieGetterSharp.csproj">
-      <Project>{ACB84F0E-B482-46B0-8C29-1FAC6C85D622}</Project>
-      <Name>CookieGetterSharp</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
@@ -137,9 +144,18 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>このプロジェクトは、このコンピューターにはない NuGet パッケージを参照しています。これらをダウンロードするには、NuGet パッケージの復元を有効にしてください。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。不足しているファイルは {0} です。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\System.Data.SQLite.Core.1.0.94.0\build\net451\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\System.Data.SQLite.Core.1.0.94.0\build\net451\System.Data.SQLite.Core.targets'))" />
+    <Error Condition="!Exists('..\..\packages\SnkLib.App.CookieGetter.1.0.5420.2282\build\net451\SnkLib.App.CookieGetter.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SnkLib.App.CookieGetter.1.0.5420.2282\build\net451\SnkLib.App.CookieGetter.targets'))" />
+  </Target>
+  <Import Project="..\..\packages\System.Data.SQLite.Core.1.0.94.0\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('..\..\packages\System.Data.SQLite.Core.1.0.94.0\build\net451\System.Data.SQLite.Core.targets')" />
+  <Import Project="..\..\packages\SnkLib.App.CookieGetter.1.0.5420.2282\build\net451\SnkLib.App.CookieGetter.targets" Condition="Exists('..\..\packages\SnkLib.App.CookieGetter.1.0.5420.2282\build\net451\SnkLib.App.CookieGetter.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

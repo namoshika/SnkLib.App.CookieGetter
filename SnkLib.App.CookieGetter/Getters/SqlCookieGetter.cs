@@ -68,20 +68,36 @@ namespace SunokoLibrary.Application.Browsers
 
                 var results = new List<object[]>();
                 await Task.Delay(5);
-                using (var sqlConnection = new SQLiteConnection(string.Format("Data Source={0}", temp)))
+                SQLiteConnection sqlConnection = null;
+                try
                 {
-                    await sqlConnection.OpenAsync();
+                    sqlConnection = new SQLiteConnection(string.Format("Data Source={0}", temp));
+                    sqlConnection.Open();
                     var command = sqlConnection.CreateCommand();
                     command.Connection = sqlConnection;
                     command.CommandText = query;
-                    using (var sdr = await command.ExecuteReaderAsync())
-                        while (await sdr.ReadAsync())
+                    SQLiteDataReader sdr = null;
+                    try
+                    {
+                        sdr = command.ExecuteReader();
+                        while (sdr.Read())
                         {
                             var items = new object[sdr.FieldCount];
                             for (int i = 0; i < sdr.FieldCount; i++)
                                 items[i] = sdr[i];
                             results.Add(items);
                         }
+                    }
+                    finally
+                    {
+                        if (sdr != null)
+                            sdr.Close();
+                    }
+                }
+                finally
+                {
+                    if (sqlConnection != null)
+                        sqlConnection.Close();
                 }
                 return results;
             }

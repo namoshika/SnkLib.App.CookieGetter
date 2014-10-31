@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package>
+    <metadata>
+        <id>$id$</id>
+        <version>$version$</version>
+        <title>$title$</title>
+        <authors>$author$</authors>
+        <owners>$author$</owners>
+        <description>$description$</description>
+        <projectUrl>https://github.com/namoshika/SnkLib.App.CookieGetter</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <copyright>Copyright 2014 namoshika</copyright>
+        <tags>Browser Cookie Getter</tags>
+        <references>
+            <reference file="$id$.dll" />
+        </references>
+    </metadata>
+    <files>
+        <file src="SnkLib.App.CookieGetter.targets" target="build\net451" />
+        <file src="bin\$configuration$\SnkLib.App.CookieGetter.x86Proxy.exe" target="build\net451" />
+    </files>
+</package>
