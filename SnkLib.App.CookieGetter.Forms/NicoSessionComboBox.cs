@@ -39,11 +39,13 @@ namespace SunokoLibrary.Windows.Forms
                     OnPropertyChanged();
                 }
             }
-            public async override Task InitializeAsync()
+            public async override void Initialize()
             {
+                var baseText = (Getter.Config.IsCustomized ? "カスタム設定 " : string.Empty) + Getter.Config.BrowserName;
+                DisplayText = string.Format("{0} (loading...)", baseText);
                 AccountName = await GetUserName(Getter);
-                DisplayText = (Getter.Config.IsCustomized ? "カスタム設定 " : string.Empty) + Getter.Config.BrowserName
-                    + (string.IsNullOrEmpty(AccountName) ? string.Empty : string.Format(" ({0})", AccountName));
+                DisplayText = string.IsNullOrEmpty(AccountName) == false
+                    ? string.Format("{0} ({1})", baseText, AccountName) : baseText;
             }
             static async Task<string> GetUserName(ICookieImporter cookieGetter)
             {

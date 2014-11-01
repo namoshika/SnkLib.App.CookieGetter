@@ -30,7 +30,7 @@ namespace Sample
             {
                 case "SelectedIndex":
                     var cookieContainer = new CookieContainer();
-                    var currentGetter = await nicoSessionComboBox1.Selector.GetSelectedImporterAsync();
+                    var currentGetter = nicoSessionComboBox1.Selector.SelectedImporter;
                     var result = await currentGetter.GetCookiesAsync(TargetUrl, cookieContainer);
                     var cookie = cookieContainer.GetCookies(TargetUrl)["user_session"];
 

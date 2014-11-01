@@ -24,7 +24,8 @@ namespace SunokoLibrary.Application
             _isAllBrowserMode = false;
             Items = new ObservableCollection<BrowserItem>();
         }
-        System.Threading.SemaphoreSlim _updateSyncer = new System.Threading.SemaphoreSlim(1);
+        System.Threading.SemaphoreSlim _updateSem = new System.Threading.SemaphoreSlim(1);
+        object _updaterSyn = new object();
         bool _isUpdating, _isAllBrowserMode, _addedCustom;
         int _selectedIndex;
         Func<ICookieImporter, BrowserItem> _itemGenerator;
@@ -67,6 +68,21 @@ namespace SunokoLibrary.Application
             }
         }
         /// <summary>
+        /// 選択中のブラウザのICookieImporterを取得します。
+        /// </summary>
+        public ICookieImporter SelectedImporter
+        {
+            get
+            {
+                lock (_updaterSyn)
+                {
+                    var browserItem = SelectedIndex >= 0 && SelectedIndex < Items.Count ? Items[SelectedIndex] : null; ;
+                    var getter = browserItem != null ? browserItem.Getter : null;
+                    return getter;
+                }
+            }
+        }
+        /// <summary>
         /// 使用可能なブラウザを取得します。
         /// </summary>
         public ObservableCollection<BrowserItem> Items { get; private set; }
@@ -80,59 +96,47 @@ namespace SunokoLibrary.Application
             try
             {
                 //設定復元用に選択中のブラウザを取得。
-                currentGetter = await GetSelectedImporterAsync();
+                currentGetter = SelectedImporter;
                 currentConfig = currentGetter != null ? currentGetter.Config : null;
                 //Items更新
-                await _updateSyncer.WaitAsync();
+                await _updateSem.WaitAsync();
                 _addedCustom = false;
                 IsUpdating = true;
-                Items.Clear();
-                var browserItems = await Task.Factory.ContinueWhenAll((await CookieGetters.GetInstancesAsync(!IsAllBrowserMode)).Select(async getter =>
-                    {
-                        BrowserItem item;
-                        try
+                for (var i = Items.Count - 1; i >= 0; i--)
+                    Items.RemoveAt(i);
+                var browserItems = (await CookieGetters.GetInstancesAsync(!IsAllBrowserMode))
+                    .Select(getter =>
                         {
-                            item = _itemGenerator(getter);
-                            await item.InitializeAsync();
-                            return item;
-                        }
-                        catch (Exception e)
-                        {
-                            throw new CookieImportException(
-                                string.Format("{0}の生成に失敗しました。", typeof(BrowserItem).Name), ImportResult.UnknownError, e);
-                        }
-                    }).ToArray(), tsks => tsks.Select(tsk => tsk.Result));
-                foreach (var item in browserItems)
-                    Items.Add(item);
+                            try
+                            {
+                                var item = _itemGenerator(getter);
+                                item.Initialize();
+                                return item;
+                            }
+                            catch (Exception e)
+                            {
+                                throw new CookieImportException(
+                                    string.Format("{0}の生成に失敗しました。", typeof(BrowserItem).Name), ImportResult.UnknownError, e);
+                            }
+                        });
+                lock (_updaterSyn)
+                    foreach (var item in browserItems)
+                        Items.Add(item);
             }
             catch (CookieImportException e)
             {
-                Items.Clear();
+                for (var i = Items.Count - 1; i >= 0; i--)
+                    Items.RemoveAt(i);
                 System.Diagnostics.Trace.TraceInformation("選択中のブラウザの設定カスタマイズに失敗。", e);
             }
             finally
             {
                 IsUpdating = false;
-                _updateSyncer.Release();
+                _updateSem.Release();
             }
             //更新前に選択していた項目を再選択させる
             if (currentConfig != null)
                 await SetConfigAsync(currentConfig);
-        }
-        /// <summary>
-        /// 選択中のブラウザのICookieImporterを取得します。
-        /// </summary>
-        public async Task<ICookieImporter> GetSelectedImporterAsync()
-        {
-            try
-            {
-                await _updateSyncer.WaitAsync();
-                var browserItem = SelectedIndex >= 0 && SelectedIndex < Items.Count ? Items[SelectedIndex] : null; ;
-                var getter = browserItem != null ? browserItem.Getter : null;
-                return getter;
-            }
-            finally
-            { _updateSyncer.Release(); }
         }
         /// <summary>
         /// 任意のブラウザ構成を設定します。カスタム設定の構成も設定可能です。
@@ -143,43 +147,46 @@ namespace SunokoLibrary.Application
         {
             try
             {
-                await _updateSyncer.WaitAsync();
+                await _updateSem.WaitAsync();
                 IsUpdating = true;
 
                 //引数configが使えるGetterを取得する。無い場合は適当なのを見繕う
                 //取得したGetterのItems内での場所を検索する。
                 //idxがどのItemsも指定していない場合はカスタム設定を生成
                 var getter = await CookieGetters.GetInstanceAsync(config);
-                var idx = Items.Select(item => item.Getter.Config).TakeWhile(conf => conf != getter.Config).Count();
-                if (idx == Items.Count)
+                lock (_updaterSyn)
                 {
-                    BrowserItem customItem;
-                    try
+                    var idx = Items.Select(item => item.Getter.Config).TakeWhile(conf => conf != getter.Config).Count();
+                    if (idx == Items.Count)
                     {
-                        customItem = _itemGenerator(getter);
-                        await customItem.InitializeAsync();
+                        BrowserItem customItem;
+                        try
+                        {
+                            customItem = _itemGenerator(getter);
+                            customItem.Initialize();
+                        }
+                        catch (Exception e)
+                        {
+                            throw new CookieImportException(
+                                string.Format("{0}の生成に失敗しました。", typeof(BrowserItem).Name), ImportResult.UnknownError, e);
+                        }
+                        if (_addedCustom)
+                            Items[Items.Count - 1] = customItem;
+                        else
+                        {
+                            Items.Add(customItem);
+                            _addedCustom = true;
+                        }
                     }
-                    catch (Exception e)
-                    {
-                        throw new CookieImportException(
-                            string.Format("{0}の生成に失敗しました。", typeof(BrowserItem).Name), ImportResult.UnknownError, e);
-                    }
-                    if (_addedCustom)
-                        Items[Items.Count - 1] = customItem;
-                    else
-                    {
-                        Items.Add(customItem);
-                        _addedCustom = true;
-                    }
+                    SelectedIndex = idx;
                 }
-                SelectedIndex = idx;
             }
             catch (CookieImportException e)
             { System.Diagnostics.Trace.TraceInformation("選択中のブラウザの設定カスタマイズに失敗。", e); }
             finally
             {
                 IsUpdating = false;
-                _updateSyncer.Release();
+                _updateSem.Release();
             }
         }
 
@@ -240,7 +247,7 @@ namespace SunokoLibrary.Application
         /// <summary>
         /// 初期化を行う際に呼び出されます。呼び出す必要はありません。オーバーライドして使用してください。
         /// </summary>
-        public abstract Task InitializeAsync();
+        public abstract void Initialize();
 
         public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
         protected virtual void OnPropertyChanged([CallerMemberName]string memberName = null)

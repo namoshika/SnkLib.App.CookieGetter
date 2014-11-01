@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,13 +19,15 @@ namespace SunokoLibrary.Windows.Forms
         {
             IsAllBrowserMode = false;
             DropDownStyle = ComboBoxStyle.DropDownList;
-            DisplayMember = "DisplayText";
         }
         OpenFileDialog openFileDialog = new OpenFileDialog();
         FolderBrowserDialog openFolderDialog = new FolderBrowserDialog();
         BrowserSelector _selector;
         bool _isAllBrowserMode;
 
+        /// <summary>
+        /// ブラウザ選択のViewModelを取得、設定します。
+        /// </summary>
         [Browsable(false)]
         public BrowserSelector Selector
         {
@@ -48,7 +51,11 @@ namespace SunokoLibrary.Windows.Forms
                 }
             }
         }
-        [Category("動作"), Description("インストールされているブラウザーのみ表示するかどうかを示します。"), DefaultValue(true)]
+        /// <summary>
+        /// インストールされているブラウザーのみ表示するかどうかを取得、設定します。
+        /// </summary>
+        [Category("動作"), DefaultValue(true)]
+        [Description("インストールされているブラウザーのみ表示するかどうかを取得、設定します。")]
         public bool IsAllBrowserMode
         {
             get { return !DesignMode && _selector != null ? _selector.IsAllBrowserMode : _isAllBrowserMode; }
@@ -60,9 +67,12 @@ namespace SunokoLibrary.Windows.Forms
             }
         }
 
+        /// <summary>
+        /// 任意のCookieファイルを指定するためのファイル選択ダイアログを表示する。
+        /// </summary>
         public async Task ShowCookieDialogAsync()
         {
-            var currentGetter = await Selector.GetSelectedImporterAsync();
+            var currentGetter = Selector.SelectedImporter;
             var currentCookiePath = currentGetter.Config.CookiePath;
             BrowserConfig newConfig = null;
             DialogResult res;
@@ -121,6 +131,49 @@ namespace SunokoLibrary.Windows.Forms
             }
         }
         void _selector_Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        { DataSource = Selector.Items.ToArray(); }
+        {
+            switch(e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    for (var i = 0; i < e.NewItems.Count; i++)
+                    {
+                        var item = (BrowserItem)e.NewItems[i];
+                        Items.Insert(e.NewStartingIndex + i, item.DisplayText ?? string.Empty);
+                        item.PropertyChanged += item_PropertyChanged;
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    for (var i = 0; i < e.OldItems.Count; i++)
+                    {
+                        var item = (BrowserItem)e.OldItems[i];
+                        item.PropertyChanged -= item_PropertyChanged;
+                        Items.RemoveAt(e.OldStartingIndex + i);
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Replace:
+                    var oldItem = (BrowserItem)e.OldItems[0];
+                    var newItem = (BrowserItem)e.NewItems[0];
+                    oldItem.PropertyChanged -= item_PropertyChanged;
+                    newItem.PropertyChanged += item_PropertyChanged;
+                    Items[e.NewStartingIndex] = newItem.DisplayText ?? string.Empty;
+                    break;
+                case NotifyCollectionChangedAction.Move:
+                    var mvItem = (string)Items[e.NewStartingIndex];
+                    Items.RemoveAt(e.OldStartingIndex);
+                    Items.Insert(e.NewStartingIndex, mvItem);
+                    break;
+            }
+        }
+        void item_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch(e.PropertyName)
+            {
+                case "DisplayText":
+                    var item = (BrowserItem)sender;
+                    var idx = Selector.Items.IndexOf(item);
+                    Items[idx] = item.DisplayText;
+                    break;
+            }
+        }
     }
 }
