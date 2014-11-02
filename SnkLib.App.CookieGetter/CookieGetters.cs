@@ -18,21 +18,18 @@ namespace SunokoLibrary.Application
         {
             BrowserManagers = new ConcurrentQueue<ICookieImporterFactory>(new ICookieImporterFactory[] {
                 new IEBrowserManager(),
-                new FirefoxBrowserManager(),
-                new PaleMoonBrowserManager(),
-                new SeaMonkeyBrowserManager(),
                 new GoogleChromeBrowserManager(),
-                new ComodoDragonBrowserManager(),
-                new ComodoIceDragonBrowserManager(),
+                new FirefoxBrowserManager(),
                 new OperaWebkitBrowserManager(),
-                new LunascapeGeckoBrowserManager(),
-                new LunascapeWebkitBrowserManager(),
+                new ChromiumBrowserManager(),
                 new Sleipnir4BlinkBrowserManager(),
                 new Sleipnir5BlinkBrowserManager(),
-                new ChromiumBrowserManager(),
-                new CoolNovoBrowserManager(),
+                new LunascapeGeckoBrowserManager(),
+                new LunascapeWebkitBrowserManager(),
                 new MaxthonBrowserManager(),
-                new TungstenBrowserManager()
+                new TungstenBrowserManager(),
+                new SmartBlinkBrowserManager(),
+                new SmartGeckoBrowserManager(),
             });
         }
         
@@ -48,6 +45,8 @@ namespace SunokoLibrary.Application
         {
             return Task.Run(() => BrowserManagers
                 .SelectMany(item => item.GetCookieImporters())
+                .GroupBy(item => item.Config)
+                .Select(grp => grp.First())
                 .Where(item => item.IsAvailable || !availableOnly).ToArray());
         }
         /// <summary>

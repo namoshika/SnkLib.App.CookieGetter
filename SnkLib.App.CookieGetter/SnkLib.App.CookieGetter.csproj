@@ -61,9 +61,6 @@
     <Compile Include="Interfaces.cs" />
     <Compile Include="IProxyService.cs" />
     <Compile Include="Managers\ChromiumBrowserManager.cs" />
-    <Compile Include="Managers\ComodoDragonBrowserManager.cs" />
-    <Compile Include="Managers\ComodoIceDragonBrowserManager.cs" />
-    <Compile Include="Managers\CoolNovoBrowserManager.cs" />
     <Compile Include="Managers\FirefoxBrowserManager.cs" />
     <Compile Include="Managers\GeckoBrowserManager.cs" />
     <Compile Include="Managers\GoogleChromeBrowserManager.cs" />
@@ -72,12 +69,11 @@
     <Compile Include="Managers\LunascapeWebkitBrowserManager.cs" />
     <Compile Include="Managers\MaxthonBrowserManager.cs" />
     <Compile Include="Managers\OperaWebkitBrowserManager.cs" />
-    <Compile Include="Managers\PaleMoonBrowserManager.cs" />
-    <Compile Include="Managers\SeaMonkeyBrowserManager.cs" />
     <Compile Include="Managers\Sleipnir3GeckoBrowserManager.cs" />
     <Compile Include="Managers\Sleipnir3WekitBrowserManager.cs" />
     <Compile Include="Managers\Sleipnir4BlinkBrowserManager.cs" />
     <Compile Include="Managers\Sleipnir5BlinkBrowserManager.cs" />
+    <Compile Include="Managers\SmartBrowserManager.cs" />
     <Compile Include="Managers\TungstenBrowserManager.cs" />
     <Compile Include="Managers\BlinkBrowserManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

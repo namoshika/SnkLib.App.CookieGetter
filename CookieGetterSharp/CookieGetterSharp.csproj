@@ -83,6 +83,9 @@
     <Compile Include="CookieStatus.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Interfaces.cs" />
+    <Compile Include="Managers\CoolNovoBrowserManager.cs" />
+    <Compile Include="Managers\PaleMoonBrowserManager.cs" />
+    <Compile Include="Managers\SeaMonkeyBrowserManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SunokoLibrary.Application.Browsers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,12 +7,12 @@ using System.IO;
 using Microsoft.Win32;
 
 
-namespace SunokoLibrary.Application.Browsers
+namespace Hal.CookieGetterSharp
 {
-    public class CoolNovoBrowserManager : BlinkBrowserManager
+    class CoolNovoBrowserManager : BlinkBrowserManager
     {
         public CoolNovoBrowserManager()
-            : base(conf => new BlinkCookieGetter(conf), "CoolNovo")
+            : base("CoolNovo", null)
         {
             string folder = null;
             try

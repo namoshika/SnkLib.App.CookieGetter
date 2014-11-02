@@ -54,12 +54,18 @@ namespace SunokoLibrary.Application
         public BrowserConfig GenerateCopy(string name = null, string profileName = null, string cookiePath = null)
         { return new BrowserConfig(name ?? BrowserName, profileName ?? ProfileName, cookiePath ?? CookiePath, true); }
         public override int GetHashCode()
-        { return string.Format("{0}{1}{2}", BrowserName, ProfileName, CookiePath).GetHashCode(); }
+        { return CookiePath == null ? 0 : CookiePath.GetHashCode(); }
         public override bool Equals(object obj)
         {
             var target = obj as BrowserConfig;
-            return (object)target != null
-                ? (target.BrowserName == BrowserName && target.ProfileName == ProfileName && target.CookiePath == CookiePath) : false;
+            if ((object)target == null)
+                return false;
+            //CookiePathが一致していれば同一と見なす。
+            //しかし、null同士で一致していた場合は他の要素で確認する。
+            return
+                target.CookiePath != CookiePath ? false :
+                string.IsNullOrEmpty(CookiePath) && (target.BrowserName != BrowserName || target.ProfileName != ProfileName) ? false :
+                true;
         }
         public static bool operator ==(BrowserConfig valueA, BrowserConfig valueB)
         {

@@ -62,8 +62,8 @@ namespace Hal.CookieGetterSharp
                 new BrowserManager(BrowserType.PaleMoon, new PaleMoonBrowserManager()),
                 new BrowserManager(BrowserType.SeaMonkey, new SeaMonkeyBrowserManager()),
                 new BrowserManager(BrowserType.GoogleChrome, new GoogleChromeBrowserManager()),
-                new BrowserManager(BrowserType.ComodoDragon, new ComodoDragonBrowserManager()),
-                new BrowserManager(BrowserType.ComodoIceDragon, new ComodoIceDragonBrowserManager()),
+                new BrowserManager(BrowserType.ComodoDragon, new BlinkBrowserManager("ComodoDragon", "%LOCALAPPDATA%\\Comodo\\Dragon\\User Data")),
+                new BrowserManager(BrowserType.ComodoIceDragon, new GeckoBrowserManager("ComodoIceDragon", "%APPDATA%\\Comodo\\IceDragon")),
                 new BrowserManager(BrowserType.OperaWebkit, new OperaWebkitBrowserManager()),
                 new BrowserManager(BrowserType.LunascapeGecko, new LunascapeGeckoBrowserManager()),
                 new BrowserManager(BrowserType.LunascapeWebkit, new LunascapeWebkitBrowserManager()),
@@ -72,7 +72,7 @@ namespace Hal.CookieGetterSharp
                 new BrowserManager(BrowserType.Chromium, new ChromiumBrowserManager()),
                 new BrowserManager(BrowserType.CoolNovo, new CoolNovoBrowserManager()),
                 new BrowserManager(BrowserType.Maxthon, new MaxthonBrowserManager()),
-                new BrowserManager(BrowserType.TungstenBlink, new TungstenBrowserManager())
+                new BrowserManager(BrowserType.TungstenBlink, new TungstenBrowserManager()),
             };
         }
 

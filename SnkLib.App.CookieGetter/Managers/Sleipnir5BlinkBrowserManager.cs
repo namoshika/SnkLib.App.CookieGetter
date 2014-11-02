@@ -7,7 +7,6 @@ namespace SunokoLibrary.Application.Browsers
     public class Sleipnir5BlinkBrowserManager : BlinkBrowserManager
     {
         public Sleipnir5BlinkBrowserManager()
-            : base(conf => new BlinkCookieGetter(conf),
-            "Sleipnir5 Blink", "%APPDATA%\\Fenrir Inc\\Sleipnir5\\setting\\modules\\ChromiumViewer") { }
+            : base("Sleipnir5 Blink", "%APPDATA%\\Fenrir Inc\\Sleipnir5\\setting\\modules\\ChromiumViewer") { }
     }
 }

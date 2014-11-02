@@ -207,10 +207,11 @@ namespace SunokoLibrary.Application
         {
             Getter = getter;
             BrowserName = getter.Config.BrowserName;
+            ProfileName = getter.Config.ProfileName;
             IsCustomized = getter.Config.IsCustomized;
         }
         bool _isCustomized;
-        string _browserName;
+        string _browserName, _profileName;
 
         /// <summary>
         /// Cookie取得用インスタンスを取得します。
@@ -237,6 +238,18 @@ namespace SunokoLibrary.Application
             private set
             {
                 _browserName = value;
+                OnPropertyChanged();
+            }
+        }
+        /// <summary>
+        /// 識別名を取得します。
+        /// </summary>
+        public string ProfileName
+        {
+            get { return _profileName; }
+            private set
+            {
+                _profileName = value;
                 OnPropertyChanged();
             }
         }

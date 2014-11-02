@@ -6,7 +6,6 @@ namespace SunokoLibrary.Application.Browsers
 {
     public class FirefoxBrowserManager : GeckoBrowserManager
     {
-        public FirefoxBrowserManager()
-            : base(conf => new GeckoCookieGetter(conf), "Firefox", "%APPDATA%\\Mozilla\\Firefox") { }
+        public FirefoxBrowserManager() : base("Firefox", "%APPDATA%\\Mozilla\\Firefox") { }
     }
 }

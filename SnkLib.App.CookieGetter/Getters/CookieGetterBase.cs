@@ -23,7 +23,7 @@ namespace SunokoLibrary.Application.Browsers
         }
 
         public BrowserConfig Config { get; private set; }
-        public PathType CookiePathType{get;private set;}
+        public PathType CookiePathType { get; private set; }
         public virtual bool IsAvailable
         {
             get
@@ -40,6 +40,7 @@ namespace SunokoLibrary.Application.Browsers
             return Task.Run(() => ProtectedGetCookiesAsync(targetUrl, container));
         }
         public abstract ICookieImporter Generate(BrowserConfig config);
+
         protected abstract Task<ImportResult> ProtectedGetCookiesAsync(Uri targetUrl, CookieContainer container);
         protected static void TraceFail(ICookieImporter target, string message, string detailMessage)
         { Trace.Fail(string.Format("{0}のCookieの{1}", target.Config.BrowserName, message), detailMessage); }

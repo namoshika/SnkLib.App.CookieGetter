@@ -41,7 +41,10 @@ namespace SunokoLibrary.Windows.Forms
             }
             public async override void Initialize()
             {
-                var baseText = (Getter.Config.IsCustomized ? "カスタム設定 " : string.Empty) + Getter.Config.BrowserName;
+                var baseText = string.Format("{0}{1}{2}",
+                    Getter.Config.IsCustomized ? "カスタム設定 " : string.Empty,
+                    Getter.Config.BrowserName,
+                    Getter.Config.ProfileName.ToLowerInvariant() == "default" ? string.Empty : string.Format(" {0}", Getter.Config.ProfileName));
                 DisplayText = string.Format("{0} (loading...)", baseText);
                 AccountName = await GetUserName(Getter);
                 DisplayText = string.IsNullOrEmpty(AccountName) == false
