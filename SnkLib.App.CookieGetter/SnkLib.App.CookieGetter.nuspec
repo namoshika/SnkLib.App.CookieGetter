@@ -6,7 +6,8 @@
         <title>$title$</title>
         <authors>$author$</authors>
         <owners>$author$</owners>
-        <description>$description$</description>
+        <summary>$description$</summary>
+        <description>IEやChrome、Firefox、それらの派生ブラウザからCookieを取得し、.NETデスクトップアプリで扱うためのライブラリです。</description>
         <projectUrl>https://github.com/namoshika/SnkLib.App.CookieGetter</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <copyright>Copyright 2014 namoshika</copyright>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,31 +10,46 @@ namespace Hal.CookieGetterSharp
     using SunokoLibrary.Application;
     using SunokoLibrary.Application.Browsers;
 
-    public class CookieStatus
+    [Serializable]
+    public class CookieStatus : ISerializable
     {
 #pragma warning disable 0618 //Obsolete属性の警告を無効化"
-        public CookieStatus(CookieGetter owner, IBrowserManager manager)
+        internal CookieStatus(CookieGetter owner, IBrowserManager manager)
         {
             _owner = owner;
             BrowserType = manager.BrowserType;
         }
         CookieGetter _owner;
-        string _displayName;
+        string _name, _cookiePath, _displayName;
+        bool _isStandalone, _isAvailable;
+        PathType _pathType;
 
         public BrowserType BrowserType { get; private set; }
         public PathType PathType
-        { get { return (PathType)Enum.Parse(typeof(PathType), GetValue(() => _owner.Importer.CookiePathType).ToString()); } }
+        { get { return _isStandalone ? _pathType : (PathType)Enum.Parse(typeof(PathType), GetValue(() => _owner.Importer.CookiePathType).ToString()); } }
         public bool IsAvailable
-        { get { return GetValue(() => _owner.Importer.IsAvailable); } }
+        { get { return _isStandalone ? _isAvailable : GetValue(() => _owner.Importer.IsAvailable); } }
         public string Name
         {
-            get { return GetValue(() => _owner.Importer.Config.BrowserName); }
-            internal set { Refresh(value); }
+            get { return _isStandalone ? _name : GetValue(() => _owner.Importer.Config.BrowserName); }
+            internal set
+            {
+                if (_isStandalone)
+                    _name = value;
+                else
+                    Refresh(value);
+            }
         }
         public string CookiePath
         {
-            get { return GetValue(() => _owner.Importer.Config.CookiePath); }
-            set { Refresh(cookiePath: value); }
+            get { return _isStandalone ? _cookiePath : GetValue(() => _owner.Importer.Config.CookiePath); }
+            set
+            {
+                if (_isStandalone)
+                    _cookiePath = value;
+                else
+                    Refresh(cookiePath: value);
+            }
         }
         public string DisplayName
         {
@@ -44,7 +60,7 @@ namespace Hal.CookieGetterSharp
         TResult GetValue<TResult>(Func<TResult> getter)
         {
             try { return getter(); }
-            catch(CookieImportException e)
+            catch (CookieImportException e)
             { throw new CookieGetterException(e); }
         }
         void Refresh(string name = null, string profileName = null, string cookiePath = null)
@@ -54,7 +70,7 @@ namespace Hal.CookieGetterSharp
                 _owner.Importer = _owner.Importer.Generate(
                     _owner.Importer.Config.GenerateCopy(name, profileName, cookiePath));
             }
-            catch(CookieImportException e)
+            catch (CookieImportException e)
             { throw new CookieGetterException(e); }
         }
         public override bool Equals(object obj)
@@ -66,6 +82,25 @@ namespace Hal.CookieGetterSharp
         }
         public override int GetHashCode() { return (Name + CookiePath).GetHashCode(); }
         public override string ToString() { return this.DisplayName; }
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("BrowserType", BrowserType);
+            info.AddValue("PathType", PathType);
+            info.AddValue("IsAvailable", IsAvailable);
+            info.AddValue("Name", Name);
+            info.AddValue("CookiePath", CookiePath);
+            info.AddValue("DisplayName", DisplayName);
+        }
+        public CookieStatus(SerializationInfo info, StreamingContext context)
+        {
+            _isStandalone = true;
+            _pathType = (CookieGetterSharp.PathType)info.GetInt32("PathType");
+            _isAvailable = info.GetBoolean("IsAvailable");
+            _name = info.GetString("Name");
+            _cookiePath = info.GetString("CookiePath");
+            _displayName = info.GetString("DisplayName");
+            BrowserType = (BrowserType)info.GetInt32("BrowserType");
+        }
 #pragma warning restore 0618
     }
     public enum PathType { File, Directory }

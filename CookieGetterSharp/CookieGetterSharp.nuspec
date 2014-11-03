@@ -12,6 +12,9 @@
         <description>SnkLib.App.CookieGetterに対してCookieGetterSharpとの互換性を持たせます。</description>
         <copyright>Copyright 2014 namoshika</copyright>
         <tags>Browser Cookie Getter</tags>
+        <dependencies>
+            <dependency id="SnkLib.App.CookieGetter" version="1.0.5420.2282" />
+        </dependencies>
         <references>
             <reference file="$id$.dll"/>
         </references>

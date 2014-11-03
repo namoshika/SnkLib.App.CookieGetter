@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更してください。
 [assembly: AssemblyTitle("SnkLib.App.CookieGetter")]
-[assembly: AssemblyDescription("ブラウザのCookieをアプリから参照するライブラリ")]
+[assembly: AssemblyDescription("ブラウザのCookieをデスクトップアプリから参照するライブラリ")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("namoshika")]
 [assembly: AssemblyProduct("SnkLib.App.CookieGetter")]
