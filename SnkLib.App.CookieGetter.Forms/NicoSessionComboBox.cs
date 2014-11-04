@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace SunokoLibrary.Windows.Forms
 {
     using SunokoLibrary.Application;
+    using SunokoLibrary.Windows.ViewModels;
 
     /// <summary>
     /// ニコニコ動画アカウント一覧の表示用コンボボックス。

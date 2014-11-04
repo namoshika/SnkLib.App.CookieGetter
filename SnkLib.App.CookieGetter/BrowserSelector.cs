@@ -6,8 +6,10 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-namespace SunokoLibrary.Application
+namespace SunokoLibrary.Windows.ViewModels
 {
+    using SunokoLibrary.Application;
+
     /// <summary>
     /// ブラウザ選択UI用ViewModel。CookieGettersとUIの間を取り持ち、UI側の状態遷移を保持します。
     /// </summary>

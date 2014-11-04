@@ -8,6 +8,7 @@ using System.Windows.Forms;
 namespace SunokoLibrary.Windows.Forms
 {
     using SunokoLibrary.Application;
+    using SunokoLibrary.Windows.ViewModels;
 
     /// <summary>
     /// アカウント一覧の表示用コンボボックス。

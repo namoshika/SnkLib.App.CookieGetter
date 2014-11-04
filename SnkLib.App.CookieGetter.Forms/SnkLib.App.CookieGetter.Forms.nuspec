@@ -12,6 +12,9 @@
         <description>SnkLib.App.CookieGetterを使用し、ブラウザのCookieを取り込む際に使えるUI部品を提供します。</description>
         <copyright>Copyright 2014 namoshika</copyright>
         <tags>Browser Cookie Getter</tags>
+        <dependencies>
+            <dependency id="SnkLib.App.CookieGetter" version="1.1.0.0" />
+        </dependencies>
         <references>
             <reference file="$id$.dll"/>
         </references>
