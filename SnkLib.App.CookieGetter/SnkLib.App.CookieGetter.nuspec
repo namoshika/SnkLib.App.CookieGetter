@@ -17,7 +17,7 @@
         </references>
     </metadata>
     <files>
-        <file src="SnkLib.App.CookieGetter.targets" target="build\net451" />
-        <file src="bin\$configuration$\SnkLib.App.CookieGetter.x86Proxy.exe" target="build\net451" />
+        <file src="SnkLib.App.CookieGetter.targets" target="build\net45" />
+        <file src="bin\$configuration$\SnkLib.App.CookieGetter.x86Proxy.exe" target="build\net45" />
     </files>
 </package>

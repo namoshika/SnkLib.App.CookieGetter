@@ -19,7 +19,4 @@
             <reference file="$id$.dll"/>
         </references>
     </metadata>
-    <files>
-        <file src="bin\$configuration$\$id$.**" target="lib\net451" exclude="**\*.dll;**\*.xml;**\*.vshost.exe**;**\*.pdb"/>
-    </files>
 </package>
