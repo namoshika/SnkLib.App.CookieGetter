@@ -71,7 +71,7 @@ namespace SunokoLibrary.Application
         {
             if(object.ReferenceEquals(valueA, valueB))
                 return true;
-            if((object)valueA == null || (object)valueB == null)
+            if((object)valueA == null)
                 return false;
             return valueA.Equals(valueB);
         }

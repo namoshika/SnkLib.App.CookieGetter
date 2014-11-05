@@ -14,10 +14,10 @@ namespace Hal.CookieGetterSharp
     public class CookieStatus : ISerializable
     {
 #pragma warning disable 0618 //Obsolete属性の警告を無効化"
-        internal CookieStatus(CookieGetter owner, IBrowserManager manager)
+        internal CookieStatus(CookieGetter owner, BrowserType type)
         {
             _owner = owner;
-            BrowserType = manager.BrowserType;
+            BrowserType = type;
         }
         CookieGetter _owner;
         string _name, _cookiePath, _displayName;

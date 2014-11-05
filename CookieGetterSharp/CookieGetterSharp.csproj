@@ -75,7 +75,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BrowserManager.cs" />
     <Compile Include="ComboBoxBrowser.cs">
       <SubType>Component</SubType>
     </Compile>

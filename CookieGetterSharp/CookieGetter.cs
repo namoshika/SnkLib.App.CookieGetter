@@ -13,10 +13,10 @@ namespace Hal.CookieGetterSharp
     [Obsolete("SunokoLibrary.Application.CookieGettersを使用してください。")]
     public class CookieGetter : ICookieGetter
     {
-        public CookieGetter(ICookieImporter importer, IBrowserManager manager)
+        internal CookieGetter(ICookieImporter importer)
         {
             Importer = importer;
-            Status = new CookieStatus(this, manager);
+            Status = new CookieStatus(this, ConvertBrowserType(importer.Config.BrowserName));
         }
         internal ICookieImporter Importer { get; set; }
         public CookieStatus Status { get; private set; }
@@ -52,59 +52,54 @@ namespace Hal.CookieGetterSharp
         public override int GetHashCode()
         { return Status.GetHashCode(); }
 
-        public static Queue<Exception> Exceptions = new Queue<Exception>();
-        static IBrowserManager[] _browserManagers;
         static CookieGetter()
         {
-            _browserManagers = new IBrowserManager[]{
-                new BrowserManager(BrowserType.IE, new IEBrowserManager()),
-                new BrowserManager(BrowserType.Firefox, new FirefoxBrowserManager()),
-                new BrowserManager(BrowserType.PaleMoon, new PaleMoonBrowserManager()),
-                new BrowserManager(BrowserType.SeaMonkey, new SeaMonkeyBrowserManager()),
-                new BrowserManager(BrowserType.GoogleChrome, new GoogleChromeBrowserManager()),
-                new BrowserManager(BrowserType.ComodoDragon, new BlinkBrowserManager("ComodoDragon", "%LOCALAPPDATA%\\Comodo\\Dragon\\User Data")),
-                new BrowserManager(BrowserType.ComodoIceDragon, new GeckoBrowserManager("ComodoIceDragon", "%APPDATA%\\Comodo\\IceDragon")),
-                new BrowserManager(BrowserType.OperaWebkit, new OperaWebkitBrowserManager()),
-                new BrowserManager(BrowserType.LunascapeGecko, new LunascapeGeckoBrowserManager()),
-                new BrowserManager(BrowserType.LunascapeWebkit, new LunascapeWebkitBrowserManager()),
-                new BrowserManager(BrowserType.Sleipnir4Blink, new Sleipnir4BlinkBrowserManager()),
-                new BrowserManager(BrowserType.Sleipnir5Blink, new Sleipnir5BlinkBrowserManager()),
-                new BrowserManager(BrowserType.Chromium, new ChromiumBrowserManager()),
-                new BrowserManager(BrowserType.CoolNovo, new CoolNovoBrowserManager()),
-                new BrowserManager(BrowserType.Maxthon, new MaxthonBrowserManager()),
-                new BrowserManager(BrowserType.TungstenBlink, new TungstenBrowserManager()),
+            //対応させていないブラウザ、派生ブラウザとして省かれているブラウザを対応させる
+            CookieGetters.BrowserManagers.Enqueue(new PaleMoonBrowserManager());
+            CookieGetters.BrowserManagers.Enqueue(new SeaMonkeyBrowserManager());
+            CookieGetters.BrowserManagers.Enqueue(new CoolNovoBrowserManager());
+
+            //コア部分にはBrowserTypeが無いため、ブラウザ名とBrowserTypeの対応関係を
+            //定義してBrowserType値の生成に使うする。
+            _browserTypeDict = new Dictionary<string, BrowserType>() {
+                {"IE Normal",  BrowserType.IE},
+                {"IE Protected",  BrowserType.IESafemode},
+                {"IE Enhanced Protected",  BrowserType.IEEPMode},
+                {"Firefox",  BrowserType.Firefox},
+                {"PaleMoon", BrowserType.PaleMoon},
+                {"SeaMonkey", BrowserType.SeaMonkey},
+                {"GoogleChrome",  BrowserType.GoogleChrome},
+                {"IceDragon", BrowserType.ComodoIceDragon},
+                {"Dragon", BrowserType.ComodoDragon},
+                {"CoolNovo", BrowserType.CoolNovo},
+                {"Opera Webkit",  BrowserType.OperaWebkit},
+                {"Lunascape Gecko",  BrowserType.LunascapeGecko},
+                {"Lunascape Webkit",  BrowserType.LunascapeWebkit},
+                {"Sleipnir3 Gecko",  BrowserType.Sleipnir3Gecko},
+                {"Sleipnir3 Wekit",  BrowserType.Sleipnir3Webkit},
+                {"Sleipnir4 Blink",  BrowserType.Sleipnir4Blink},
+                {"Sleipnir5 Blink",  BrowserType.Sleipnir5Blink},
+                {"Chromium",  BrowserType.Chromium},
+                {"Maxthon webkit",  BrowserType.Maxthon},
+                {"TungstenBlink",  BrowserType.TungstenBlink},
             };
         }
+        public static Queue<Exception> Exceptions = new Queue<Exception>();
+        static int _browserTypeLen = Enum.GetNames(typeof(BrowserType)).Length;
+        static Dictionary<string, BrowserType> _browserTypeDict;
 
         public static ICookieGetter[] CreateInstances(bool availableOnly)
         {
-            var results = new List<ICookieGetter>();
-            foreach (var manager in _browserManagers)
-            {
-                if (availableOnly)
-                {
-                    foreach (var cg in manager.CreateCookieGetters())
-                    {
-                        if (cg.Status.IsAvailable)
-                        {
-                            results.Add(cg);
-                        }
-                    }
-                }
-                else
-                {
-                    results.AddRange(manager.CreateCookieGetters());
-                }
-            }
-
-            return results.ToArray();
+            var getters = CookieGetters.GetInstancesAsync(availableOnly)
+                .ContinueWith(tsk => tsk.Result.Select(getter => new CookieGetter(getter)))
+                .Result.ToArray();
+            return getters;
         }
         public static ICookieGetter CreateInstance(BrowserType type)
         {
-            foreach (var manager in _browserManagers)
-                if (manager.BrowserType == type)
-                    return manager.CreateDefaultCookieGetter();
-            return null;
+            return CreateInstances(false)
+                .Where(getter => getter.Status.BrowserType == type)
+                .FirstOrDefault();
         }
         public static ICookieGetter CreateInstance(CookieStatus status)
         {
@@ -114,6 +109,12 @@ namespace Hal.CookieGetterSharp
             cookieGetter.Status.DisplayName = status.DisplayName;
 
             return cookieGetter;
+        }
+        static BrowserType ConvertBrowserType(string browserName)
+        {
+            BrowserType res;
+            return _browserTypeDict.TryGetValue(browserName, out res)
+                ? res : _browserTypeDict[browserName] = (BrowserType)_browserTypeLen++;
         }
     }
 }
