@@ -15,11 +15,11 @@ namespace SunokoLibrary.Application.Browsers
     /// </summary>
     public class IEPMCookieGetter : IECookieGetter
     {
-        public IEPMCookieGetter(BrowserConfig config) : base(config) { }
+        public IEPMCookieGetter(BrowserConfig config, int primaryLevel) : base(config, primaryLevel) { }
 
         public override bool IsAvailable { get { return Win32Api.GetIEVersion().Major >= 8; } }
         public override ICookieImporter Generate(BrowserConfig config)
-        { return new IEPMCookieGetter(config); }
+        { return new IEPMCookieGetter(config, PrimaryLevel); }
         protected override async Task<ImportResult> ProtectedGetCookiesAsync(Uri targetUrl, CookieContainer container)
         {
             if (IsAvailable == false)

@@ -6,6 +6,6 @@ namespace SunokoLibrary.Application.Browsers
 {
     public class GoogleChromeBrowserManager : BlinkBrowserManager
     {
-        public GoogleChromeBrowserManager() : base("GoogleChrome", "%LOCALAPPDATA%\\Google\\Chrome\\User Data") { }
+        public GoogleChromeBrowserManager() : base("GoogleChrome", "%LOCALAPPDATA%\\Google\\Chrome\\User Data", 1) { }
     }
 }

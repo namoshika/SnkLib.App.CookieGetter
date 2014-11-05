@@ -16,7 +16,7 @@ namespace SunokoLibrary.Application.Browsers
                 path = null;
 
             BrowserConfig status = new BrowserConfig(name, "Default", path);
-            return new ICookieImporter[] { new BlinkCookieGetter(status) };
+            return new ICookieImporter[] { new BlinkCookieGetter(status, 2) };
         }
     }
 }

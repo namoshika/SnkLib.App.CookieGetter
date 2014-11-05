@@ -15,7 +15,7 @@ namespace SunokoLibrary.Application.Browsers
         {
             var path = SearchCookieDirectory();
             var option = new BrowserConfig("Lunascape Webkit", "Default", path);
-            return new ICookieImporter[] { new WebkitQtCookieGetter(option) };
+            return new ICookieImporter[] { new WebkitQtCookieGetter(option, 2) };
         }
         /// <summary>
         /// Lunascape6のプラグインフォルダからFirefoxのクッキーが保存されているパスを検索する

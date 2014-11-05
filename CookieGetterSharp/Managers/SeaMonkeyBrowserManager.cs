@@ -7,6 +7,6 @@ namespace Hal.CookieGetterSharp
 {
     class SeaMonkeyBrowserManager : GeckoBrowserManager
     {
-        public SeaMonkeyBrowserManager() : base("SeaMonkey", "%APPDATA%\\Mozilla\\SeaMonkey") { }
+        public SeaMonkeyBrowserManager() : base("SeaMonkey", "%APPDATA%\\Mozilla\\SeaMonkey", 2) { }
     }
 }

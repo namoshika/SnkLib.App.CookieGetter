@@ -13,7 +13,7 @@ namespace SunokoLibrary.Application.Browsers
     /// </summary>
     public abstract class SqlCookieGetter : CookieGetterBase
     {
-        public SqlCookieGetter(BrowserConfig config) : base(config, PathType.File) { }
+        public SqlCookieGetter(BrowserConfig config, int primaryLevel) : base(config, PathType.File, primaryLevel) { }
 
         /// <summary>
         /// DBから指定したクエリでCookieを取得する

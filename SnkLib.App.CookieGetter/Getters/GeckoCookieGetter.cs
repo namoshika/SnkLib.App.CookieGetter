@@ -13,11 +13,11 @@ namespace SunokoLibrary.Application.Browsers
     /// </summary>
     public class GeckoCookieGetter : SqlCookieGetter
     {
-        public GeckoCookieGetter(BrowserConfig config) : base(config) { }
+        public GeckoCookieGetter(BrowserConfig config, int primaryLevel) : base(config, primaryLevel) { }
         const string SELECT_QUERY = "SELECT value, name, host, path, expiry FROM moz_cookies";
 
         public override ICookieImporter Generate(BrowserConfig config)
-        { return new GeckoCookieGetter(config); }
+        { return new GeckoCookieGetter(config, PrimaryLevel); }
         protected override async Task<ImportResult> ProtectedGetCookiesAsync(Uri targetUrl, System.Net.CookieContainer container)
         {
             if (IsAvailable == false)

@@ -7,6 +7,6 @@ namespace Hal.CookieGetterSharp
 {
     class PaleMoonBrowserManager : GeckoBrowserManager
     {
-        public PaleMoonBrowserManager() : base("PaleMoon", "%APPDATA%\\Moonchild Productions\\Pale Moon") { }
+        public PaleMoonBrowserManager() : base("PaleMoon", "%APPDATA%\\Moonchild Productions\\Pale Moon", 2) { }
     }
 }

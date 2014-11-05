@@ -14,16 +14,18 @@ namespace SunokoLibrary.Application.Browsers
     [System.Diagnostics.DebuggerDisplay("{Config.BrowserName,nq}({Config.ProfileName,nq}): {Config.CookiePath,nq}")]
     public abstract class CookieGetterBase : ICookieImporter
     {
-        public CookieGetterBase(BrowserConfig config, PathType cookiePathType)
+        public CookieGetterBase(BrowserConfig config, PathType cookiePathType, int primaryLevel)
         {
             if (config == null)
                 throw new ArgumentNullException("引数statusがnullです。");
             Config = config;
             CookiePathType = cookiePathType;
+            PrimaryLevel = primaryLevel;
         }
 
         public BrowserConfig Config { get; private set; }
         public PathType CookiePathType { get; private set; }
+        public int PrimaryLevel { get; private set; }
         public virtual bool IsAvailable
         {
             get

@@ -14,13 +14,13 @@ namespace SunokoLibrary.Application.Browsers
     /// </summary>
     public class BlinkCookieGetter : SqlCookieGetter
     {
-        public BlinkCookieGetter(BrowserConfig config) : base(config) { }
+        public BlinkCookieGetter(BrowserConfig config, int primaryLevel) : base(config, primaryLevel) { }
         const string SELECT_QUERY_VERSION = "SELECT value FROM meta WHERE key='version';";
         const string SELECT_QUERY = "SELECT 0, value, name, host_key, path, expires_utc FROM cookies";
         const string SELECT_QUERY_V7 = "SELECT 7, encrypted_value, name, host_key, path, expires_utc FROM cookies";
 
         public override ICookieImporter Generate(BrowserConfig config)
-        { return new BlinkCookieGetter(config); }
+        { return new BlinkCookieGetter(config, PrimaryLevel); }
         protected override async Task<ImportResult> ProtectedGetCookiesAsync(Uri targetUrl, CookieContainer container)
         {
             if (IsAvailable == false)

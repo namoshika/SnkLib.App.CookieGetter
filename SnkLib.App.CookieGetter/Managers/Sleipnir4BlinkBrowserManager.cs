@@ -7,6 +7,6 @@ namespace SunokoLibrary.Application.Browsers
     public class Sleipnir4BlinkBrowserManager : BlinkBrowserManager
     {
         public Sleipnir4BlinkBrowserManager()
-            : base("Sleipnir4 Blink", "%APPDATA%\\Fenrir Inc\\Sleipnir\\setting\\modules\\ChromiumViewer") { }
+            : base("Sleipnir4 Blink", "%APPDATA%\\Fenrir Inc\\Sleipnir\\setting\\modules\\ChromiumViewer", 2) { }
     }
 }

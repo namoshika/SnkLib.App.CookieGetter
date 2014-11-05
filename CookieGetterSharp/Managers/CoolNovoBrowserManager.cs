@@ -12,7 +12,7 @@ namespace Hal.CookieGetterSharp
     class CoolNovoBrowserManager : BlinkBrowserManager
     {
         public CoolNovoBrowserManager()
-            : base("CoolNovo", null)
+            : base("CoolNovo", null, 2)
         {
             string folder = null;
             try

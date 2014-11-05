@@ -10,15 +10,17 @@ namespace SunokoLibrary.Application.Browsers
     public class GeckoBrowserManager : ICookieImporterFactory
     {
         public GeckoBrowserManager(
-            string name = null, string dataFolder = null,
+            string name, string dataFolder, int primaryLevel,
             string cookieFileName = "cookies.sqlite", string iniFileName = "profiles.ini")
         {
-            Name = name;
+            _primaryLevel = primaryLevel;
+            _name = name;
             DataFolder = dataFolder != null ? Utility.ReplacePathSymbols(dataFolder) : null;
             IniFileName = iniFileName;
             CookieFileName = cookieFileName;
         }
-        protected string Name;
+        int _primaryLevel;
+        string _name;
         protected string DataFolder;
         protected string IniFileName;
         protected string CookieFileName;
@@ -26,11 +28,11 @@ namespace SunokoLibrary.Application.Browsers
         public IEnumerable<ICookieImporter> GetCookieImporters()
         {
             var getters = UserProfile.GetProfiles(DataFolder, IniFileName)
-                .Select(prof => new BrowserConfig(Name, prof.Name, Path.Combine(prof.Path, CookieFileName)))
-                .Select(inf => (ICookieImporter)new GeckoCookieGetter(inf))
+                .Select(prof => new BrowserConfig(_name, prof.Name, Path.Combine(prof.Path, CookieFileName)))
+                .Select(inf => (ICookieImporter)new GeckoCookieGetter(inf, _primaryLevel))
                 .ToArray();
             getters = getters.Length == 0
-                ? new ICookieImporter[] { new GeckoCookieGetter(new BrowserConfig(Name, "Default", null)) } : getters;
+                ? new ICookieImporter[] { new GeckoCookieGetter(new BrowserConfig(_name, "Default", null), _primaryLevel) } : getters;
             return getters;
         }
 

@@ -107,6 +107,8 @@ namespace SunokoLibrary.Windows.ViewModels
                 for (var i = Items.Count - 1; i >= 0; i--)
                     Items.RemoveAt(i);
                 var browserItems = (await CookieGetters.GetInstancesAsync(!IsAllBrowserMode))
+                    .ToArray()
+                    .OrderBy(getter => getter, _getterComparer)
                     .Select(getter =>
                         {
                             try
@@ -191,10 +193,36 @@ namespace SunokoLibrary.Windows.ViewModels
                 _updateSem.Release();
             }
         }
-
+        /// <summary>
+        /// プロパティが更新された事を通知します。
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
         protected virtual void OnPropertyChanged([CallerMemberName]string memberName = null)
         { PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(memberName)); }
+
+        static GetterComparer _getterComparer = new GetterComparer();
+        class GetterComparer : IComparer<ICookieImporter>
+        {
+            public int Compare(ICookieImporter x, ICookieImporter y)
+            {
+                if (x == y)
+                    return 0;
+                else if (x == null)
+                    return -1;
+                else if (y == null)
+                    return 1;
+                else if (x.PrimaryLevel != y.PrimaryLevel)
+                    return x.PrimaryLevel - y.PrimaryLevel;
+                else
+                {
+                    var xIdx = x.Config.BrowserName.IndexOf(' ');
+                    var yIdx = y.Config.BrowserName.IndexOf(' ');
+                    var xName = xIdx >= 0 ? x.Config.BrowserName.Substring(0, xIdx) : x.Config.BrowserName;
+                    var yName = yIdx >= 0 ? y.Config.BrowserName.Substring(0, yIdx) : y.Config.BrowserName;
+                    return string.Compare(xName, yName);
+                }
+            }
+        }
     }
     /// <summary>
     /// ブラウザ選択UIにおける各ブラウザ項目用ViewModel。任意のICookieImporterを持ち、UI上での項目表示を保持します。

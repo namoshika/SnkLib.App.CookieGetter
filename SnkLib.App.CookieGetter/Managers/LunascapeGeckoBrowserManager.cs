@@ -16,7 +16,7 @@ namespace SunokoLibrary.Application.Browsers
         {
             var path = SearchCookieDirectory();
             var status = new BrowserConfig("Lunascape Gecko", "Default", path);
-            return new ICookieImporter[] { new GeckoCookieGetter(status) };
+            return new ICookieImporter[] { new GeckoCookieGetter(status, 2) };
         }
         /// <summary>
         /// Lunascape6のプラグインフォルダからFirefoxのクッキーが保存されているパスを検索する

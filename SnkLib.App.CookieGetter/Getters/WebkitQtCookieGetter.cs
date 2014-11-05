@@ -8,9 +8,9 @@ namespace SunokoLibrary.Application.Browsers
 {
     public class WebkitQtCookieGetter : CookieGetterBase
     {
-        public WebkitQtCookieGetter(BrowserConfig config) : base(config, PathType.File) { }
+        public WebkitQtCookieGetter(BrowserConfig config, int primaryLevel) : base(config, PathType.File, primaryLevel) { }
         public override ICookieImporter Generate(BrowserConfig config)
-        { return new WebkitQtCookieGetter(config); }
+        { return new WebkitQtCookieGetter(config, PrimaryLevel); }
         protected override async Task<ImportResult> ProtectedGetCookiesAsync(Uri targetUrl, CookieContainer container)
         {
             if (IsAvailable == false)

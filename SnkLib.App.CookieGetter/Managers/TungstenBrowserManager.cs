@@ -7,6 +7,6 @@ namespace SunokoLibrary.Application.Browsers
 {
     public class TungstenBrowserManager : BlinkBrowserManager
     {
-        public TungstenBrowserManager() : base("TungstenBlink", "%APPDATA%\\Tungsten\\profile") { }
+        public TungstenBrowserManager() : base("TungstenBlink", "%APPDATA%\\Tungsten\\profile", 2) { }
     }
 }

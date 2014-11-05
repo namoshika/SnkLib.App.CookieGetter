@@ -91,7 +91,7 @@ namespace SunokoLibrary.Application.Browsers
                         .Substring(appDataPath.Length))
                         .Split(new []{"\\"}, StringSplitOptions.RemoveEmptyEntries)
                         .Reverse().First(),
-                    userDataPath)) { }
+                    userDataPath, 2)) { }
     }
     public class SmartGeckoBrowserManager : SmartBrowserManager
     {
@@ -102,6 +102,6 @@ namespace SunokoLibrary.Application.Browsers
                         .Substring(appDataPath.Length))
                         .Split(new []{"\\"}, StringSplitOptions.RemoveEmptyEntries)
                         .Reverse().First(),
-                    Path.GetDirectoryName(userDataPath))) { }
+                    Path.GetDirectoryName(userDataPath), 2)) { }
     }
 }

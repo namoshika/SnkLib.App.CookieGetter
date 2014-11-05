@@ -10,16 +10,18 @@ namespace SunokoLibrary.Application.Browsers
     public class BlinkBrowserManager : ICookieImporterFactory
     {
         public BlinkBrowserManager(
-            string name, string dataFolder, string cookieFileName = "Cookies",
+            string name, string dataFolder, int primaryLevel, string cookieFileName = "Cookies",
             string defaultFolder = "Default", string profileFolderStarts = "Profile")
         {
-            Name = name;
+            _primaryLevel = primaryLevel;
+            _name = name;
             DataFolder = dataFolder != null ? Utility.ReplacePathSymbols(dataFolder) : null;
             CookieFileName = cookieFileName;
             DefaultFolderName = defaultFolder;
             ProfileFolderStarts = profileFolderStarts;
         }
-        protected string Name;
+        int _primaryLevel;
+        string _name;
         protected string DataFolder;
         protected string CookieFileName;
         protected string DefaultFolderName;
@@ -37,8 +39,8 @@ namespace SunokoLibrary.Application.Browsers
             string path = null;
             if (DataFolder != null)
                 path = Path.Combine(DataFolder, DefaultFolderName, CookieFileName);
-            var conf = new BrowserConfig(Name, DefaultFolderName, path);
-            return new ICookieImporter[] { new BlinkCookieGetter(conf) };
+            var conf = new BrowserConfig(_name, DefaultFolderName, path);
+            return new ICookieImporter[] { new BlinkCookieGetter(conf, _primaryLevel) };
         }
         /// <summary>
         /// ブラウザが持っているデフォルト以外の全ての環境設定からICookieImporterを生成する。
@@ -55,7 +57,7 @@ namespace SunokoLibrary.Application.Browsers
                     .Select(path => Path.Combine(path, CookieFileName))
                     .Where(path => File.Exists(path))
                     .Select(path => new BlinkCookieGetter(
-                        new BrowserConfig(Name, Path.GetFileName(Path.GetDirectoryName(path)), path)));
+                        new BrowserConfig(_name, Path.GetFileName(Path.GetDirectoryName(path)), path), _primaryLevel));
                 return paths;
             }
             return paths;

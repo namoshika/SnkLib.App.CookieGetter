@@ -22,20 +22,20 @@ namespace SunokoLibrary.Application.Browsers
         public ICookieImporter GetIECookieGetter()
         {
             var cookieFolder = Environment.GetFolderPath(Environment.SpecialFolder.Cookies);
-            return new IECookieGetter(new BrowserConfig("IE Normal", "Default", cookieFolder));
+            return new IECookieGetter(new BrowserConfig("IE Normal", "Default", cookieFolder), 0);
         }
         public ICookieImporter GetIEPMCookieGetter()
         {
             var cookieFolder = System.IO.Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.Cookies), "low");
-            return new IEPMCookieGetter(new BrowserConfig("IE Protected", "Default", cookieFolder));
+            return new IEPMCookieGetter(new BrowserConfig("IE Protected", "Default", cookieFolder), 0);
         }
         public ICookieImporter GetIEEPMCookieGetter()
         {
             var cookieFolder = Utility.ReplacePathSymbols(
                 @"%LOCALAPPDATA%\Packages\windows_ie_ac_001\AC\INetCookies");
             return new IEFindCacheCookieGetter(
-                new BrowserConfig("IE Enhanced Protected", "Default", cookieFolder));
+                new BrowserConfig("IE Enhanced Protected", "Default", cookieFolder), 0);
         }
     }
 }

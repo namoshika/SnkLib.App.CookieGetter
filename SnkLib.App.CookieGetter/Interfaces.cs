@@ -27,6 +27,10 @@ namespace SunokoLibrary.Application
         /// </summary>
         bool IsAvailable { get; }
         /// <summary>
+        /// 並べ替え時に用いられる数値を取得します。OSブラウザ: 0、有名ブラウザ: 1、派生ブラウザ: 2。
+        /// </summary>
+        int PrimaryLevel { get; }
+        /// <summary>
         /// 指定されたURLとの通信に使えるCookieを返します。
         /// </summary>
         /// <param name="targetUrl">通信先のURL</param>

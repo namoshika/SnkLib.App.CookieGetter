@@ -16,8 +16,8 @@ namespace SunokoLibrary.Application.Browsers
     {
         //クラス命名センスとしてwininet.dllのFindNextUrlCacheEntryの文脈を用いる。
         //純粋にapi上で片付ける方法が不明なのでwininetのapi自体は使っていない。
-        public IEFindCacheCookieGetter(BrowserConfig config)
-            : base(config, PathType.Directory) { }
+        public IEFindCacheCookieGetter(BrowserConfig config, int primaryLevel)
+            : base(config, PathType.Directory, primaryLevel) { }
         public override bool IsAvailable
         {
             get
@@ -27,7 +27,7 @@ namespace SunokoLibrary.Application.Browsers
             }
         }
         public override ICookieImporter Generate(BrowserConfig config)
-        { return new IEFindCacheCookieGetter(config); }
+        { return new IEFindCacheCookieGetter(config, PrimaryLevel); }
         protected override async Task<ImportResult> ProtectedGetCookiesAsync(Uri targetUrl, CookieContainer container)
         {
             if (IsAvailable == false)

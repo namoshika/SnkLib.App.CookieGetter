@@ -14,10 +14,10 @@ namespace SunokoLibrary.Application.Browsers
     /// </summary>
     public class IECookieGetter : CookieGetterBase
     {
-        public IECookieGetter(BrowserConfig config) : base(config, PathType.Directory) { }
+        public IECookieGetter(BrowserConfig config, int primaryLevel) : base(config, PathType.Directory, primaryLevel) { }
         public override bool IsAvailable { get { return true; } }
         public override ICookieImporter Generate(BrowserConfig config)
-        { return new IECookieGetter(config); }
+        { return new IECookieGetter(config, PrimaryLevel); }
         protected override async Task<ImportResult> ProtectedGetCookiesAsync(Uri targetUrl, System.Net.CookieContainer container)
         {
             string cookiesText;
