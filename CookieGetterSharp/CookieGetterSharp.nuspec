@@ -8,6 +8,7 @@
         <owners>$author$</owners>
         <summary>$description$</summary>
         <projectUrl>https://github.com/namoshika/SnkLib.App.CookieGetter</projectUrl>
+        <licenseUrl>https://www.gnu.org/licenses/lgpl-2.1.txt</licenseUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>SnkLib.App.CookieGetterに対してCookieGetterSharpとの互換性を持たせます。</description>
         <copyright>Copyright 2014 namoshika</copyright>
