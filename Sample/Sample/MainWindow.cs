@@ -31,21 +31,24 @@ namespace Sample
                 case "SelectedIndex":
                     var cookieContainer = new CookieContainer();
                     var currentGetter = nicoSessionComboBox1.Selector.SelectedImporter;
-                    var result = await currentGetter.GetCookiesAsync(TargetUrl, cookieContainer);
-                    var cookie = cookieContainer.GetCookies(TargetUrl)["user_session"];
-
-                    //UI更新
-                    txtCookiePath.Text = currentGetter.Config.CookiePath;
-                    txtCookiePath.Enabled = true;
-                    btnOpenCookieFileDialog.Enabled = true;
-                    txtUserSession.Text = cookie != null ? cookie.Value : null;
-                    txtUserSession.Enabled = result == ImportResult.Success;
-
-                    if (nicoSessionComboBox1.SelectedIndex >= 0
-                        && nicoSessionComboBox1.SelectedIndex < nicoSessionComboBox1.Items.Count)
+                    if (currentGetter != null)
                     {
+                        var result = await currentGetter.GetCookiesAsync(TargetUrl, cookieContainer);
+                        var cookie = cookieContainer.GetCookies(TargetUrl)["user_session"];
+                        //UI更新
+                        txtCookiePath.Text = currentGetter.Config.CookiePath;
+                        btnOpenCookieFileDialog.Enabled = true;
+                        txtUserSession.Text = cookie != null ? cookie.Value : null;
+                        txtUserSession.Enabled = result == ImportResult.Success;
                         Properties.Settings.Default.SelectedBrowserConfig = currentGetter.Config;
                         Properties.Settings.Default.Save();
+                    }
+                    else
+                    {
+                        txtCookiePath.Text = null;
+                        txtUserSession.Text = null;
+                        txtUserSession.Enabled = false;
+                        btnOpenCookieFileDialog.Enabled = false;
                     }
                     break;
             }
@@ -55,6 +58,6 @@ namespace Sample
         void btnOpenCookieFileDialog_Click(object sender, EventArgs e)
         { var tsk = nicoSessionComboBox1.ShowCookieDialogAsync(); }
         void checkBoxShowAll_CheckedChanged(object sender, EventArgs e)
-        { nicoSessionComboBox1.IsAllBrowserMode = checkBoxShowAll.Checked; }
+        { nicoSessionComboBox1.Selector.IsAllBrowserMode = checkBoxShowAll.Checked; }
     }
 }

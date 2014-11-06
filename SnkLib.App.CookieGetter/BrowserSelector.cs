@@ -52,6 +52,8 @@ namespace SunokoLibrary.Windows.ViewModels
             get { return _isAllBrowserMode; }
             set
             {
+                if (_isAllBrowserMode == value)
+                    return;
                 _isAllBrowserMode = value;
                 OnPropertyChanged();
                 var tsk = UpdateAsync();
@@ -65,6 +67,8 @@ namespace SunokoLibrary.Windows.ViewModels
             get { return _selectedIndex; }
             set
             {
+                if (_selectedIndex == value)
+                    return;
                 _selectedIndex = value;
                 OnPropertyChanged();
             }
@@ -98,14 +102,12 @@ namespace SunokoLibrary.Windows.ViewModels
             try
             {
                 //設定復元用に選択中のブラウザを取得。
+                await _updateSem.WaitAsync();
                 currentGetter = SelectedImporter;
                 currentConfig = currentGetter != null ? currentGetter.Config : null;
-                //Items更新
-                await _updateSem.WaitAsync();
-                _addedCustom = false;
+                SelectedIndex = -1;
+
                 IsUpdating = true;
-                for (var i = Items.Count - 1; i >= 0; i--)
-                    Items.RemoveAt(i);
                 var browserItems = (await CookieGetters.GetInstancesAsync(!IsAllBrowserMode))
                     .ToArray()
                     .OrderBy(getter => getter, _getterComparer)
@@ -123,67 +125,44 @@ namespace SunokoLibrary.Windows.ViewModels
                                     string.Format("{0}の生成に失敗しました。", typeof(BrowserItem).Name), ImportResult.UnknownError, e);
                             }
                         });
+
+                
                 lock (_updaterSyn)
+                {
+                    _addedCustom = false;
+                    for (var i = Items.Count - 1; i >= 0; i--)
+                        Items.RemoveAt(i);
                     foreach (var item in browserItems)
                         Items.Add(item);
+                }
+                //更新前に選択していた項目を再選択させる
+                if (currentConfig != null)
+                    await ProtectedSetConfigAsync(currentConfig);
             }
             catch (CookieImportException e)
             {
-                for (var i = Items.Count - 1; i >= 0; i--)
-                    Items.RemoveAt(i);
+                lock (_updaterSyn)
+                    for (var i = Items.Count - 1; i >= 0; i--)
+                        Items.RemoveAt(i);
                 System.Diagnostics.Trace.TraceInformation("選択中のブラウザの設定カスタマイズに失敗。", e);
             }
             finally
             {
-                IsUpdating = false;
                 _updateSem.Release();
+                IsUpdating = false;
             }
-            //更新前に選択していた項目を再選択させる
-            if (currentConfig != null)
-                await SetConfigAsync(currentConfig);
         }
         /// <summary>
         /// 任意のブラウザ構成を設定します。カスタム設定の構成も設定可能です。
         /// </summary>
         /// <param name="config">ブラウザの構成設定</param>
-        /// <returns></returns>
         public async Task SetConfigAsync(BrowserConfig config)
         {
             try
             {
                 await _updateSem.WaitAsync();
                 IsUpdating = true;
-
-                //引数configが使えるGetterを取得する。無い場合は適当なのを見繕う
-                //取得したGetterのItems内での場所を検索する。
-                //idxがどのItemsも指定していない場合はカスタム設定を生成
-                var getter = await CookieGetters.GetInstanceAsync(config);
-                lock (_updaterSyn)
-                {
-                    var idx = Items.Select(item => item.Getter.Config).TakeWhile(conf => conf != getter.Config).Count();
-                    if (idx == Items.Count)
-                    {
-                        BrowserItem customItem;
-                        try
-                        {
-                            customItem = _itemGenerator(getter);
-                            customItem.Initialize();
-                        }
-                        catch (Exception e)
-                        {
-                            throw new CookieImportException(
-                                string.Format("{0}の生成に失敗しました。", typeof(BrowserItem).Name), ImportResult.UnknownError, e);
-                        }
-                        if (_addedCustom)
-                            Items[Items.Count - 1] = customItem;
-                        else
-                        {
-                            Items.Add(customItem);
-                            _addedCustom = true;
-                        }
-                    }
-                    SelectedIndex = idx;
-                }
+                await ProtectedSetConfigAsync(config);
             }
             catch (CookieImportException e)
             { System.Diagnostics.Trace.TraceInformation("選択中のブラウザの設定カスタマイズに失敗。", e); }
@@ -193,12 +172,49 @@ namespace SunokoLibrary.Windows.ViewModels
                 _updateSem.Release();
             }
         }
+        protected async Task ProtectedSetConfigAsync(BrowserConfig config)
+        {
+            //引数configが使えるGetterを取得する。無い場合は適当なのを見繕う
+            var getter = await CookieGetters.GetInstanceAsync(config);
+            lock (_updaterSyn)
+            {
+                //取得したGetterのItems内での場所を検索する。
+                //idxがどのItemsも指定していない場合はカスタム設定を生成
+                var idx = Items.Select(item => item.Getter.Config).TakeWhile(conf => conf != getter.Config).Count();
+                if (idx == Items.Count)
+                {
+                    BrowserItem customItem;
+                    try
+                    {
+                        customItem = _itemGenerator(getter);
+                        customItem.Initialize();
+                    }
+                    catch (Exception e)
+                    {
+                        throw new CookieImportException(
+                            string.Format("{0}の生成に失敗しました。", typeof(BrowserItem).Name), ImportResult.UnknownError, e);
+                    }
+                    if (_addedCustom)
+                        Items[Items.Count - 1] = customItem;
+                    else
+                    {
+                        Items.Add(customItem);
+                        _addedCustom = true;
+                    }
+                }
+                SelectedIndex = idx;
+            }
+        }
+
         /// <summary>
         /// プロパティが更新された事を通知します。
         /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
+        public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName]string memberName = null)
-        { PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(memberName)); }
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(memberName));
+        }
 
         static GetterComparer _getterComparer = new GetterComparer();
         class GetterComparer : IComparer<ICookieImporter>

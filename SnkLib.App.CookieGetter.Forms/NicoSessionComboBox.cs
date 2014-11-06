@@ -16,8 +16,11 @@ namespace SunokoLibrary.Windows.Forms
     /// </summary>
     public class NicoSessionComboBox : BrowserComboBox
     {
-        public NicoSessionComboBox()
-        { Selector = new BrowserSelector(getter => new NicoAccountSelectorItem(getter)); }
+        protected override void InitLayout()
+        {
+            base.InitLayout();
+            Initialize(new BrowserSelector(getter => new NicoAccountSelectorItem(getter)));
+        }
         class NicoAccountSelectorItem : BrowserItem
         {
             public NicoAccountSelectorItem(ICookieImporter getter) : base(getter) { }

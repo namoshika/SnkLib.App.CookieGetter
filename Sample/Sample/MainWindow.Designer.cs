@@ -69,11 +69,8 @@
             // 
             // nicoSessionComboBox1
             // 
-            this.nicoSessionComboBox1.DisplayMember = "DisplayText";
             this.nicoSessionComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.nicoSessionComboBox1.Enabled = false;
             this.nicoSessionComboBox1.FormattingEnabled = true;
-            this.nicoSessionComboBox1.IsAllBrowserMode = false;
             this.nicoSessionComboBox1.Location = new System.Drawing.Point(6, 42);
             this.nicoSessionComboBox1.Name = "nicoSessionComboBox1";
             this.nicoSessionComboBox1.Size = new System.Drawing.Size(247, 20);
@@ -111,7 +108,6 @@
             // 
             // txtCookiePath
             // 
-            this.txtCookiePath.Enabled = false;
             this.txtCookiePath.Location = new System.Drawing.Point(51, 72);
             this.txtCookiePath.Name = "txtCookiePath";
             this.txtCookiePath.ReadOnly = true;
@@ -174,7 +170,6 @@
         private System.Windows.Forms.TextBox txtUserSession;
         private System.Windows.Forms.Label label1;
         private SunokoLibrary.Windows.Forms.NicoSessionComboBox nicoSessionComboBox1;
-
     }
 }
 

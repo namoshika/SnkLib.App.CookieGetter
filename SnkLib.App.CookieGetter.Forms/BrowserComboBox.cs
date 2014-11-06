@@ -15,59 +15,37 @@ namespace SunokoLibrary.Windows.Forms
     /// </summary>
     public class BrowserComboBox : ComboBox
     {
-        public BrowserComboBox()
-            : base()
-        {
-            IsAllBrowserMode = false;
-            DropDownStyle = ComboBoxStyle.DropDownList;
-        }
         OpenFileDialog openFileDialog = new OpenFileDialog();
         FolderBrowserDialog openFolderDialog = new FolderBrowserDialog();
-        BrowserSelector _selector;
-        bool _isAllBrowserMode;
 
         /// <summary>
         /// ブラウザ選択のViewModelを取得、設定します。
         /// </summary>
-        [Browsable(false)]
-        public BrowserSelector Selector
-        {
-            get { return _selector; }
-            set
-            {
-                if (!DesignMode && _selector != null)
-                {
-                    _selector.PropertyChanged -= _selector_PropertyChanged;
-                    _selector.Items.CollectionChanged -= _selector_Items_CollectionChanged;
-                }
-                _selector = value;
-                Items.Clear();
-                if (!DesignMode && _selector != null)
-                {
-                    _selector.PropertyChanged += _selector_PropertyChanged;
-                    _selector.Items.CollectionChanged += _selector_Items_CollectionChanged;
-                    _isAllBrowserMode = _selector.IsAllBrowserMode;
-                    SelectedIndex = _selector.SelectedIndex;
-                    var tsk = _selector.UpdateAsync();
-                }
-            }
-        }
-        /// <summary>
-        /// インストールされているブラウザーのみ表示するかどうかを取得、設定します。
-        /// </summary>
-        [Category("動作"), DefaultValue(true)]
-        [Description("インストールされているブラウザーのみ表示するかどうかを取得、設定します。")]
-        public bool IsAllBrowserMode
-        {
-            get { return !DesignMode && _selector != null ? _selector.IsAllBrowserMode : _isAllBrowserMode; }
-            set
-            {
-                _isAllBrowserMode = value;
-                if (!DesignMode && _selector != null && _selector.IsAllBrowserMode != value)
-                    _selector.IsAllBrowserMode = value;
-            }
-        }
+        [Browsable(false), DefaultValue(null)]
+        public BrowserSelector Selector { get; private set; }
 
+        /// <summary>
+        /// 指定したViewModelでコントロールを初期化します。
+        /// </summary>
+        public void Initialize(BrowserSelector viewModel)
+        {
+            if (DesignMode)
+                return;
+            if (Selector != null)
+            {
+                Selector.PropertyChanged -= _selector_PropertyChanged;
+                Selector.Items.CollectionChanged -= _selector_Items_CollectionChanged;
+            }
+            Selector = viewModel;
+            Items.Clear();
+            if (Selector != null)
+            {
+                Selector.PropertyChanged += _selector_PropertyChanged;
+                Selector.Items.CollectionChanged += _selector_Items_CollectionChanged;
+                SelectedIndex = Selector.SelectedIndex;
+                var tsk = Selector.UpdateAsync();
+            }
+        }
         /// <summary>
         /// 任意のCookieファイルを指定するためのファイル選択ダイアログを表示する。
         /// </summary>
@@ -108,26 +86,29 @@ namespace SunokoLibrary.Windows.Forms
         }
         protected override void OnSelectedIndexChanged(EventArgs e)
         {
-            if (!DesignMode && Selector != null)
+            if (Selector != null)
                 Selector.SelectedIndex = SelectedIndex;
             base.OnSelectedIndexChanged(e);
         }
+        protected override void InitLayout()
+        {
+            base.InitLayout();
+            DropDownStyle = ComboBoxStyle.DropDownList;
+        }
+
         void _selector_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch(e.PropertyName)
             {
-                case "IsAvailableOnly":
-                    IsAllBrowserMode = Selector.IsAllBrowserMode;
-                    break;
                 case "IsUpdating":
-                    if (Enabled != !Selector.IsUpdating)
-                        Enabled = !Selector.IsUpdating;
-                    if (Selector.IsUpdating == false)
-                        this.RefreshItems();
+                    Enabled = !Selector.IsUpdating;
+                    if (Selector.IsUpdating)
+                        BeginUpdate();
+                    else
+                        EndUpdate();
                     break;
                 case "SelectedIndex":
-                    if (SelectedIndex != Selector.SelectedIndex)
-                        SelectedIndex = Selector.SelectedIndex;
+                    SelectedIndex = Selector.SelectedIndex;
                     break;
             }
         }
@@ -140,22 +121,22 @@ namespace SunokoLibrary.Windows.Forms
                     {
                         var item = (BrowserItem)e.NewItems[i];
                         Items.Insert(e.NewStartingIndex + i, item.DisplayText ?? string.Empty);
-                        item.PropertyChanged += item_PropertyChanged;
+                        item.PropertyChanged += _selector_item_PropertyChanged;
                     }
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     for (var i = 0; i < e.OldItems.Count; i++)
                     {
                         var item = (BrowserItem)e.OldItems[i];
-                        item.PropertyChanged -= item_PropertyChanged;
+                        item.PropertyChanged -= _selector_item_PropertyChanged;
                         Items.RemoveAt(e.OldStartingIndex + i);
                     }
                     break;
                 case NotifyCollectionChangedAction.Replace:
                     var oldItem = (BrowserItem)e.OldItems[0];
                     var newItem = (BrowserItem)e.NewItems[0];
-                    oldItem.PropertyChanged -= item_PropertyChanged;
-                    newItem.PropertyChanged += item_PropertyChanged;
+                    oldItem.PropertyChanged -= _selector_item_PropertyChanged;
+                    newItem.PropertyChanged += _selector_item_PropertyChanged;
                     Items[e.NewStartingIndex] = newItem.DisplayText ?? string.Empty;
                     break;
                 case NotifyCollectionChangedAction.Move:
@@ -165,7 +146,7 @@ namespace SunokoLibrary.Windows.Forms
                     break;
             }
         }
-        void item_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void _selector_item_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch(e.PropertyName)
             {
