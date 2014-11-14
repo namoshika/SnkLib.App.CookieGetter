@@ -3,10 +3,18 @@
 ブラウザのCookieを.NETアプリで使えるようにするライブラリです。  
 <http://com.nicovideo.jp/community/co235502> で配布されているCookieGetterSharpを元に、互換性を維持した上での設計の改善を施したものです。
 
-オリジナルとして炬燵犬さん作成のクッキー取得クラス [CookieGetter](http://homepage2.nifty.com/kotatuinu/contents/computer/program/CookieGetter/cookiegetter.html)、それを大幅に改造しライブラリにしたhalxxxxさん、うつろさんの[CookieGetterSharp](http://d.hatena.ne.jp/halxxxx/20091212/1260649353)が存在します。ライセンスはCookieGetterSharpのを恣意的な解釈で継承させます。
+本家と同水準でIE, Chrome, Firefox, Lunascape, Maxthon, Sleipnir, Tungstenなどに対応しています。独自に強化したポイントとしてChromeやFirefoxの派生ブラウザなどで本家が対応していないものへの包括的な対応と設定保存周りの使い勝手の強化などが行われています。
 
 ## ライセンス
-GNU Lesser GPL
+以下のライセンス下にあります。  
+* SnkLib.App.CookieGetter  
+  https://github.com/namoshika/SnkLib.App.CookieGetter  
+  Copyright (c) 2014 namoshika.  
+  Released under the **GNU Lesser GPL**  
+
+また、以下の著作物から派生させています。
+* [CookieGetterSharp](http://d.hatena.ne.jp/halxxxx/20091212/1260649353)  
+  Copyright (c) 2014 halxxxx, うつろ
 
 ##方針
 現在、以下のブランチの方針下にあります。
