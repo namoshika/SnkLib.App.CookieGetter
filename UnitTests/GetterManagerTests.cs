@@ -42,23 +42,16 @@ namespace UnitTest
             await CheckGetters(getters, true);
         }
         [TestMethod]
-        public async Task Sleipnir5BlinkTest()
+        public async Task SleipnirTest()
         {
-            var manager = new Sleipnir5BlinkBrowserManager();
+            var manager = new SleipnirBrowserManager();
             var getters = manager.GetCookieImporters();
             await CheckGetters(getters, true);
         }
         [TestMethod]
-        public async Task Lunascape6GeckoTest()
+        public async Task LunascapeTest()
         {
-            var manager = new LunascapeGeckoBrowserManager();
-            var getters = manager.GetCookieImporters();
-            await CheckGetters(getters, true);
-        }
-        [TestMethod]
-        public async Task Lunascape6WebkitTest()
-        {
-            var manager = new LunascapeWebkitBrowserManager();
+            var manager = new LunascapeBrowserManager();
             var getters = manager.GetCookieImporters();
             await CheckGetters(getters, true);
         }

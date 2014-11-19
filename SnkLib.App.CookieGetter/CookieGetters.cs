@@ -18,15 +18,13 @@ namespace SunokoLibrary.Application
         {
             BrowserManagers = new ConcurrentQueue<ICookieImporterFactory>(new ICookieImporterFactory[] {
                 new IEBrowserManager(),
-                new GoogleChromeBrowserManager(),
                 new FirefoxBrowserManager(),
+                new GoogleChromeBrowserManager(),
                 new OperaWebkitBrowserManager(),
                 new ChromiumBrowserManager(),
-                new Sleipnir4BlinkBrowserManager(),
-                new Sleipnir5BlinkBrowserManager(),
-                new LunascapeGeckoBrowserManager(),
-                new LunascapeWebkitBrowserManager(),
+                new LunascapeBrowserManager(),
                 new MaxthonBrowserManager(),
+                new SleipnirBrowserManager(),
                 new TungstenBrowserManager(),
                 new SmartBlinkBrowserManager(),
                 new SmartGeckoBrowserManager(),

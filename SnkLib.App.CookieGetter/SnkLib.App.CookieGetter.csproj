@@ -68,14 +68,10 @@
     <Compile Include="Managers\GeckoBrowserManager.cs" />
     <Compile Include="Managers\GoogleChromeBrowserManager.cs" />
     <Compile Include="Managers\IEBrowserManager.cs" />
-    <Compile Include="Managers\LunascapeGeckoBrowserManager.cs" />
-    <Compile Include="Managers\LunascapeWebkitBrowserManager.cs" />
+    <Compile Include="Managers\LunascapeBrowserManager.cs" />
     <Compile Include="Managers\MaxthonBrowserManager.cs" />
     <Compile Include="Managers\OperaWebkitBrowserManager.cs" />
-    <Compile Include="Managers\Sleipnir3GeckoBrowserManager.cs" />
-    <Compile Include="Managers\Sleipnir3WekitBrowserManager.cs" />
-    <Compile Include="Managers\Sleipnir4BlinkBrowserManager.cs" />
-    <Compile Include="Managers\Sleipnir5BlinkBrowserManager.cs" />
+    <Compile Include="Managers\SleipnirBrowserManager.cs" />
     <Compile Include="Managers\SmartBrowserManager.cs" />
     <Compile Include="Managers\TungstenBrowserManager.cs" />
     <Compile Include="Managers\BlinkBrowserManager.cs" />
