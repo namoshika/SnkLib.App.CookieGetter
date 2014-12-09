@@ -52,18 +52,15 @@ namespace SunokoLibrary.Application
         /// </summary>
         /// <param name="targetConfig">任意のブラウザ環境設定</param>
         /// <param name="allowDefault">生成不可の場合に既定のCookieImporterを返すか</param>
-        public static async Task<ICookieImporter> GetInstanceAsync(BrowserConfig targetConfig, bool allowDefault = true)
+        public static async Task<ICookieImporter> GetInstanceAsync(BrowserConfig targetConfig = null, bool allowDefault = true)
         {
+            var foundGetter = null as ICookieImporter;
             var getterList = await GetInstancesAsync(false);
-            ICookieImporter foundGetter = null;
-            if (targetConfig != null
-                && string.IsNullOrEmpty(targetConfig.BrowserName) == false
-                && string.IsNullOrEmpty(targetConfig.ProfileName) == false
-                && string.IsNullOrEmpty(targetConfig.CookiePath) == false)
+
+            if (targetConfig != null)
             {
-                //使えそうなICookieImporterを探して、見つかったら保持しているConfigと差分の有無を比較。
-                //違いが無いならば標準のを返す。有るならばconfig.Generate()でIsCustomizedをtrueにした
-                //上で新しくICookieImporterを生成したものを返す。
+                //引数targetConfigと同一のブラウザを探す。
+                //あればConfigを比較。同一ならばそのまま使う。違いがあればカスタマイズ版を生成する
                 foundGetter = getterList.FirstOrDefault(item => item.Config.BrowserName == targetConfig.BrowserName);
                 if (foundGetter != null && targetConfig != foundGetter.Config)
                     foundGetter = foundGetter.Generate(targetConfig.GenerateCopy());

@@ -60,12 +60,11 @@ namespace SunokoLibrary.Application
             var target = obj as BrowserConfig;
             if ((object)target == null)
                 return false;
+
             //CookiePathが一致していれば同一と見なす。
             //しかし、null同士で一致していた場合は他の要素で確認する。
-            return
-                target.CookiePath != CookiePath ? false :
-                string.IsNullOrEmpty(CookiePath) && (target.BrowserName != BrowserName || target.ProfileName != ProfileName) ? false :
-                true;
+            return CookiePath == target.CookiePath &&
+                (!string.IsNullOrEmpty(CookiePath) || BrowserName == target.BrowserName && ProfileName == target.ProfileName);
         }
         public static bool operator ==(BrowserConfig valueA, BrowserConfig valueB)
         {

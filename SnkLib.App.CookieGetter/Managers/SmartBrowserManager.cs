@@ -75,7 +75,8 @@ namespace SunokoLibrary.Application.Browsers
                         .Where(path => Path.GetFileName(path) == _searchTarget)
                         .Select(path => Tuple.Create(appDataPath, path));
                 })
-                .Select(inf => _generator(inf.Item1, inf.Item2));
+                .Select(inf => _generator(inf.Item1, inf.Item2))
+                .Where(factory => factory != null);
 
             return browsers.SelectMany(item => item.GetCookieImporters());
         }
@@ -86,22 +87,26 @@ namespace SunokoLibrary.Application.Browsers
     {
         public SmartBlinkBrowserManager()
             : base("User Data", PathType.Directory, (appDataPath, userDataPath) =>
-                new BlinkBrowserManager(
-                    Path.GetDirectoryName(userDataPath
+                {
+                    var appName = Path.GetDirectoryName(userDataPath
                         .Substring(appDataPath.Length))
-                        .Split(new []{"\\"}, StringSplitOptions.RemoveEmptyEntries)
-                        .Reverse().First(),
-                    userDataPath, 2)) { }
+                        .Split(new[] { "\\" }, StringSplitOptions.RemoveEmptyEntries)
+                        .LastOrDefault();
+                    return string.IsNullOrEmpty(appName) == false
+                        ? new BlinkBrowserManager(appName, userDataPath) : null;
+                }) { }
     }
     public class SmartGeckoBrowserManager : SmartBrowserManager
     {
         public SmartGeckoBrowserManager()
             : base("profiles.ini", PathType.File, (appDataPath, userDataPath) =>
-                new GeckoBrowserManager(
-                    Path.GetDirectoryName(userDataPath
+                {
+                    var appName = Path.GetDirectoryName(userDataPath
                         .Substring(appDataPath.Length))
                         .Split(new []{"\\"}, StringSplitOptions.RemoveEmptyEntries)
-                        .Reverse().First(),
-                    Path.GetDirectoryName(userDataPath), 2)) { }
+                        .LastOrDefault();
+                    return string.IsNullOrEmpty(appName) == false
+                        ? new GeckoBrowserManager(appName, Path.GetDirectoryName(userDataPath)) : null;
+                }) { }
     }
 }

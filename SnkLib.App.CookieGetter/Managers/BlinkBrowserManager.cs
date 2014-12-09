@@ -13,6 +13,9 @@ namespace SunokoLibrary.Application.Browsers
             string name, string dataFolder, int primaryLevel = 2, string cookieFileName = "Cookies",
             string defaultFolder = "Default", string profileFolderStarts = "Profile")
         {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("引数nameをnullや空文字にする事は出来ません。");
+
             _primaryLevel = primaryLevel;
             _name = name;
             _dataFolder = dataFolder != null ? Utility.ReplacePathSymbols(dataFolder) : null;
