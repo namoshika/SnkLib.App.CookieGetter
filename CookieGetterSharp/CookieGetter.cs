@@ -57,7 +57,6 @@ namespace Hal.CookieGetterSharp
             //対応させていないブラウザ、派生ブラウザとして省かれているブラウザを対応させる
             CookieGetters.BrowserManagers.Enqueue(new PaleMoonBrowserManager());
             CookieGetters.BrowserManagers.Enqueue(new SeaMonkeyBrowserManager());
-            CookieGetters.BrowserManagers.Enqueue(new CoolNovoBrowserManager());
 
             //コア部分にはBrowserTypeが無いため、ブラウザ名とBrowserTypeの対応関係を
             //定義してBrowserType値の生成に使うする。

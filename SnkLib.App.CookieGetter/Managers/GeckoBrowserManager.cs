@@ -15,20 +15,20 @@ namespace SunokoLibrary.Application.Browsers
         {
             _primaryLevel = primaryLevel;
             _name = name;
-            DataFolder = dataFolder != null ? Utility.ReplacePathSymbols(dataFolder) : null;
-            IniFileName = iniFileName;
-            CookieFileName = cookieFileName;
+            _dataFolder = dataFolder != null ? Utility.ReplacePathSymbols(dataFolder) : null;
+            _iniFileName = iniFileName;
+            _cookieFileName = cookieFileName;
         }
         int _primaryLevel;
         string _name;
-        protected string DataFolder;
-        protected string IniFileName;
-        protected string CookieFileName;
+        string _dataFolder;
+        string _iniFileName;
+        string _cookieFileName;
 
         public IEnumerable<ICookieImporter> GetCookieImporters()
         {
-            var getters = UserProfile.GetProfiles(DataFolder, IniFileName)
-                .Select(prof => new BrowserConfig(_name, prof.Name, Path.Combine(prof.Path, CookieFileName)))
+            var getters = UserProfile.GetProfiles(_dataFolder, _iniFileName)
+                .Select(prof => new BrowserConfig(_name, prof.Name, Path.Combine(prof.Path, _cookieFileName)))
                 .Select(inf => (ICookieImporter)new GeckoCookieGetter(inf, _primaryLevel))
                 .ToArray();
             getters = getters.Length == 0

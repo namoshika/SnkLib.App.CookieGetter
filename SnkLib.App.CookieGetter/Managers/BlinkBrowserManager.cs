@@ -15,17 +15,17 @@ namespace SunokoLibrary.Application.Browsers
         {
             _primaryLevel = primaryLevel;
             _name = name;
-            DataFolder = dataFolder != null ? Utility.ReplacePathSymbols(dataFolder) : null;
-            CookieFileName = cookieFileName;
-            DefaultFolderName = defaultFolder;
-            ProfileFolderStarts = profileFolderStarts;
+            _dataFolder = dataFolder != null ? Utility.ReplacePathSymbols(dataFolder) : null;
+            _cookieFileName = cookieFileName;
+            _defaultFolderName = defaultFolder;
+            _profileFolderStarts = profileFolderStarts;
         }
         int _primaryLevel;
         string _name;
-        protected string DataFolder;
-        protected string CookieFileName;
-        protected string DefaultFolderName;
-        protected string ProfileFolderStarts;
+        string _dataFolder;
+        string _cookieFileName;
+        string _defaultFolderName;
+        string _profileFolderStarts;
 
         public IEnumerable<ICookieImporter> GetCookieImporters()
         { return GetDefaultProfiles().Concat(GetProfiles()); }
@@ -37,9 +37,9 @@ namespace SunokoLibrary.Application.Browsers
         IEnumerable<ICookieImporter> GetDefaultProfiles()
         {
             string path = null;
-            if (DataFolder != null)
-                path = Path.Combine(DataFolder, DefaultFolderName, CookieFileName);
-            var conf = new BrowserConfig(_name, DefaultFolderName, path);
+            if (_dataFolder != null)
+                path = Path.Combine(_dataFolder, _defaultFolderName, _cookieFileName);
+            var conf = new BrowserConfig(_name, _defaultFolderName, path);
             return new ICookieImporter[] { new BlinkCookieGetter(conf, _primaryLevel) };
         }
         /// <summary>
@@ -50,11 +50,11 @@ namespace SunokoLibrary.Application.Browsers
         IEnumerable<ICookieImporter> GetProfiles()
         {
             var paths = Enumerable.Empty<ICookieImporter>();
-            if (Directory.Exists(DataFolder))
+            if (Directory.Exists(_dataFolder))
             {
-                paths = Directory.EnumerateDirectories(DataFolder)
-                    .Where(path => Path.GetFileName(path).StartsWith(ProfileFolderStarts, StringComparison.OrdinalIgnoreCase))
-                    .Select(path => Path.Combine(path, CookieFileName))
+                paths = Directory.EnumerateDirectories(_dataFolder)
+                    .Where(path => Path.GetFileName(path).StartsWith(_profileFolderStarts, StringComparison.OrdinalIgnoreCase))
+                    .Select(path => Path.Combine(path, _cookieFileName))
                     .Where(path => File.Exists(path))
                     .Select(path => new BlinkCookieGetter(
                         new BrowserConfig(_name, Path.GetFileName(Path.GetDirectoryName(path)), path), _primaryLevel));
