@@ -10,11 +10,11 @@ namespace SunokoLibrary.Application.Browsers
     public class GeckoBrowserManager : ICookieImporterFactory
     {
         public GeckoBrowserManager(
-            string name, string dataFolder, int primaryLevel,
+            string name, string dataFolder, int primaryLevel = 2,
             string cookieFileName = "cookies.sqlite", string iniFileName = "profiles.ini")
         {
-            _primaryLevel = primaryLevel;
             _name = name;
+            _primaryLevel = primaryLevel;
             _dataFolder = dataFolder != null ? Utility.ReplacePathSymbols(dataFolder) : null;
             _iniFileName = iniFileName;
             _cookieFileName = cookieFileName;

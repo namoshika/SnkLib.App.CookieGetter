@@ -10,7 +10,7 @@ namespace SunokoLibrary.Application.Browsers
     public class BlinkBrowserManager : ICookieImporterFactory
     {
         public BlinkBrowserManager(
-            string name, string dataFolder, int primaryLevel, string cookieFileName = "Cookies",
+            string name, string dataFolder, int primaryLevel = 2, string cookieFileName = "Cookies",
             string defaultFolder = "Default", string profileFolderStarts = "Profile")
         {
             _primaryLevel = primaryLevel;
