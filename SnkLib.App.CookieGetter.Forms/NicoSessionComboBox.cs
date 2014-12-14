@@ -19,7 +19,7 @@ namespace SunokoLibrary.Windows.Forms
         protected override void InitLayout()
         {
             base.InitLayout();
-            Initialize(new BrowserSelector(getter => new NicoAccountSelectorItem(getter)));
+            Initialize(new BrowserSelector(CookieGetters.Default, getter => new NicoAccountSelectorItem(getter)));
         }
         class NicoAccountSelectorItem : BrowserItem
         {

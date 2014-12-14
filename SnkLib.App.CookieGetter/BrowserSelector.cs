@@ -19,8 +19,9 @@ namespace SunokoLibrary.Windows.ViewModels
         /// 内容を指定してインスタンスを生成
         /// </summary>
         /// <param name="itemGenerator">Cookie取得用インスタンスからUI上でのブラウザ選択項目を生成します。</param>
-        public BrowserSelector(Func<ICookieImporter, BrowserItem> itemGenerator)
+        public BrowserSelector(ICookieImporterManager importerManager, Func<ICookieImporter, BrowserItem> itemGenerator)
         {
+            _importerManager = importerManager;
             _itemGenerator = itemGenerator;
             _selectedIndex = -1;
             _isAllBrowserMode = false;
@@ -30,6 +31,7 @@ namespace SunokoLibrary.Windows.ViewModels
         object _updaterSyn = new object();
         bool _isUpdating, _isAllBrowserMode, _addedCustom;
         int _selectedIndex;
+        ICookieImporterManager _importerManager;
         Func<ICookieImporter, BrowserItem> _itemGenerator;
 
         /// <summary>
@@ -108,7 +110,7 @@ namespace SunokoLibrary.Windows.ViewModels
                 SelectedIndex = -1;
 
                 IsUpdating = true;
-                var browserItems = (await CookieGetters.GetInstancesAsync(!IsAllBrowserMode))
+                var browserItems = (await _importerManager.GetInstancesAsync(!IsAllBrowserMode))
                     .ToArray()
                     .OrderBy(getter => getter, _getterComparer)
                     .Select(getter =>
@@ -175,7 +177,7 @@ namespace SunokoLibrary.Windows.ViewModels
         protected async Task ProtectedSetConfigAsync(BrowserConfig config)
         {
             //引数configが使えるGetterを取得する。無い場合は適当なのを見繕う
-            var getter = await CookieGetters.GetInstanceAsync(config);
+            var getter = await _importerManager.GetInstanceAsync(config, true);
             lock (_updaterSyn)
             {
                 //取得したGetterのItems内での場所を検索する。

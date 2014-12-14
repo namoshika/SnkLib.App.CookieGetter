@@ -89,7 +89,7 @@ namespace Hal.CookieGetterSharp
 
         public static ICookieGetter[] CreateInstances(bool availableOnly)
         {
-            var getters = CookieGetters.GetInstancesAsync(availableOnly)
+            var getters = CookieGetters.Default.GetInstancesAsync(availableOnly)
                 .ContinueWith(tsk => tsk.Result.Select(getter => new CookieGetter(getter)))
                 .Result.ToArray();
             return getters;

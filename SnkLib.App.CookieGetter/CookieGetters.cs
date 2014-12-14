@@ -8,40 +8,26 @@ using System.Threading.Tasks;
 namespace SunokoLibrary.Application
 {
     using SunokoLibrary.Application.Browsers;
-    
+
     /// <summary>
     /// 使用可能なICookieImporterを提供します。
     /// </summary>
-    public static class CookieGetters
+    public class CookieGetters : ICookieImporterManager
     {
-        static CookieGetters()
-        {
-            BrowserManagers = new ConcurrentQueue<ICookieImporterFactory>(new ICookieImporterFactory[] {
-                new IEBrowserManager(),
-                new FirefoxBrowserManager(),
-                new GoogleChromeBrowserManager(),
-                new OperaWebkitBrowserManager(),
-                new ChromiumBrowserManager(),
-                new LunascapeBrowserManager(),
-                new MaxthonBrowserManager(),
-                new SleipnirBrowserManager(),
-                new TungstenBrowserManager(),
-                new SmartBlinkBrowserManager(),
-                new SmartGeckoBrowserManager(),
-            });
-        }
-        
         /// <summary>
-        /// 対応するブラウザのリスト
+        /// 引数factoriesを扱うCookieGettersを生成します。
         /// </summary>
-        public static ConcurrentQueue<ICookieImporterFactory> BrowserManagers { get; private set; }
+        /// <param name="factories">登録するファクトリの配列</param>
+        public CookieGetters(ICookieImporterFactory[] factories)
+        { _factories = factories; }
+        ICookieImporterFactory[] _factories;
         /// <summary>
         /// Cookie取得用インスタンスのリストを取得する
         /// </summary>
         /// <param name="availableOnly">利用可能なものだけを選択するかどうか</param>
-        public static Task<ICookieImporter[]> GetInstancesAsync(bool availableOnly)
+        public Task<ICookieImporter[]> GetInstancesAsync(bool availableOnly)
         {
-            return Task.Run(() => BrowserManagers
+            return Task.Run(() => _factories
                 .SelectMany(item => item.GetCookieImporters())
                 .GroupBy(item => item.Config)
                 .Select(grp => grp.First())
@@ -52,7 +38,7 @@ namespace SunokoLibrary.Application
         /// </summary>
         /// <param name="targetConfig">任意のブラウザ環境設定</param>
         /// <param name="allowDefault">生成不可の場合に既定のCookieImporterを返すか</param>
-        public static async Task<ICookieImporter> GetInstanceAsync(BrowserConfig targetConfig = null, bool allowDefault = true)
+        public async Task<ICookieImporter> GetInstanceAsync(BrowserConfig targetConfig = null, bool allowDefault = true)
         {
             var foundGetter = null as ICookieImporter;
             var getterList = await GetInstancesAsync(false);
@@ -71,5 +57,31 @@ namespace SunokoLibrary.Application
 
             return foundGetter;
         }
+
+        static CookieGetters()
+        {
+            BrowserManagers = new ConcurrentQueue<ICookieImporterFactory>(new ICookieImporterFactory[] {
+                new IEBrowserManager(),
+                new FirefoxBrowserManager(),
+                new GoogleChromeBrowserManager(),
+                new OperaWebkitBrowserManager(),
+                new ChromiumBrowserManager(),
+                new LunascapeBrowserManager(),
+                new MaxthonBrowserManager(),
+                new SleipnirBrowserManager(),
+                new TungstenBrowserManager(),
+                new SmartBlinkBrowserManager(),
+                new SmartGeckoBrowserManager(),
+            });
+            Default = new CookieGetters(BrowserManagers.ToArray());
+        }
+        /// <summary>
+        /// 対応するブラウザのリスト
+        /// </summary>
+        public static ConcurrentQueue<ICookieImporterFactory> BrowserManagers { get; private set; }
+        /// <summary>
+        /// 既定のCookieGettersを取得します。
+        /// </summary>
+        public static CookieGetters Default { get; private set; }
     }
 }

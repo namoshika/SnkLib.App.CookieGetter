@@ -73,6 +73,23 @@ namespace SunokoLibrary.Application
         /// </summary>
         IEnumerable<ICookieImporter> GetCookieImporters();
     }
+    /// <summary>
+    /// 使用可能なICookieImporterの管理を行う機能を定義します。
+    /// </summary>
+    public interface ICookieImporterManager
+    {
+        /// <summary>
+        /// Cookie取得用インスタンスのリストを取得する
+        /// </summary>
+        /// <param name="availableOnly">利用可能なものだけを選択するかどうか</param>
+        Task<ICookieImporter[]> GetInstancesAsync(bool availableOnly);
+        /// <summary>
+        /// 設定値を復元したCookie取得用インスタンスを取得する。直前まで使用していたICookieImporterのConfigを保存しておいたりすると起動時に最適な既定値を選んでくれる。
+        /// </summary>
+        /// <param name="targetConfig">任意のブラウザ環境設定</param>
+        /// <param name="allowDefault">生成不可の場合に既定のCookieImporterを返すか</param>
+        Task<ICookieImporter> GetInstanceAsync(BrowserConfig targetConfig, bool allowDefault);
+    }
 
     /// <summary>
     /// クッキー取得に関する例外。

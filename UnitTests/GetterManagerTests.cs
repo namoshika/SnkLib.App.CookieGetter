@@ -65,14 +65,14 @@ namespace UnitTest
         [TestMethod]
         public async Task AvailableAllBrowserTest()
         {
-            var getters = (await CookieGetters.GetInstancesAsync(true))
+            var getters = (await CookieGetters.Default.GetInstancesAsync(true))
                 .Where(getter => getter is IECookieGetter == false).ToArray();
             await CheckGetters(getters, true);
         }
         [TestMethod]
         public async Task NotAvailableAllBrowserTest()
         {
-            var getters = (await CookieGetters.GetInstancesAsync(false))
+            var getters = (await CookieGetters.Default.GetInstancesAsync(false))
                 .Where(getter => getter.IsAvailable == false).ToArray();
             await CheckGetters(getters, false);
         }
