@@ -55,7 +55,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SnkLib.App.CookieGetter\SnkLib.App.CookieGetter.csproj">
+    <ProjectReference Include="..\Net4.5\SnkLib.App.CookieGetter\SnkLib.App.CookieGetter.csproj">
       <Project>{bb3f3039-e8c2-4cb8-9257-59b92f03a87c}</Project>
       <Name>SnkLib.App.CookieGetter</Name>
     </ProjectReference>

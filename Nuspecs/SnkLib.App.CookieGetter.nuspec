@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <package>
     <metadata>
-        <id>$id$</id>
-        <version>$version$</version>
-        <title>$title$</title>
-        <authors>$author$</authors>
-        <owners>$author$</owners>
+        <id>SnkLib.App.CookieGetter</id>
+        <version>1.3.0.0</version>
+        <title>SnkLib.App.CookieGetter</title>
+        <authors>namoshika</authors>
+        <owners>namoshika</owners>
         <summary>ブラウザのCookieをデスクトップアプリから参照するライブラリ</summary>
         <description>IEやChrome、Firefox、それらの派生ブラウザからCookieを取得し、.NETデスクトップアプリで扱うためのライブラリです。</description>
         <projectUrl>https://github.com/namoshika/SnkLib.App.CookieGetter</projectUrl>
@@ -14,11 +14,19 @@
         <copyright>Copyright 2014 namoshika</copyright>
         <tags>Browser Cookie Getter</tags>
         <references>
-            <reference file="$id$.dll" />
+            <reference file="SnkLib.App.CookieGetter.dll" />
         </references>
+        <dependencies>
+            <group targetFramework="net45">
+                <dependency id="System.Data.SQLite.Core" version="1.0.94.0" />
+            </group>
+        </dependencies>
     </metadata>
     <files>
+        <!--.net4.5-->
+        <file src="..\Net4.5\SnkLib.App.CookieGetter\bin\Release\SnkLib.App.CookieGetter.dll" target="lib\net45" />
+        <file src="..\Net4.5\SnkLib.App.CookieGetter\bin\Release\SnkLib.App.CookieGetter.xml" target="lib\net45" />
+        <file src="..\Net4.5\SnkLib.App.CookieGetter\bin\Release\SnkLib.App.CookieGetter.x86Proxy.exe" target="build\net45" />
         <file src="SnkLib.App.CookieGetter.targets" target="build\net45" />
-        <file src="bin\$configuration$\SnkLib.App.CookieGetter.x86Proxy.exe" target="build\net45" />
     </files>
 </package>

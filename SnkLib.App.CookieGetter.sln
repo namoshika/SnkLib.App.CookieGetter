@@ -3,59 +3,96 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CookieGetterSharp", "CookieGetterSharp\CookieGetterSharp.csproj", "{ACB84F0E-B482-46B0-8C29-1FAC6C85D622}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{BCBC7A76-8A57-4723-87BC-0EFE6E37E542}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkLib.App.CookieGetter", "SnkLib.App.CookieGetter\SnkLib.App.CookieGetter.csproj", "{BB3F3039-E8C2-4CB8-9257-59B92F03A87C}"
-	ProjectSection(ProjectDependencies) = postProject
-		{6B024D6D-EE44-4E98-8612-ECDE351E5182} = {6B024D6D-EE44-4E98-8612-ECDE351E5182}
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkLib.App.CookieGetter", "Net4.5\SnkLib.App.CookieGetter\SnkLib.App.CookieGetter.csproj", "{BB3F3039-E8C2-4CB8-9257-59B92F03A87C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Net4.5", "Net4.5", "{021D5F20-4EB9-4DE0-BD06-0C63A5257E11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkLib.App.CookieGetter.Forms", "Net4.5\SnkLib.App.CookieGetter.Forms\SnkLib.App.CookieGetter.Forms.csproj", "{21C104C4-9DDD-4449-B3CE-BD69068333DB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Net4.0", "Net4.0", "{21F9D42E-0FF2-476C-BADC-914515DD853A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkLib.App.CookieGetter.x86Proxy", "Net4.0\SnkLib.App.CookieGetter.x86Proxy\SnkLib.App.CookieGetter.x86Proxy.csproj", "{6B024D6D-EE44-4E98-8612-ECDE351E5182}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CookieGetterSharp", "Net4.5\CookieGetterSharp\CookieGetterSharp.csproj", "{EF10C03D-D0D0-48A2-A491-6469843396B5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuspecs", "Nuspecs", "{25F670FD-79D6-4A2F-91E9-A1A6D96A4044}"
+	ProjectSection(SolutionItems) = preProject
+		Nuspecs\CookieGetterSharp.nuspec = Nuspecs\CookieGetterSharp.nuspec
+		Nuspecs\NuPacker.bat = Nuspecs\NuPacker.bat
+		Nuspecs\SnkLib.App.CookieGetter.Forms.nuspec = Nuspecs\SnkLib.App.CookieGetter.Forms.nuspec
+		Nuspecs\SnkLib.App.CookieGetter.nuspec = Nuspecs\SnkLib.App.CookieGetter.nuspec
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkLib.App.CookieGetter.x86Proxy", "SnkLib.App.CookieGetter.x86Proxy\SnkLib.App.CookieGetter.x86Proxy.csproj", "{6B024D6D-EE44-4E98-8612-ECDE351E5182}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Net4.5\Sample\Sample\Sample.csproj", "{14A980C2-8B21-4C0C-B34D-0D188D8EE911}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample\Sample.csproj", "{14A980C2-8B21-4C0C-B34D-0D188D8EE911}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NwhoisLoginSystem", "Sample\NwhoisLoginSystem\NwhoisLoginSystem.csproj", "{FAA80ADB-F755-4D64-9669-D251726FFD97}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkLib.App.CookieGetter.Forms", "SnkLib.App.CookieGetter.Forms\SnkLib.App.CookieGetter.Forms.csproj", "{21C104C4-9DDD-4449-B3CE-BD69068333DB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NwhoisLoginSystem", "Net4.5\Sample\NwhoisLoginSystem\NwhoisLoginSystem.csproj", "{FAA80ADB-F755-4D64-9669-D251726FFD97}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{ACB84F0E-B482-46B0-8C29-1FAC6C85D622}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ACB84F0E-B482-46B0-8C29-1FAC6C85D622}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ACB84F0E-B482-46B0-8C29-1FAC6C85D622}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ACB84F0E-B482-46B0-8C29-1FAC6C85D622}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BCBC7A76-8A57-4723-87BC-0EFE6E37E542}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BCBC7A76-8A57-4723-87BC-0EFE6E37E542}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCBC7A76-8A57-4723-87BC-0EFE6E37E542}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{BCBC7A76-8A57-4723-87BC-0EFE6E37E542}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCBC7A76-8A57-4723-87BC-0EFE6E37E542}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCBC7A76-8A57-4723-87BC-0EFE6E37E542}.Release|x86.ActiveCfg = Release|Any CPU
 		{BB3F3039-E8C2-4CB8-9257-59B92F03A87C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BB3F3039-E8C2-4CB8-9257-59B92F03A87C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB3F3039-E8C2-4CB8-9257-59B92F03A87C}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{BB3F3039-E8C2-4CB8-9257-59B92F03A87C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB3F3039-E8C2-4CB8-9257-59B92F03A87C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6B024D6D-EE44-4E98-8612-ECDE351E5182}.Debug|Any CPU.ActiveCfg = Release|Any CPU
-		{6B024D6D-EE44-4E98-8612-ECDE351E5182}.Debug|Any CPU.Build.0 = Release|Any CPU
-		{6B024D6D-EE44-4E98-8612-ECDE351E5182}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6B024D6D-EE44-4E98-8612-ECDE351E5182}.Release|Any CPU.Build.0 = Release|Any CPU
-		{14A980C2-8B21-4C0C-B34D-0D188D8EE911}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{14A980C2-8B21-4C0C-B34D-0D188D8EE911}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{14A980C2-8B21-4C0C-B34D-0D188D8EE911}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{14A980C2-8B21-4C0C-B34D-0D188D8EE911}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FAA80ADB-F755-4D64-9669-D251726FFD97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FAA80ADB-F755-4D64-9669-D251726FFD97}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FAA80ADB-F755-4D64-9669-D251726FFD97}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FAA80ADB-F755-4D64-9669-D251726FFD97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB3F3039-E8C2-4CB8-9257-59B92F03A87C}.Release|x86.ActiveCfg = Release|Any CPU
 		{21C104C4-9DDD-4449-B3CE-BD69068333DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{21C104C4-9DDD-4449-B3CE-BD69068333DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21C104C4-9DDD-4449-B3CE-BD69068333DB}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{21C104C4-9DDD-4449-B3CE-BD69068333DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21C104C4-9DDD-4449-B3CE-BD69068333DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21C104C4-9DDD-4449-B3CE-BD69068333DB}.Release|x86.ActiveCfg = Release|Any CPU
+		{6B024D6D-EE44-4E98-8612-ECDE351E5182}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B024D6D-EE44-4E98-8612-ECDE351E5182}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B024D6D-EE44-4E98-8612-ECDE351E5182}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6B024D6D-EE44-4E98-8612-ECDE351E5182}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B024D6D-EE44-4E98-8612-ECDE351E5182}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B024D6D-EE44-4E98-8612-ECDE351E5182}.Release|x86.ActiveCfg = Release|Any CPU
+		{EF10C03D-D0D0-48A2-A491-6469843396B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF10C03D-D0D0-48A2-A491-6469843396B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF10C03D-D0D0-48A2-A491-6469843396B5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EF10C03D-D0D0-48A2-A491-6469843396B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF10C03D-D0D0-48A2-A491-6469843396B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF10C03D-D0D0-48A2-A491-6469843396B5}.Release|x86.ActiveCfg = Release|Any CPU
+		{14A980C2-8B21-4C0C-B34D-0D188D8EE911}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14A980C2-8B21-4C0C-B34D-0D188D8EE911}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14A980C2-8B21-4C0C-B34D-0D188D8EE911}.Debug|x86.ActiveCfg = Debug|x86
+		{14A980C2-8B21-4C0C-B34D-0D188D8EE911}.Debug|x86.Build.0 = Debug|x86
+		{14A980C2-8B21-4C0C-B34D-0D188D8EE911}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14A980C2-8B21-4C0C-B34D-0D188D8EE911}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14A980C2-8B21-4C0C-B34D-0D188D8EE911}.Release|x86.ActiveCfg = Release|x86
+		{14A980C2-8B21-4C0C-B34D-0D188D8EE911}.Release|x86.Build.0 = Release|x86
+		{FAA80ADB-F755-4D64-9669-D251726FFD97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAA80ADB-F755-4D64-9669-D251726FFD97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAA80ADB-F755-4D64-9669-D251726FFD97}.Debug|x86.ActiveCfg = Debug|x86
+		{FAA80ADB-F755-4D64-9669-D251726FFD97}.Debug|x86.Build.0 = Debug|x86
+		{FAA80ADB-F755-4D64-9669-D251726FFD97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAA80ADB-F755-4D64-9669-D251726FFD97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAA80ADB-F755-4D64-9669-D251726FFD97}.Release|x86.ActiveCfg = Release|x86
+		{FAA80ADB-F755-4D64-9669-D251726FFD97}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BB3F3039-E8C2-4CB8-9257-59B92F03A87C} = {021D5F20-4EB9-4DE0-BD06-0C63A5257E11}
+		{21C104C4-9DDD-4449-B3CE-BD69068333DB} = {021D5F20-4EB9-4DE0-BD06-0C63A5257E11}
+		{6B024D6D-EE44-4E98-8612-ECDE351E5182} = {21F9D42E-0FF2-476C-BADC-914515DD853A}
+		{EF10C03D-D0D0-48A2-A491-6469843396B5} = {021D5F20-4EB9-4DE0-BD06-0C63A5257E11}
+		{14A980C2-8B21-4C0C-B34D-0D188D8EE911} = {021D5F20-4EB9-4DE0-BD06-0C63A5257E11}
+		{FAA80ADB-F755-4D64-9669-D251726FFD97} = {021D5F20-4EB9-4DE0-BD06-0C63A5257E11}
 	EndGlobalSection
 EndGlobal
