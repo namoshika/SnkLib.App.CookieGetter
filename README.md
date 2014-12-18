@@ -1,7 +1,7 @@
 ﻿#SnkLib.App.CookieGetter
 
 ブラウザのCookieを.NETアプリで使えるようにするライブラリです。  
-<http://com.nicovideo.jp/community/co235502> で配布されているCookieGetterSharpを元に、互換性を維持した上での設計の改善を施したものです。
+<http://com.nicovideo.jp/community/co235502> で配布されているCookieGetterSharpを元に、互換性を維持した上での設計の改善を施したものです。.NET4.0以上で動きます。
 
 本家と同水準でIE, Chrome, Firefox, Lunascape, Maxthon, Sleipnir, Tungstenなどに対応しています。独自に強化したポイントとしてChromeやFirefoxの派生ブラウザなどで本家が対応していないものへの包括的な対応と設定保存周りの使い勝手の強化などが行われています。
 
@@ -24,14 +24,23 @@ masterで本家との互換性を追究しつつ、Gecko, Webkit系のIBrowserMa
 * baseFix: 見つけた不具合の修正。互換性重視で触らぬ神に祟りなし方針。
 * master: 設計の改善。
 
-また、プロジェクトは以下の方針下にあります。
+また、プロジェクトは以下の方針下にあります。  
+各プロジェクトはフレームワークのバージョン毎にフォルダを分けられています。
 
-* CookieGetterSharp: 本家と互換性を持ったせるラッパー。
-* NwhoisLoginSystem: 本家に付いてるデモアプリ。
-* Sample: 新クラスに対応させたデモアプリ。
-* SnkLib.App.CookieGetter: 本体。
-* SnkLib.App.CookieGetter.Forms: ブラウザ選択UIなどの部品。
-* SnkLib.App.CookieGetter.x86Proxy: 本体が内部で使用する子プロセス。
+* NET4.0
+  * SnkLib.App.CookieGetter: 本体。
+  * SnkLib.App.CookieGetter.Forms: ブラウザ選択UIなどの部品。
+  * SnkLib.App.CookieGetter.x86Proxy: 本体が内部で使用する子プロセス。.NET4.5と共用です。
+  * Sample: 新クラスに対応させたデモアプリ。
+  * CookieGetterSharp: 本家と互換性を持ったせるラッパー。
+* NET4.5
+  * SnkLib.App.CookieGetter: 本体。
+  * SnkLib.App.CookieGetter.Forms: ブラウザ選択UIなどの部品。
+  * Sample: 新クラスに対応させたデモアプリ。
+  * NwhoisLoginSystem: 本家に付いてるデモアプリ。
+  * CookieGetterSharp: 本家と互換性を持ったせるラッパー。
+* Nuspecs: NuGetパッケージ生成関係。
+* Publish: 生成したnupkgの出力先
 * UnitTests: 動作確認。
 
 ##使い方
@@ -72,8 +81,5 @@ Properties.Settings.Default.SelectedBrowserConfig = cookieGetter.Config
 //適切なものが見つからない場合は適当なのを見繕うなど、次回起動時の設定の
 //復元が楽になるように作っています。
 var currentGetter = await CookieGetters.GetInstanceAsync(
-  new BrowserConfig(
-    Properties.Settings.Default.BrowserName,
-    Properties.Settings.Default.ProfileName,
-    Properties.Settings.Default.CookiePath));
+  Properties.Settings.Default.SelectedBrowserConfig);
 ```

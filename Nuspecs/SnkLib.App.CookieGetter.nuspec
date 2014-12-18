@@ -20,6 +20,11 @@
             <group targetFramework="net45">
                 <dependency id="System.Data.SQLite.Core" version="1.0.94.0" />
             </group>
+            <group targetFramework="net40">
+                <dependency id="System.Data.SQLite.Core" version="1.0.94.0" />
+                <dependency id="Microsoft.Bcl.Async" version="1.0.168" />
+                <dependency id="Microsoft.Bcl.Build" version="1.0.14" />
+            </group>
         </dependencies>
     </metadata>
     <files>
@@ -28,5 +33,10 @@
         <file src="..\Net4.5\SnkLib.App.CookieGetter\bin\Release\SnkLib.App.CookieGetter.xml" target="lib\net45" />
         <file src="..\Net4.5\SnkLib.App.CookieGetter\bin\Release\SnkLib.App.CookieGetter.x86Proxy.exe" target="build\net45" />
         <file src="SnkLib.App.CookieGetter.targets" target="build\net45" />
+        <!--.net4.0-->
+        <file src="..\Net4.0\SnkLib.App.CookieGetter\bin\Release\SnkLib.App.CookieGetter.dll" target="lib\net40" />
+        <file src="..\Net4.0\SnkLib.App.CookieGetter\bin\Release\SnkLib.App.CookieGetter.xml" target="lib\net40" />
+        <file src="..\Net4.0\SnkLib.App.CookieGetter\bin\Release\SnkLib.App.CookieGetter.x86Proxy.exe" target="build\net40" />
+        <file src="SnkLib.App.CookieGetter.targets" target="build\net40" />
     </files>
 </package>
