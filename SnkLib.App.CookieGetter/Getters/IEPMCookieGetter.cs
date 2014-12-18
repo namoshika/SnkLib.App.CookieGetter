@@ -20,13 +20,12 @@ namespace SunokoLibrary.Application.Browsers
         public override bool IsAvailable { get { return Win32Api.GetIEVersion().Major >= 8; } }
         public override ICookieImporter Generate(BrowserConfig config)
         { return new IEPMCookieGetter(config, PrimaryLevel); }
-        protected override async Task<ImportResult> ProtectedGetCookiesAsync(Uri targetUrl, CookieContainer container)
+        protected override ImportResult ProtectedGetCookies(Uri targetUrl, CookieContainer container)
         {
             if (IsAvailable == false)
                 return ImportResult.Unavailable;
             try
             {
-                await Task.Yield();
                 var cookiesText = PrivateGetCookiesWinApi(targetUrl, null);
                 Debug.Assert(cookiesText != null, "IEGetProtectedModeCookie: error");
                 if (cookiesText != null)

@@ -21,13 +21,13 @@ namespace SunokoLibrary.Application.Browsers
 
         public override ICookieImporter Generate(BrowserConfig config)
         { return new BlinkCookieGetter(config, PrimaryLevel); }
-        protected override async Task<ImportResult> ProtectedGetCookiesAsync(Uri targetUrl, CookieContainer container)
+        protected override ImportResult ProtectedGetCookies(Uri targetUrl, CookieContainer container)
         {
             if (IsAvailable == false)
                 return ImportResult.Unavailable;
             try
             {
-                var formatVersionRec = await LookupEntryAsync(Config.CookiePath, SELECT_QUERY_VERSION);
+                var formatVersionRec = LookupEntry(Config.CookiePath, SELECT_QUERY_VERSION);
                 int cookieFormatVersion;
                 if (formatVersionRec.Count == 0
                     || formatVersionRec[0].Length == 0
@@ -37,7 +37,8 @@ namespace SunokoLibrary.Application.Browsers
                 string query;
                 query = cookieFormatVersion < 7 ? SELECT_QUERY : SELECT_QUERY_V7;
                 query = string.Format("{0} {1} ORDER BY creation_utc DESC", query, MakeWhere(targetUrl));
-                container.Add(await LookupCookiesAsync(Config.CookiePath, query));
+                foreach (var item in LookupCookies(Config.CookiePath, query))
+                    container.Add(item);
                 return ImportResult.Success;
             }
             catch (CookieImportException ex)

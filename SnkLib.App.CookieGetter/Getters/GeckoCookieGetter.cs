@@ -18,14 +18,15 @@ namespace SunokoLibrary.Application.Browsers
 
         public override ICookieImporter Generate(BrowserConfig config)
         { return new GeckoCookieGetter(config, PrimaryLevel); }
-        protected override async Task<ImportResult> ProtectedGetCookiesAsync(Uri targetUrl, System.Net.CookieContainer container)
+        protected override ImportResult ProtectedGetCookies(Uri targetUrl, System.Net.CookieContainer container)
         {
             if (IsAvailable == false)
                 return ImportResult.Unavailable;
             try
             {
                 var query = string.Format("{0} {1} ORDER BY expiry", SELECT_QUERY, MakeWhere(targetUrl));
-                container.Add(await LookupCookiesAsync(Config.CookiePath, query));
+                foreach (var item in LookupCookies(Config.CookiePath, query))
+                    container.Add(item);
                 return ImportResult.Success;
             }
             catch (CookieImportException ex)

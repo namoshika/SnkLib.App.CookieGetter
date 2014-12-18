@@ -6,7 +6,7 @@
         <title>$title$</title>
         <authors>$author$</authors>
         <owners>$author$</owners>
-        <summary>$description$</summary>
+        <summary>CookieGetterSharpと互換性を持たせるためのラッパー</summary>
         <projectUrl>https://github.com/namoshika/SnkLib.App.CookieGetter</projectUrl>
         <licenseUrl>https://www.gnu.org/licenses/lgpl-2.1.txt</licenseUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>

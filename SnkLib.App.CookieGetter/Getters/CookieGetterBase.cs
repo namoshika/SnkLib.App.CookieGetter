@@ -39,11 +39,11 @@ namespace SunokoLibrary.Application.Browsers
             //同期コンテキストが確実にUIスレッド以外になるようにする。
             //awaitのある処理をUIスレッドでTask.Wait()した場合、デッドロックが発生する事がある。
             //その対策としてここで別スレッドから呼び出す事を保証する。
-            return Task.Run(() => ProtectedGetCookiesAsync(targetUrl, container));
+            return Task.Factory.StartNew(() => ProtectedGetCookies(targetUrl, container));
         }
         public abstract ICookieImporter Generate(BrowserConfig config);
 
-        protected abstract Task<ImportResult> ProtectedGetCookiesAsync(Uri targetUrl, CookieContainer container);
+        protected abstract ImportResult ProtectedGetCookies(Uri targetUrl, CookieContainer container);
         protected static void TraceFail(ICookieImporter target, string message, string detailMessage)
         { Trace.Fail(string.Format("{0}のCookieの{1}", target.Config.BrowserName, message), detailMessage); }
     }

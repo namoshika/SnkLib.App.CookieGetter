@@ -11,7 +11,7 @@ namespace SunokoLibrary.Application.Browsers
         public WebkitQtCookieGetter(BrowserConfig config, int primaryLevel) : base(config, PathType.File, primaryLevel) { }
         public override ICookieImporter Generate(BrowserConfig config)
         { return new WebkitQtCookieGetter(config, PrimaryLevel); }
-        protected override async Task<ImportResult> ProtectedGetCookiesAsync(Uri targetUrl, CookieContainer container)
+        protected override ImportResult ProtectedGetCookies(Uri targetUrl, CookieContainer container)
         {
             if (IsAvailable == false)
                 return ImportResult.Unavailable;
@@ -21,7 +21,7 @@ namespace SunokoLibrary.Application.Browsers
                 using (var sr = new System.IO.StreamReader(Config.CookiePath))
                     while (!sr.EndOfStream)
                     {
-                        var line = await sr.ReadLineAsync();
+                        var line = sr.ReadLine();
                         if (line.StartsWith("cookies="))
                             container.Add(ParseCookieSettings(line));
                         res = ImportResult.Success;

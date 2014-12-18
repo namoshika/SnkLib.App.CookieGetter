@@ -18,6 +18,7 @@ namespace SunokoLibrary.Windows.ViewModels
         /// <summary>
         /// 内容を指定してインスタンスを生成
         /// </summary>
+        /// <param name="importerManager">使用するGettersを引数で指定します。</param>
         /// <param name="itemGenerator">Cookie取得用インスタンスからUI上でのブラウザ選択項目を生成します。</param>
         public BrowserSelector(ICookieImporterManager importerManager, Func<ICookieImporter, BrowserItem> itemGenerator)
         {

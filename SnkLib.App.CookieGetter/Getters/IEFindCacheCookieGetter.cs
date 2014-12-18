@@ -28,12 +28,11 @@ namespace SunokoLibrary.Application.Browsers
         }
         public override ICookieImporter Generate(BrowserConfig config)
         { return new IEFindCacheCookieGetter(config, PrimaryLevel); }
-        protected override async Task<ImportResult> ProtectedGetCookiesAsync(Uri targetUrl, CookieContainer container)
+        protected override ImportResult ProtectedGetCookies(Uri targetUrl, CookieContainer container)
         {
             if (IsAvailable == false)
                 return ImportResult.Unavailable;
 
-            await Task.Yield();
             List<Cookie> cookies;
             try
             {

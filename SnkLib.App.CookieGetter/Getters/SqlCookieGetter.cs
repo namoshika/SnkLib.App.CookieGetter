@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,17 +23,10 @@ namespace SunokoLibrary.Application.Browsers
         /// <param name="query">実行するクエリ</param>
         /// <returns>取得されたCookies</returns>
         /// <exception cref="CookieImportException" />
-        protected async Task<CookieCollection> LookupCookiesAsync(string path, string query)
+        protected IEnumerable<Cookie> LookupCookies(string path, string query)
         {
-            var result = new CookieCollection();
-            foreach (var record in await LookupEntryAsync(path, query))
-            {
-                var cookie = DataToCookie(record);
-                if (cookie == null)
-                    continue;
-                result.Add(cookie);
-            }
-            return result;
+            return LookupEntry(path, query)
+                .Select(record => DataToCookie(record)).Where(cookie => cookie != null);
         }
         /// <summary>
         /// SQLから取得したデータをクッキーに変換する
@@ -46,7 +40,7 @@ namespace SunokoLibrary.Application.Browsers
         /// <param name="path">参照先DBファイル</param>
         /// <param name="query">実行するクエリ</param>
         /// <exception cref="CookieImportException">一時ファイル生成失敗。DB照会失敗。</exception>
-        protected static async Task<List<object[]>> LookupEntryAsync(string path, string query)
+        protected static List<object[]> LookupEntry(string path, string query)
         {
             if (File.Exists(path) == false)
                 throw new InvalidOperationException(string.Format("ファイルが存在しません。{0}", path));
@@ -67,7 +61,6 @@ namespace SunokoLibrary.Application.Browsers
                 }
 
                 var results = new List<object[]>();
-                await Task.Delay(5);
                 SQLiteConnection sqlConnection = null;
                 try
                 {

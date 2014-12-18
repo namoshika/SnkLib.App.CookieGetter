@@ -18,7 +18,7 @@ namespace SunokoLibrary.Application.Browsers
         public override bool IsAvailable { get { return true; } }
         public override ICookieImporter Generate(BrowserConfig config)
         { return new IECookieGetter(config, PrimaryLevel); }
-        protected override async Task<ImportResult> ProtectedGetCookiesAsync(Uri targetUrl, System.Net.CookieContainer container)
+        protected override ImportResult ProtectedGetCookies(Uri targetUrl, System.Net.CookieContainer container)
         {
             string cookiesText;
             var hResult = Win32Api.GetCookiesFromIE(out cookiesText, targetUrl, null);
@@ -28,7 +28,6 @@ namespace SunokoLibrary.Application.Browsers
                 return ImportResult.AccessError;
             try
             {
-                await Task.Yield();
                 var cookies = new CookieCollection();
                 foreach (var item in ParseCookies(cookiesText, targetUrl))
                     cookies.Add(item);

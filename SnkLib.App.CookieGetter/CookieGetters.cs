@@ -27,7 +27,7 @@ namespace SunokoLibrary.Application
         /// <param name="availableOnly">利用可能なものだけを選択するかどうか</param>
         public Task<ICookieImporter[]> GetInstancesAsync(bool availableOnly)
         {
-            return Task.Run(() => _factories
+            return Task.Factory.StartNew(() => _factories
                 .SelectMany(item => item.GetCookieImporters())
                 .GroupBy(item => item.Config)
                 .Select(grp => grp.First())
