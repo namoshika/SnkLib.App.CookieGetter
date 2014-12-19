@@ -68,24 +68,97 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Threading.Tasks.Extensions">
-      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop">
-      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite, Version=1.0.81.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Net4.0\Libs\SystemDataSQLite10811\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SnkLib.App.CookieGetter\BrowserConfig.cs">
+      <Link>Core\BrowserConfig.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\BrowserSelector.cs">
+      <Link>Core\BrowserSelector.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\CookieGetters.cs">
+      <Link>Core\CookieGetters.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Getters\BlinkCookieGetter.cs">
+      <Link>Core\Getters\BlinkCookieGetter.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Getters\CookieGetterBase.cs">
+      <Link>Core\Getters\CookieGetterBase.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Getters\GeckoCookieGetter.cs">
+      <Link>Core\Getters\GeckoCookieGetter.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Getters\IECookieGetter.cs">
+      <Link>Core\Getters\IECookieGetter.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Getters\IEFindCacheCookieGetter.cs">
+      <Link>Core\Getters\IEFindCacheCookieGetter.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Getters\IEPMCookieGetter.cs">
+      <Link>Core\Getters\IEPMCookieGetter.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Getters\SqlCookieGetter.cs">
+      <Link>Core\Getters\SqlCookieGetter.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Getters\WebkitQtCookieGetter.cs">
+      <Link>Core\Getters\WebkitQtCookieGetter.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Interfaces.cs">
+      <Link>Core\Interfaces.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\IProxyService.cs">
+      <Link>Core\IProxyService.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Managers\BlinkBrowserManager.cs">
+      <Link>Core\Managers\BlinkBrowserManager.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Managers\ChromiumBrowserManager.cs">
+      <Link>Core\Managers\ChromiumBrowserManager.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Managers\FirefoxBrowserManager.cs">
+      <Link>Core\Managers\FirefoxBrowserManager.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Managers\GeckoBrowserManager.cs">
+      <Link>Core\Managers\GeckoBrowserManager.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Managers\GoogleChromeBrowserManager.cs">
+      <Link>Core\Managers\GoogleChromeBrowserManager.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Managers\IEBrowserManager.cs">
+      <Link>Core\Managers\IEBrowserManager.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Managers\LunascapeBrowserManager.cs">
+      <Link>Core\Managers\LunascapeBrowserManager.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Managers\MaxthonBrowserManager.cs">
+      <Link>Core\Managers\MaxthonBrowserManager.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Managers\OperaWebkitBrowserManager.cs">
+      <Link>Core\Managers\OperaWebkitBrowserManager.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Managers\SleipnirBrowserManager.cs">
+      <Link>Core\Managers\SleipnirBrowserManager.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Managers\SmartBrowserManager.cs">
+      <Link>Core\Managers\SmartBrowserManager.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Managers\TungstenBrowserManager.cs">
+      <Link>Core\Managers\TungstenBrowserManager.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Utility.cs">
+      <Link>Core\Utility.cs</Link>
+    </Compile>
     <Compile Include="ComboBoxBrowser.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -131,20 +204,22 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="..\..\Net4.0\SnkLib.App.CookieGetter.x86Proxy\bin\Release\SnkLib.App.CookieGetter.x86Proxy.exe">
+      <Link>SnkLib.App.CookieGetter.x86Proxy.exe</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SnkLib.App.CookieGetter\SnkLib.App.CookieGetter.csproj">
-      <Project>{bb3f3039-e8c2-4cb8-9257-59b92f03a87c}</Project>
-      <Name>SnkLib.App.CookieGetter</Name>
-    </ProjectReference>
+    <None Include="..\..\Net4.0\Libs\SystemDataSQLite10811\Win32\SQLite.Interop.dll">
+      <Link>Win32\SQLite.Interop.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\Net4.0\Libs\SystemDataSQLite10811\x64\SQLite.Interop.dll">
+      <Link>x64\SQLite.Interop.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
-  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
-    <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
-    <Error Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
-  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

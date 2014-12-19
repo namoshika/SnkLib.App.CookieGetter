@@ -3,7 +3,7 @@
 ブラウザのCookieを.NETアプリで使えるようにするライブラリです。  
 <http://com.nicovideo.jp/community/co235502> で配布されているCookieGetterSharpを元に、互換性を維持した上での設計の改善を施したものです。.NET4.0以上で動きます。
 
-本家と同水準でIE, Chrome, Firefox, Lunascape, Maxthon, Sleipnir, Tungstenなどに対応しています。独自に強化したポイントとしてChromeやFirefoxの派生ブラウザなどで本家が対応していないものへの包括的な対応と設定保存周りの使い勝手の強化などが行われています。
+本家と同水準でIE, Chrome, Firefox, Lunascape, Maxthon, Sleipnir, Tungsten などに対応しています。また、Kinzaなどの本家が対応していない派生ブラウザ系統への包括的な対応と設定保存周りの使い勝手の改善などが行われています。
 
 ## ライセンス
 以下のライセンス下にあります。  
@@ -12,7 +12,7 @@
   Copyright (c) 2014 namoshika.  
   Released under the **GNU Lesser GPL**  
 
-また、以下の著作物から派生させています。
+以下の著作物から派生させています。
 * [CookieGetterSharp](http://d.hatena.ne.jp/halxxxx/20091212/1260649353)  
   Copyright (c) 2014 halxxxx, うつろ
 
@@ -30,27 +30,26 @@ masterで本家との互換性を追究しつつ、Gecko, Webkit系のIBrowserMa
 * NET4.0
   * SnkLib.App.CookieGetter: 本体。
   * SnkLib.App.CookieGetter.Forms: ブラウザ選択UIなどの部品。
-  * SnkLib.App.CookieGetter.x86Proxy: 本体が内部で使用する子プロセス。.NET4.5と共用です。
+  * SnkLib.App.CookieGetter.x86Proxy: 本体が内部で使用する子プロセス。.NET4.5と共用。
   * Sample: 新クラスに対応させたデモアプリ。
-  * CookieGetterSharp: 本家と互換性を持ったせるラッパー。
 * NET4.5
   * SnkLib.App.CookieGetter: 本体。
   * SnkLib.App.CookieGetter.Forms: ブラウザ選択UIなどの部品。
   * Sample: 新クラスに対応させたデモアプリ。
   * NwhoisLoginSystem: 本家に付いてるデモアプリ。
-  * CookieGetterSharp: 本家と互換性を持ったせるラッパー。
+  * CookieGetterSharp:   
+    本家との互換ライブラリ。本家が対応していないブラウザへの対応などを既存のアプリに提供する。
 * Nuspecs: NuGetパッケージ生成関係。
 * Publish: 生成したnupkgの出力先
 * UnitTests: 動作確認。
 
-##使い方
+##使い方(開発者向け)
 使用したいプロジェクトへNuGetで以下のパッケージをインストールします。
 * [SnkLib.App.CookieGetter](https://www.nuget.org/packages/SnkLib.App.CookieGetter/)を追加する(必須)。
 * [SnkLib.App.CookieGetter.Forms](https://www.nuget.org/packages/SnkLib.App.CookieGetter.Forms/)を追加する  
   (オプション。Windows Forms向けのUI部品が入っています。)。
-* [SnkLib.App.CookieGetter.Sharp](https://www.nuget.org/packages/SnkLib.App.CookieGetter.Sharp/)を追加する(不要。本家流の時のみ必須)。
 
-以下の解説は新クラス流の使い方です。本家流の使い方は本家のページを読んでください。
+以下の解説は新クラスの使い方です。本家とは設計が異なります。本家と同じ設計を使いたい場合にはNET4.5フォルダ内のCookieGetterSharpを使用します。オススメはしません。
 
 ```C#
 //以下の名前空間を参照します。
