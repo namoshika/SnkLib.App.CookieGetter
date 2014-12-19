@@ -60,13 +60,13 @@ namespace SunokoLibrary.Application.Browsers
                 throw new CookieImportException(
                     "未知の項目をレコードから発見。レコードからCookieオブジェクトへの変換に失敗しました。", ImportResult.ConvertError);
 
-            var expiresDt = (long)data[5];
-            Cookie baseObj = new Cookie()
+            var expiresDt = (ulong)(long)data[5];
+            var baseObj = new Cookie()
             {
                 Name = data[2] as string,
                 Domain = data[3] as string,
                 Path = data[4] as string,
-                Expires = Utility.UnixTimeToDateTime((int)(expiresDt / 1000000 - 11644473600))
+                Expires = Utility.UnixTimeToDateTime(expiresDt / 1000000 - 11644473600)
             };
 
             //Cookieの値の読み込み。値はURLエンコード済みなのでそのまま放り込む。

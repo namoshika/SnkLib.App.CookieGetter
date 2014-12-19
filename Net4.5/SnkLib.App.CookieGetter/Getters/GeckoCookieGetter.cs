@@ -49,7 +49,7 @@ namespace SunokoLibrary.Application.Browsers
                 Name = (string)data[1],
                 Domain = (string)data[2],
                 Path = (string)data[3],
-                Expires = Utility.UnixTimeToDateTime((int)(long)data[4]),
+                Expires = Utility.UnixTimeToDateTime((ulong)(long)data[4]),
             };
             return cookie;
         }

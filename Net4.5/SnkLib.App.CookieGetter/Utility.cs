@@ -11,15 +11,11 @@ namespace SunokoLibrary.Application
 {
     static class Utility
     {
-        /// <summary>
-        /// Unix時間をDateTimeに変換する
-        /// </summary>
-        /// <param name="UnixTime"></param>
-        /// <returns></returns>
-        public static DateTime UnixTimeToDateTime(int UnixTime)
-        {
-            return new DateTime(1970, 1, 1, 9, 0, 0).AddSeconds(UnixTime);
-        }
+        static DateTime unix = new DateTime(1970, 1, 1, 9, 0, 0);
+        public static DateTime UnixTimeToDateTime(ulong UnixTime)
+        { return unix.AddSeconds(UnixTime); }
+        public static ulong DateTimeToUnixTime(DateTime dateTime)
+        { return (ulong)(dateTime - unix).TotalSeconds; }
         /// <summary>
         /// %APPDATA%などを実際のパスに変換する
         /// </summary>
@@ -35,6 +31,40 @@ namespace SunokoLibrary.Application
     }
     static class Win32Api
     {
+        /// <summary>
+        /// CryptProtectDataでデータを暗号化する。
+        /// </summary>
+        /// <param name="cipher">処理対象のデータ</param>
+        /// <returns>暗号化されたデータ</returns>
+        public static byte[] CryptProtectedData(byte[] cipher)
+        {
+            //リソース確保
+            Win32Api.DATA_BLOB input;
+            input.pbData = Marshal.AllocHGlobal(cipher.Length);
+            input.cbData = (uint)cipher.Length;
+            Marshal.Copy(cipher, 0, input.pbData, cipher.Length);
+            var output = new Win32Api.DATA_BLOB();
+            var dammy = new Win32Api.DATA_BLOB();
+
+            //復号化
+            bool isSucc;
+            isSucc = Win32Api.CryptProtectData(ref input, null, ref dammy, IntPtr.Zero, IntPtr.Zero, 0, ref output);
+            Debug.Assert(isSucc, "CryptUnprotectData error: データ暗号化に失敗。");
+            if (isSucc == false)
+                return null;
+
+            //リソース解放
+            var decryptedBytes = new byte[output.cbData];
+            Marshal.Copy(output.pbData, decryptedBytes, 0, (int)output.cbData);
+            //output解放
+            isSucc = Win32Api.LocalFree(output.pbData) == IntPtr.Zero;
+            Debug.Assert(isSucc, "CryptUnprotectData error: データ暗号化後のoutputリソース解放に失敗。");
+            //input解放
+            isSucc = Win32Api.LocalFree(input.pbData) == IntPtr.Zero;
+            Debug.Assert(isSucc, "CryptUnprotectData error: データ暗号化後のinputリソース解放に失敗。");
+
+            return decryptedBytes;
+        }
         /// <summary>
         /// CryptUnprotectDataで暗号化されたデータを復号化する。
         /// </summary>
@@ -178,6 +208,9 @@ namespace SunokoLibrary.Application
             public uint cbData;
             public IntPtr pbData;
         }
+
+        [DllImport("Crypt32.dll", CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Unicode)]
+        static extern bool CryptProtectData(ref DATA_BLOB pDataIn, string ppszDataDescr, ref  DATA_BLOB pOptionalEntropy, IntPtr pvReserved, IntPtr pPromptStruct, uint dwFlags, [In, Out]ref DATA_BLOB pDataOut);
         [DllImport("Crypt32.dll", CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Unicode)]
         static extern bool CryptUnprotectData(ref DATA_BLOB pDataIn, string ppszDataDescr, ref  DATA_BLOB pOptionalEntropy, IntPtr pvReserved, IntPtr pPromptStruct, uint dwFlags, [In, Out]ref DATA_BLOB pDataOut);
         [DllImport("Kernel32.dll")]
