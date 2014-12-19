@@ -6,7 +6,7 @@
         <title>SnkLib.App.CookieGetter.Sharp</title>
         <authors>namoshika</authors>
         <owners>namoshika</owners>
-        <summary>CookieGetterSharpと互換性を持たせるためのラッパー</summary>
+        <summary>This library provides compatibility with CookieGetterSharp to "SnkLib.App.CookieGetter".</summary>
         <projectUrl>https://github.com/namoshika/SnkLib.App.CookieGetter</projectUrl>
         <licenseUrl>https://www.gnu.org/licenses/lgpl-2.1.txt</licenseUrl>
         <description>SnkLib.App.CookieGetterに対してCookieGetterSharpとの互換性を持たせます。</description>
