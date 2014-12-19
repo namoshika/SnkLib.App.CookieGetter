@@ -66,7 +66,8 @@ namespace SunokoLibrary.Application.Browsers
                 Name = data[2] as string,
                 Domain = data[3] as string,
                 Path = data[4] as string,
-                Expires = Utility.UnixTimeToDateTime(expiresDt / 1000000 - 11644473600)
+                Expires = expiresDt > 0
+                    ? Utility.UnixTimeToDateTime(expiresDt / 1000000 - 11644473600) : DateTime.MinValue,
             };
 
             //Cookieの値の読み込み。値はURLエンコード済みなのでそのまま放り込む。
