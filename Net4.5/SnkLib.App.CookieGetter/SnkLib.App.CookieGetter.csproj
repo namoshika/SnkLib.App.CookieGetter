@@ -63,6 +63,7 @@
     <Compile Include="Getters\WebkitQtCookieGetter.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="IProxyService.cs" />
+    <Compile Include="Managers\BrowserManagerBase.cs" />
     <Compile Include="Managers\ChromiumBrowserManager.cs" />
     <Compile Include="Managers\FirefoxBrowserManager.cs" />
     <Compile Include="Managers\GeckoBrowserManager.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Managers\SmartBrowserManager.cs" />
     <Compile Include="Managers\TungstenBrowserManager.cs" />
     <Compile Include="Managers\BlinkBrowserManager.cs" />
+    <Compile Include="Managers\WebkitQtBrowserManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>

@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace SunokoLibrary.Application.Browsers
 {
-    public class GeckoBrowserManager : ICookieImporterFactory
+    public class GeckoBrowserManager : BrowserManagerBase
     {
         public GeckoBrowserManager(
             string name, string dataFolder, int primaryLevel = 2,
             string cookieFileName = "cookies.sqlite", string iniFileName = "profiles.ini")
+            : base(new[] { ENGINE_ID })
         {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException("引数nameをnullや空文字にする事は出来ません。");
@@ -22,22 +23,25 @@ namespace SunokoLibrary.Application.Browsers
             _iniFileName = iniFileName;
             _cookieFileName = cookieFileName;
         }
+
+        internal const string ENGINE_ID = "Gecko";
         int _primaryLevel;
         string _name;
         string _dataFolder;
         string _iniFileName;
         string _cookieFileName;
-
-        public IEnumerable<ICookieImporter> GetCookieImporters()
+        public override IEnumerable<ICookieImporter> GetCookieImporters()
         {
             var getters = UserProfile.GetProfiles(_dataFolder, _iniFileName)
-                .Select(prof => new BrowserConfig(_name, prof.Name, Path.Combine(prof.Path, _cookieFileName)))
+                .Select(prof => new BrowserConfig(_name, prof.Name, Path.Combine(prof.Path, _cookieFileName), ENGINE_ID, false))
                 .Select(inf => (ICookieImporter)new GeckoCookieGetter(inf, _primaryLevel))
                 .ToArray();
             getters = getters.Length == 0
-                ? new ICookieImporter[] { new GeckoCookieGetter(new BrowserConfig(_name, "Default", null), _primaryLevel) } : getters;
+                ? new ICookieImporter[] { new GeckoCookieGetter(new BrowserConfig(_name, "Default", null, ENGINE_ID, false), _primaryLevel) } : getters;
             return getters;
         }
+        public override ICookieImporter GetCookieImporter(BrowserConfig config)
+        { return new GeckoCookieGetter(config, 2); }
 
         /// <summary>
         /// ユーザの環境設定。ブラウザが複数の環境設定を持てる場合に使う。

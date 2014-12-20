@@ -123,6 +123,9 @@
     <Compile Include="..\SnkLib.App.CookieGetter\Managers\BlinkBrowserManager.cs">
       <Link>Core\Managers\BlinkBrowserManager.cs</Link>
     </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Managers\BrowserManagerBase.cs">
+      <Link>Core\Managers\BrowserManagerBase.cs</Link>
+    </Compile>
     <Compile Include="..\SnkLib.App.CookieGetter\Managers\ChromiumBrowserManager.cs">
       <Link>Core\Managers\ChromiumBrowserManager.cs</Link>
     </Compile>
@@ -155,6 +158,9 @@
     </Compile>
     <Compile Include="..\SnkLib.App.CookieGetter\Managers\TungstenBrowserManager.cs">
       <Link>Core\Managers\TungstenBrowserManager.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Managers\WebkitQtBrowserManager.cs">
+      <Link>Core\Managers\WebkitQtBrowserManager.cs</Link>
     </Compile>
     <Compile Include="..\SnkLib.App.CookieGetter\Utility.cs">
       <Link>Core\Utility.cs</Link>

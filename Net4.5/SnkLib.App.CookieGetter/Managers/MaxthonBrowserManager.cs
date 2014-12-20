@@ -15,7 +15,7 @@ namespace SunokoLibrary.Application.Browsers
             if (!System.IO.File.Exists(path))
                 path = null;
 
-            BrowserConfig status = new BrowserConfig(name, "Default", path);
+            var status = new BrowserConfig(name, "Default", path, BlinkBrowserManager.ENGINE_ID, false);
             return new ICookieImporter[] { new BlinkCookieGetter(status, 2) };
         }
     }

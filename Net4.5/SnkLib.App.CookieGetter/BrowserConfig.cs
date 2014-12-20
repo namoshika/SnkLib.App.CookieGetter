@@ -22,12 +22,14 @@ namespace SunokoLibrary.Application
         /// <param name="browserName">ブラウザの名前</param>
         /// <param name="profileName">ブラウザのプロファイル名</param>
         /// <param name="cookiePath">ブラウザのCookieファイルパス</param>
+        /// <param name="engineId">ブラウザのエンジン識別子</param>
         /// <param name="isCustomized">ユーザ定義による設定かどうか</param>
-        public BrowserConfig(string browserName, string profileName, string cookiePath, bool isCustomized = false)
+        public BrowserConfig(string browserName, string profileName, string cookiePath, string engineId, bool isCustomized)
         {
             BrowserName = browserName;
             ProfileName = profileName;
             CookiePath = cookiePath;
+            EngineId = engineId;
             IsCustomized = isCustomized;
         }
         public BrowserConfig() { }
@@ -41,7 +43,7 @@ namespace SunokoLibrary.Application
         /// </summary>
         public string BrowserName { get; private set; }
         /// <summary>
-        /// 識別名を取得する。
+        /// プロフィール名を取得する。
         /// </summary>
         public string ProfileName { get; private set; }
         /// <summary>
@@ -49,10 +51,14 @@ namespace SunokoLibrary.Application
         /// </summary>
         public string CookiePath { get; private set; }
         /// <summary>
+        /// 使用されているブラウザエンジンの種類を取得する。
+        /// </summary>
+        public string EngineId { get; private set; }
+        /// <summary>
         /// 引数で指定された値で上書きしたコピーを生成する。
         /// </summary>
         public BrowserConfig GenerateCopy(string name = null, string profileName = null, string cookiePath = null)
-        { return new BrowserConfig(name ?? BrowserName, profileName ?? ProfileName, cookiePath ?? CookiePath, true); }
+        { return new BrowserConfig(name ?? BrowserName, profileName ?? ProfileName, cookiePath ?? CookiePath, EngineId, true); }
         public override int GetHashCode()
         { return CookiePath == null ? 0 : CookiePath.GetHashCode(); }
         public override bool Equals(object obj)
@@ -108,6 +114,7 @@ namespace SunokoLibrary.Application
                     case "BrowserName": BrowserName = pair.Value; break;
                     case "ProfileName": ProfileName = pair.Value; break;
                     case "CookiePath": CookiePath = pair.Value; break;
+                    case "EngineId": EngineId = pair.Value; break;
                 }
         }
         void IXmlSerializable.WriteXml(System.Xml.XmlWriter writer)
@@ -118,6 +125,7 @@ namespace SunokoLibrary.Application
                     { "BrowserName", BrowserName },
                     { "ProfileName", ProfileName },
                     { "CookiePath", CookiePath },
+                    { "EngineId", EngineId },
                 })
             {
                 writer.WriteStartElement(member.Key);
@@ -152,16 +160,17 @@ namespace SunokoLibrary.Application
                 }
                 //値を展開
                 bool isCustom = false;
-                string browserName = null, profileName = null, cookiePath = null;
+                string browserName = null, profileName = null, cookiePath = null, engineId = null;
                 foreach (var pair in restoredValues)
                     switch (pair.Key)
                     {
-                        case "IsCustomized": isCustom = pair.Value == "true"; break;
+                        case "IsCustomized": isCustom = pair.Value == true.ToString(); break;
                         case "BrowserName": browserName = pair.Value; break;
                         case "ProfileName": profileName = pair.Value; break;
                         case "CookiePath": cookiePath = pair.Value; break;
+                        case "EngineId": engineId = pair.Value; break;
                     }
-                var config = new BrowserConfig(browserName, profileName, cookiePath, isCustom);
+                var config = new BrowserConfig(browserName, profileName, cookiePath, engineId, isCustom);
                 return config;
             }
             public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
@@ -175,6 +184,7 @@ namespace SunokoLibrary.Application
                             { "BrowserName", config.BrowserName },
                             { "ProfileName", config.ProfileName },
                             { "CookiePath", config.CookiePath },
+                            { "EngineId", config.EngineId },
                         }
                         .Select(pair =>
                             string.Format("{0}:{1}:{2}", pair.Key, (pair.Value ?? string.Empty).Length, pair.Value)));

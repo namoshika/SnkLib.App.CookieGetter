@@ -57,9 +57,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="..\Net4.5\SnkLib.App.CookieGetter\Utility.cs">
-      <Link>Utility.cs</Link>
-    </Compile>
     <Compile Include="SimpleTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

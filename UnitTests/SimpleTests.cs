@@ -105,7 +105,7 @@ namespace UnitTest
             foreach (var filePath in System.IO.Directory.EnumerateFiles(REGRESSION_TESTDATA_PATH, "*.blink"))
             {
                 var browserName = System.IO.Path.GetFileNameWithoutExtension(filePath);
-                var getter = new BlinkCookieGetter(new BrowserConfig(browserName, "Default", filePath), 2);
+                var getter = new BlinkCookieGetter(new BrowserConfig(browserName, "Default", filePath, BlinkBrowserManager.ENGINE_ID, false), 2);
                 await CheckGetters(getter, true, true);
             }
             LogWriter.WriteLine();
@@ -117,7 +117,7 @@ namespace UnitTest
             LogWriter.WriteLine(" BlinkGetter Test");
             LogWriter.WriteLine("===================");
             var getter = new BlinkCookieGetter(
-                new BrowserConfig("BlinkBrowser", "BlinkProfile", @".\TestDatas\blinkCookies.sqlite3"), 2);
+                new BrowserConfig("BlinkBrowser", "BlinkProfile", @".\TestDatas\blinkCookies.sqlite3", BlinkBrowserManager.ENGINE_ID, false), 2);
             await CheckGetters(getter, true, true);
             LogWriter.WriteLine();
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -17,10 +18,19 @@ namespace SunokoLibrary.Application
         /// <summary>
         /// 引数factoriesを扱うCookieGettersを生成します。
         /// </summary>
-        /// <param name="factories">登録するファクトリの配列</param>
-        public CookieGetters(ICookieImporterFactory[] factories)
-        { _factories = factories; }
+        /// <param name="factories">登録するブラウザ毎のファクトリの配列</param>
+        /// <param name="generators">登録するブラウザエンジン毎のファクトリの配列</param>
+        public CookieGetters(ICookieImporterFactory[] factories, ICookieImporterGenerator[] generators)
+        {
+            _factories = factories;
+            _generators = generators
+                .OfType<ICookieImporterGenerator>()
+                .SelectMany(item => item.EngineIds.Select(id => new { Importer = item, EngineId = id}))
+                .ToDictionary(item => item.EngineId, item => item.Importer);
+        }
         ICookieImporterFactory[] _factories;
+        Dictionary<string, ICookieImporterGenerator> _generators;
+
         /// <summary>
         /// Cookie取得用インスタンスのリストを取得する
         /// </summary>
@@ -45,15 +55,15 @@ namespace SunokoLibrary.Application
 
             if (targetConfig != null)
             {
-                //引数targetConfigと同一のブラウザを探す。
-                //あればConfigを比較。同一ならばそのまま使う。違いがあればカスタマイズ版を生成する
-                foundGetter = getterList.FirstOrDefault(item => item.Config.BrowserName == targetConfig.BrowserName);
-                if (foundGetter != null && targetConfig != foundGetter.Config)
-                    foundGetter = foundGetter.Generate(targetConfig.GenerateCopy());
+                //引数targetConfigと同一のImporterを探す。
+                //あればそのまま使う。なければ登録されたジェネレータから新たに生成する。
+                foundGetter = getterList.FirstOrDefault(item => item.Config == targetConfig);
+                ICookieImporterGenerator foundFactory;
+                if (foundGetter == null && _generators.TryGetValue(targetConfig.EngineId, out foundFactory))
+                    foundGetter = foundFactory.GetCookieImporter(targetConfig);
             }
-            if (allowDefault)
-                foundGetter = foundGetter
-                    ?? getterList.Where(importer => importer.IsAvailable).FirstOrDefault();
+            if (allowDefault && foundGetter == null)
+                foundGetter = getterList.FirstOrDefault(importer => importer.IsAvailable);
 
             return foundGetter;
         }
@@ -73,12 +83,20 @@ namespace SunokoLibrary.Application
                 new SmartBlinkBrowserManager(),
                 new SmartGeckoBrowserManager(),
             });
-            Default = new CookieGetters(BrowserManagers.ToArray());
+            BrowserEngines = new ConcurrentQueue<ICookieImporterGenerator>(new ICookieImporterGenerator[] {
+                new IEBrowserManager(), new ChromiumBrowserManager(),
+                new FirefoxBrowserManager(), new WebkitQtBrowserManager(),
+            });
+            Default = new CookieGetters(BrowserManagers.ToArray(), BrowserEngines.ToArray());
         }
         /// <summary>
         /// 対応するブラウザのリスト
         /// </summary>
         public static ConcurrentQueue<ICookieImporterFactory> BrowserManagers { get; private set; }
+        /// <summary>
+        /// 対応するブラウザエンジンのリスト
+        /// </summary>
+        public static ConcurrentQueue<ICookieImporterGenerator> BrowserEngines { get; private set; }
         /// <summary>
         /// 既定のCookieGettersを取得します。
         /// </summary>
