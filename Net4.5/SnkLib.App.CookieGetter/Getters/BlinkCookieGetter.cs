@@ -50,11 +50,11 @@ namespace SunokoLibrary.Application.Browsers
         protected override Cookie DataToCookie(object[] data)
         {
             long formatVersion;
-            if(data.Length < 6 || data[0] is long == false)
+            if (data.Length < 6 || data[0] is long == false)
                 throw new CookieImportException(
                     "CookieFormatVersionの取得に失敗。レコードからCookieオブジェクトへの変換に失敗しました。", ImportResult.ConvertError);
             formatVersion = (long)data[0];
-            if(formatVersion < 7
+            if (formatVersion < 7
                 ? data.Skip(1).Take(4).Where(rec => rec is string == false).Any() || data[5] is long == false
                 : data[1] is byte[] == false || data.Skip(2).Take(3).Where(rec => rec is string == false).Any() || data[5] is long == false)
                 throw new CookieImportException(
@@ -76,10 +76,12 @@ namespace SunokoLibrary.Application.Browsers
             {
                 var cipher = data[1] as byte[];
                 if (cipher == null || cipher.Length == 0)
-                    throw new CookieImportException(ImportResult.ConvertError);
+                    throw new CookieImportException(
+                        "Cookieファイルから暗号化データを取得できませんでした。", ImportResult.ConvertError);
                 var plain = Win32Api.DecryptProtectedData(cipher);
                 if (plain == null)
-                    throw new CookieImportException(ImportResult.ConvertError);
+                    throw new CookieImportException(
+                        "Cookieの暗号化データを復号化できませんでした。", ImportResult.ConvertError);
                 baseObj.Value = Encoding.UTF8.GetString(plain);
             }
             else

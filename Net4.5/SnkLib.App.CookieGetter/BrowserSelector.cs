@@ -140,7 +140,7 @@ namespace SunokoLibrary.Windows.ViewModels
                 }
                 //更新前に選択していた項目を再選択させる
                 if (currentConfig != null)
-                    await ProtectedSetConfigAsync(currentConfig);
+                    await PrivateSetConfigAsync(currentConfig);
             }
             catch (CookieImportException e)
             {
@@ -165,7 +165,7 @@ namespace SunokoLibrary.Windows.ViewModels
             {
                 await _updateSem.WaitAsync();
                 IsUpdating = true;
-                await ProtectedSetConfigAsync(config);
+                await PrivateSetConfigAsync(config);
             }
             catch (CookieImportException e)
             { System.Diagnostics.Trace.TraceInformation("選択中のブラウザの設定カスタマイズに失敗。", e); }
@@ -175,7 +175,7 @@ namespace SunokoLibrary.Windows.ViewModels
                 _updateSem.Release();
             }
         }
-        protected async Task ProtectedSetConfigAsync(BrowserConfig config)
+        async Task PrivateSetConfigAsync(BrowserConfig config)
         {
             //引数configが使えるGetterを取得する。無い場合は適当なのを見繕う
             var getter = await _importerManager.GetInstanceAsync(config, true);
@@ -212,12 +212,9 @@ namespace SunokoLibrary.Windows.ViewModels
         /// <summary>
         /// プロパティが更新された事を通知します。
         /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
         protected virtual void OnPropertyChanged([CallerMemberName]string memberName = null)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(memberName));
-        }
+        { PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(memberName)); }
 
         static GetterComparer _getterComparer = new GetterComparer();
         class GetterComparer : IComparer<ICookieImporter>

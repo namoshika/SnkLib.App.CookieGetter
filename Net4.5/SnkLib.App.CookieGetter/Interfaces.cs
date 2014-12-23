@@ -113,7 +113,6 @@ namespace SunokoLibrary.Application
     [Serializable]
     public class CookieImportException : Exception
     {
-        public CookieImportException(ImportResult result) { Result = result; }
         public CookieImportException(string message, ImportResult result)
             : base(message) { Result = result; }
         public CookieImportException(string message, ImportResult result, Exception inner)

@@ -16,18 +16,9 @@ namespace SunokoLibrary.Application.Browsers
             _targetType = targetType;
             _generator = generator;
         }
-        static SmartBrowserManager()
-        {
-            AppDataFolders = new[] {
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
-            };
-        }
-
         string _searchTarget;
         PathType _targetType;
         Func<string, string, ICookieImporterFactory> _generator;
-        protected readonly static string[] AppDataFolders;
 
         public IEnumerable<ICookieImporter> GetCookieImporters()
         {
@@ -82,6 +73,15 @@ namespace SunokoLibrary.Application.Browsers
         }
         bool ExistsTarget(string targetPath)
         { return _targetType == PathType.File ? File.Exists(targetPath) : Directory.Exists(targetPath); }
+
+        static SmartBrowserManager()
+        {
+            AppDataFolders = new[] {
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
+            };
+        }
+        readonly static string[] AppDataFolders;
     }
     public class SmartBlinkBrowserManager : SmartBrowserManager
     {

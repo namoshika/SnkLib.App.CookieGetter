@@ -32,6 +32,7 @@ namespace SunokoLibrary.Application
             EngineId = engineId;
             IsCustomized = isCustomized;
         }
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public BrowserConfig() { }
 
         /// <summary>

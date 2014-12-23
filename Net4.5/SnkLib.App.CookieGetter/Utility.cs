@@ -34,15 +34,15 @@ namespace SunokoLibrary.Application
         /// <summary>
         /// CryptProtectDataでデータを暗号化する。
         /// </summary>
-        /// <param name="cipher">処理対象のデータ</param>
+        /// <param name="unencryptedData">処理対象のデータ</param>
         /// <returns>暗号化されたデータ</returns>
-        public static byte[] CryptProtectedData(byte[] cipher)
+        public static byte[] CryptProtectedData(byte[] unencryptedData)
         {
             //リソース確保
             Win32Api.DATA_BLOB input;
-            input.pbData = Marshal.AllocHGlobal(cipher.Length);
-            input.cbData = (uint)cipher.Length;
-            Marshal.Copy(cipher, 0, input.pbData, cipher.Length);
+            input.pbData = Marshal.AllocHGlobal(unencryptedData.Length);
+            input.cbData = (uint)unencryptedData.Length;
+            Marshal.Copy(unencryptedData, 0, input.pbData, unencryptedData.Length);
             var output = new Win32Api.DATA_BLOB();
             var dammy = new Win32Api.DATA_BLOB();
 
@@ -68,15 +68,15 @@ namespace SunokoLibrary.Application
         /// <summary>
         /// CryptUnprotectDataで暗号化されたデータを復号化する。
         /// </summary>
-        /// <param name="cipher">暗号化されたデータ</param>
+        /// <param name="encryptedData">暗号化されたデータ</param>
         /// <returns>復号化されたデータ</returns>
-        public static byte[] DecryptProtectedData(byte[] cipher)
+        public static byte[] DecryptProtectedData(byte[] encryptedData)
         {
             //リソース確保
             Win32Api.DATA_BLOB input;
-            input.pbData = Marshal.AllocHGlobal(cipher.Length);
-            input.cbData = (uint)cipher.Length;
-            Marshal.Copy(cipher, 0, input.pbData, cipher.Length);
+            input.pbData = Marshal.AllocHGlobal(encryptedData.Length);
+            input.cbData = (uint)encryptedData.Length;
+            Marshal.Copy(encryptedData, 0, input.pbData, encryptedData.Length);
             var output = new Win32Api.DATA_BLOB();
             var dammy = new Win32Api.DATA_BLOB();
 
