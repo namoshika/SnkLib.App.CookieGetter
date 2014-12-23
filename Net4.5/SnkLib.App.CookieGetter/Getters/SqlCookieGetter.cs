@@ -10,14 +10,18 @@ using System.Threading.Tasks;
 namespace SunokoLibrary.Application.Browsers
 {
     /// <summary>
-    /// SQLiteを利用してクッキーを保存するタイプのブラウザからクッキーを取得するクラス
+    /// Cookieの保存にSQLiteを使用するタイプのブラウザからCookieを取得します。
     /// </summary>
     public abstract class SqlCookieGetter : CookieGetterBase
     {
+#pragma warning disable 1591
+
         public SqlCookieGetter(BrowserConfig config, int primaryLevel) : base(config, PathType.File, primaryLevel) { }
 
+#pragma warning restore 1591
+
         /// <summary>
-        /// DBから指定したクエリでCookieを取得する
+        /// DBから指定したクエリでCookieを取得します。
         /// </summary>
         /// <param name="path">参照先DBファイル</param>
         /// <param name="query">実行するクエリ</param>
@@ -29,13 +33,13 @@ namespace SunokoLibrary.Application.Browsers
                 .Select(record => DataToCookie(record)).Where(cookie => cookie != null);
         }
         /// <summary>
-        /// SQLから取得したデータをクッキーに変換する
+        /// SQLから取得したデータをCookieに変換します。
         /// </summary>
         /// <param name="data">指定されたQueryで取得した１行分のデータ</param>
         /// <exception cref="CookieImportException">未知の形式のレコードを入力された。</exception>
         protected abstract Cookie DataToCookie(object[] data);
         /// <summary>
-        /// DBに対してエントリ照会を行う
+        /// DBに対してエントリ照会を行います。
         /// </summary>
         /// <param name="path">参照先DBファイル</param>
         /// <param name="query">実行するクエリ</param>
@@ -97,12 +101,12 @@ namespace SunokoLibrary.Application.Browsers
             catch (IOException ex)
             {
                 throw new CookieImportException(
-                  "クッキーを取得中、一時ファイルの生成に失敗しました。", ImportResult.AccessError, ex);
+                  "Cookieを取得中、一時ファイルの生成に失敗しました。", ImportResult.AccessError, ex);
             }
             catch (SQLiteException ex)
             {
                 throw new CookieImportException(
-                  "クッキーを取得中、Sqliteアクセスでエラーが発生しました。", ImportResult.ConvertError, ex);
+                  "Cookieを取得中、Sqliteアクセスでエラーが発生しました。", ImportResult.ConvertError, ex);
             }
             finally
             {

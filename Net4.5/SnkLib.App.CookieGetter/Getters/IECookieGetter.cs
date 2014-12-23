@@ -10,10 +10,12 @@ using System.Threading.Tasks;
 namespace SunokoLibrary.Application.Browsers
 {
     /// <summary>
-    /// IEやトライデントエンジンを利用しているブラウザのクッキーを取得する
+    /// IEからCookieを取得します。
     /// </summary>
     public class IECookieGetter : CookieGetterBase
     {
+#pragma warning disable 1591
+
         public IECookieGetter(BrowserConfig config, int primaryLevel) : base(config, PathType.Directory, primaryLevel) { }
         public override bool IsAvailable { get { return true; } }
         public override ICookieImporter Generate(BrowserConfig config)
@@ -41,10 +43,8 @@ namespace SunokoLibrary.Application.Browsers
             }
         }
 
-        /// <summary>
-        /// 渡されたcookieヘッダーをcookieに変換する。CookieContainer.SetCookies()は不都合が生じる。
-        /// </summary>
-        /// <exception cref="CookieImportException" />
+        //渡されたcookieヘッダーをcookieに変換する。
+        //CookieContainer.SetCookies()は不都合が生じる。
         protected virtual IEnumerable<Cookie> ParseCookies(string cookieHeader, Uri url)
         {
             if (string.IsNullOrEmpty(cookieHeader))
@@ -57,15 +57,15 @@ namespace SunokoLibrary.Application.Browsers
                 var chunks = data.ToString().Split('=');
                 if (2 > chunks.Length)
                 {
-                    TraceFail(this, "IEクッキーの解析に失敗。", string.Format("cookieHeader: {0}\r\nurl: {1}", cookieHeader, url));
-                    throw new CookieImportException("IEクッキーの解析に失敗。", ImportResult.ConvertError);
+                    TraceFail(this, "IE Cookie解析に失敗。", string.Format("cookieHeader: {0}\r\nurl: {1}", cookieHeader, url));
+                    throw new CookieImportException("IE Cookieの解析に失敗。", ImportResult.ConvertError);
                 }
                 var name = chunks[0].Trim();
                 var value = chunks[1].Trim();
                 if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(value))
                 {
-                    TraceFail(this, "IEクッキーの解析に失敗。", string.Format("cookieHeader: {0}\r\nurl: {1}", cookieHeader, url));
-                    throw new CookieImportException("IEクッキーの解析に失敗。", ImportResult.ConvertError);
+                    TraceFail(this, "IE Cookieの解析に失敗。", string.Format("cookieHeader: {0}\r\nurl: {1}", cookieHeader, url));
+                    throw new CookieImportException("IE Cookieの解析に失敗。", ImportResult.ConvertError);
                 }
 
                 cookie.Name = name;
@@ -79,5 +79,7 @@ namespace SunokoLibrary.Application.Browsers
                 yield return cookie;
             }
         }
+
+#pragma warning restore 1591
     }
 }

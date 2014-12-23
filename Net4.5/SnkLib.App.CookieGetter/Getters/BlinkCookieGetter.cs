@@ -10,10 +10,12 @@ using System.Threading.Tasks;
 namespace SunokoLibrary.Application.Browsers
 {
     /// <summary>
-    /// GoogleChromeからクッキーを取得する
+    /// GoogleChromeからCookieを取得します。
     /// </summary>
     public class BlinkCookieGetter : SqlCookieGetter
     {
+#pragma warning disable 1591
+
         public BlinkCookieGetter(BrowserConfig config, int primaryLevel) : base(config, primaryLevel) { }
         const string SELECT_QUERY_VERSION = "SELECT value FROM meta WHERE key='version';";
         const string SELECT_QUERY = "SELECT 0, value, name, host_key, path, expires_utc FROM cookies";
@@ -104,5 +106,7 @@ namespace SunokoLibrary.Application.Browsers
                 " OR ", domains.Select(domain => string.Format("host_key = \"{0}\"", domain))));
             return query;
         }
+
+#pragma warning restore 1591
     }
 }

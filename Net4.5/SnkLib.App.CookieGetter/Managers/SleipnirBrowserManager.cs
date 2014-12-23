@@ -5,8 +5,12 @@ using System.Text;
 
 namespace SunokoLibrary.Application.Browsers
 {
+    /// <summary>
+    /// SleipnirからICookieImporterを取得します。
+    /// </summary>
     public class SleipnirBrowserManager : ICookieImporterFactory
     {
+#pragma warning disable 1591
         public IEnumerable<ICookieImporter> GetCookieImporters()
         {
             var importers =
@@ -17,6 +21,8 @@ namespace SunokoLibrary.Application.Browsers
                 };
             return importers.SelectMany(item => item);
         }
+#pragma warning restore 1591
+
         static readonly Sleipnir3GeckoBrowserManager _pnir3GeckoBrowserManager = new Sleipnir3GeckoBrowserManager();
         static readonly Sleipnir3WekitBrowserManager _pnir3BlinkBrowserManager = new Sleipnir3WekitBrowserManager();
         static readonly Sleipnir5BlinkBrowserManager _pnir5BlinkBrowserManager = new Sleipnir5BlinkBrowserManager();

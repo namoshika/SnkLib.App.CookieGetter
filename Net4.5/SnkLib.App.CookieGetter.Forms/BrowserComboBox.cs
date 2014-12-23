@@ -84,6 +84,9 @@ namespace SunokoLibrary.Windows.Forms
             if (res == System.Windows.Forms.DialogResult.OK)
                 await Selector.SetConfigAsync(newConfig);
         }
+
+#pragma warning disable 1591
+
         protected override void OnSelectedIndexChanged(EventArgs e)
         {
             if (Selector != null)
@@ -95,6 +98,8 @@ namespace SunokoLibrary.Windows.Forms
             base.InitLayout();
             DropDownStyle = ComboBoxStyle.DropDownList;
         }
+
+#pragma warning restore 1591
 
         void _selector_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {

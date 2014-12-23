@@ -6,16 +6,14 @@ using System.Text;
 namespace SunokoLibrary.Application.Browsers
 {
     /// <summary>
-    /// IE系のすべてのクッキーを取得する
+    /// IE系のすべてのICookieImporterを取得します。
     /// </summary>
     public class IEBrowserManager : BrowserManagerBase
     {
+#pragma warning disable 1591
+
         public IEBrowserManager() : base(
             new[] { ENGINE_ID_NORMAL_IE, ENGINE_ID_PROTECTED_IE, ENGINE_ID_ENHANCED_PROTECTED_IE }) { }
-        internal const string ENGINE_ID_NORMAL_IE = "NormalIE";
-        internal const string ENGINE_ID_PROTECTED_IE = "ProtectedIE";
-        internal const string ENGINE_ID_ENHANCED_PROTECTED_IE = "EnhancedProtectedIE";
-
         public override IEnumerable<ICookieImporter> GetCookieImporters()
         {
             var cookieFolder = Environment.GetFolderPath(Environment.SpecialFolder.Cookies);
@@ -39,17 +37,29 @@ namespace SunokoLibrary.Application.Browsers
                     throw new ArgumentException("引数configのEngineIdを使えるGetterが見つかりませんでした。");
             }
         }
+
+#pragma warning restore 1591
+
+        /// <summary>
+        /// 非保護モードのIEからCookieを取得するICookieImporterを取得します。
+        /// </summary>
         public ICookieImporter GetIECookieGetter()
         {
             var cookieFolder = Environment.GetFolderPath(Environment.SpecialFolder.Cookies);
             return new IECookieGetter(new BrowserConfig("IE Normal", "Default", cookieFolder, ENGINE_ID_NORMAL_IE, false), 0);
         }
+        /// <summary>
+        /// 保護モードのIEからCookieを取得するICookieImporterを取得します。
+        /// </summary>
         public ICookieImporter GetIEPMCookieGetter()
         {
             var cookieFolder = System.IO.Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.Cookies), "low");
             return new IEPMCookieGetter(new BrowserConfig("IE Protected", "Default", cookieFolder, ENGINE_ID_PROTECTED_IE, false), 0);
         }
+        /// <summary>
+        /// 拡張保護モードのIEからCookieを取得するICookieImporterを取得します。
+        /// </summary>
         public ICookieImporter GetIEEPMCookieGetter()
         {
             var cookieFolder = Utility.ReplacePathSymbols(
@@ -57,5 +67,9 @@ namespace SunokoLibrary.Application.Browsers
             return new IEFindCacheCookieGetter(
                 new BrowserConfig("IE Enhanced Protected", "Default", cookieFolder, ENGINE_ID_ENHANCED_PROTECTED_IE, false), 0);
         }
+
+        internal const string ENGINE_ID_NORMAL_IE = "NormalIE";
+        internal const string ENGINE_ID_PROTECTED_IE = "ProtectedIE";
+        internal const string ENGINE_ID_ENHANCED_PROTECTED_IE = "EnhancedProtectedIE";
     }
 }

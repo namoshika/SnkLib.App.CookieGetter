@@ -16,10 +16,10 @@ namespace SunokoLibrary.Windows.ViewModels
     public class BrowserSelector : INotifyPropertyChanged
     {
         /// <summary>
-        /// 内容を指定してインスタンスを生成
+        /// 指定されたManagerからの項目を使用するインスタンスを生成します。
         /// </summary>
-        /// <param name="importerManager">使用するGettersを引数で指定します。</param>
-        /// <param name="itemGenerator">Cookie取得用インスタンスからUI上でのブラウザ選択項目を生成します。</param>
+        /// <param name="importerManager">使用するManager</param>
+        /// <param name="itemGenerator">取得されたICookieImporterからブラウザ項目のViewModelを生成するメソッド</param>
         public BrowserSelector(ICookieImporterManager importerManager, Func<ICookieImporter, BrowserItem> itemGenerator)
         {
             _importerManager = importerManager;
@@ -213,6 +213,9 @@ namespace SunokoLibrary.Windows.ViewModels
         /// プロパティが更新された事を通知します。
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
+        /// <summary>
+        /// PropertyChangedイベントを起こします。
+        /// </summary>
         protected virtual void OnPropertyChanged([CallerMemberName]string memberName = null)
         { PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(memberName)); }
 
@@ -241,14 +244,14 @@ namespace SunokoLibrary.Windows.ViewModels
         }
     }
     /// <summary>
-    /// ブラウザ選択UIにおける各ブラウザ項目用ViewModel。任意のICookieImporterを持ち、UI上での項目表示を保持します。
+    /// ブラウザ選択UIにおける各ブラウザ項目用ViewModel。可視化対象のICookieImporterを持ち、UI上での項目表示を保持します。
     /// </summary>
     public abstract class BrowserItem : INotifyPropertyChanged
     {
         /// <summary>
-        /// 内容を指定してインスタンスを生成
+        /// 指定されたICookieImporterからインスタンスを生成します。
         /// </summary>
-        /// <param name="getter">任意のCookie取得用インスタンス</param>
+        /// <param name="getter">対象のブラウザ</param>
         public BrowserItem(ICookieImporter getter)
         {
             Getter = getter;
@@ -308,7 +311,13 @@ namespace SunokoLibrary.Windows.ViewModels
         /// </summary>
         public abstract void Initialize();
 
+        /// <summary>
+        /// プロパティが更新された事を通知します。
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
+        /// <summary>
+        /// PropertyChangedイベントを起こします。
+        /// </summary>
         protected virtual void OnPropertyChanged([CallerMemberName]string memberName = null)
         { PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(memberName)); }
     }

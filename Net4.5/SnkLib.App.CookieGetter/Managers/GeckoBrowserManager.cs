@@ -7,8 +7,19 @@ using System.Threading.Tasks;
 
 namespace SunokoLibrary.Application.Browsers
 {
+    /// <summary>
+    /// Firefox系列のブラウザからICookieImporterを取得する基盤クラス
+    /// </summary>
     public class GeckoBrowserManager : BrowserManagerBase
     {
+        /// <summary>
+        /// 指定したブラウザ情報でインスタンスを生成します。
+        /// </summary>
+        /// <param name="name">ブラウザ名</param>
+        /// <param name="dataFolder">対象のブラウザ用の設定フォルダパス</param>
+        /// <param name="primaryLevel">ブラウザの格</param>
+        /// <param name="cookieFileName">Cookieファイルの名前</param>
+        /// <param name="iniFileName">設定ファイルの名前</param>
         public GeckoBrowserManager(
             string name, string dataFolder, int primaryLevel = 2,
             string cookieFileName = "cookies.sqlite", string iniFileName = "profiles.ini")
@@ -23,13 +34,15 @@ namespace SunokoLibrary.Application.Browsers
             _iniFileName = iniFileName;
             _cookieFileName = cookieFileName;
         }
-
         internal const string ENGINE_ID = "Gecko";
         int _primaryLevel;
         string _name;
         string _dataFolder;
         string _iniFileName;
         string _cookieFileName;
+
+#pragma warning disable 1591
+
         public override IEnumerable<ICookieImporter> GetCookieImporters()
         {
             var getters = UserProfile.GetProfiles(_dataFolder, _iniFileName)
@@ -43,6 +56,8 @@ namespace SunokoLibrary.Application.Browsers
         public override ICookieImporter GetCookieImporter(BrowserConfig config)
         { return new GeckoCookieGetter(config, 2); }
 
+#pragma warning restore 1591
+
         /// <summary>
         /// ユーザの環境設定。ブラウザが複数の環境設定を持てる場合に使う。
         /// </summary>
@@ -54,7 +69,7 @@ namespace SunokoLibrary.Application.Browsers
             public bool IsDefault;
 
             /// <summary>
-            /// Firefoxのプロフィールフォルダ内のフォルダをすべて取得する
+            /// Firefoxのプロフィールフォルダ内のフォルダをすべて取得します。
             /// </summary>
             /// <returns></returns>
             public static UserProfile[] GetProfiles(string moz_path, string iniFileName)

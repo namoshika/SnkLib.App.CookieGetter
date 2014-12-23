@@ -9,10 +9,12 @@ using System.Threading.Tasks;
 namespace SunokoLibrary.Application.Browsers
 {
     /// <summary>
-    /// Firefoxからクッキーを取得する
+    /// FirefoxからCookieを取得します。
     /// </summary>
     public class GeckoCookieGetter : SqlCookieGetter
     {
+#pragma warning disable 1591
+
         public GeckoCookieGetter(BrowserConfig config, int primaryLevel) : base(config, primaryLevel) { }
         const string SELECT_QUERY = "SELECT value, name, host, path, expiry FROM moz_cookies";
 
@@ -87,5 +89,7 @@ namespace SunokoLibrary.Application.Browsers
             sb.Append(')');
             return sb.ToString();
         }
+
+#pragma warning restore 1591
     }
 }

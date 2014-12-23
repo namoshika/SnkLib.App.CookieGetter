@@ -6,13 +6,20 @@ using System.Threading.Tasks;
 
 namespace SunokoLibrary.Application.Browsers
 {
+    /// <summary>
+    /// WebkitQtからICookieImporterを取得します。
+    /// </summary>
     public class WebkitQtBrowserManager : BrowserManagerBase
     {
+#pragma warning disable 1591
+
         public WebkitQtBrowserManager() : base(new[] { ENGINE_ID }) { }
         internal const string ENGINE_ID = "WebkitQt";
         public override IEnumerable<ICookieImporter> GetCookieImporters()
         { return Enumerable.Empty<ICookieImporter>(); }
         public override ICookieImporter GetCookieImporter(BrowserConfig config)
         { return new WebkitQtCookieGetter(config, 2); }
+
+#pragma warning restore 1591
     }
 }

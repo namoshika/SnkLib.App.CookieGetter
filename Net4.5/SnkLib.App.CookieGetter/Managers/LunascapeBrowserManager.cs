@@ -6,8 +6,12 @@ using System.Text;
 
 namespace SunokoLibrary.Application.Browsers
 {
+    /// <summary>
+    /// LunascapeからICookieImporterを取得します。
+    /// </summary>
     public class LunascapeBrowserManager : ICookieImporterFactory
     {
+#pragma warning disable 1591
         public IEnumerable<ICookieImporter> GetCookieImporters()
         {
             var importers =
@@ -17,6 +21,8 @@ namespace SunokoLibrary.Application.Browsers
                 };
             return importers.SelectMany(item => item);
         }
+#pragma warning restore 1591
+
         static readonly LunascapeGeckoBrowserManager _lunaGeckoBrowserManager = new LunascapeGeckoBrowserManager();
         static readonly LunascapeWebkitBrowserManager _lunaWebkitBrowserManager = new LunascapeWebkitBrowserManager();
 
@@ -33,7 +39,7 @@ namespace SunokoLibrary.Application.Browsers
                 return new ICookieImporter[] { new GeckoCookieGetter(status, 2) };
             }
             /// <summary>
-            /// Lunascape6のプラグインフォルダからFirefoxのクッキーが保存されているパスを検索する
+            /// Lunascape6のプラグインフォルダからFirefoxのCookieが保存されているパスを検索します。
             /// </summary>
             /// <returns></returns>
             string SearchCookieDirectory()
@@ -64,7 +70,7 @@ namespace SunokoLibrary.Application.Browsers
                 return new ICookieImporter[] { new WebkitQtCookieGetter(option, 2) };
             }
             /// <summary>
-            /// Lunascape6のプラグインフォルダからFirefoxのクッキーが保存されているパスを検索する
+            /// Lunascape6のプラグインフォルダからFirefoxのCookieが保存されているパスを検索する
             /// </summary>
             /// <returns></returns>
             string SearchCookieDirectory()

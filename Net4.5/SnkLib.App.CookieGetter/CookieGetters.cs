@@ -16,10 +16,11 @@ namespace SunokoLibrary.Application
     public class CookieGetters : ICookieImporterManager
     {
         /// <summary>
-        /// 引数factoriesを扱うCookieGettersを生成します。
+        /// CookieGettersを生成します。引数省略時にはCookieGettersのImporterFactories、ImporterGeneratorsが使用されます。
         /// </summary>
-        /// <param name="factories">登録するブラウザ毎のファクトリの配列</param>
-        /// <param name="generators">登録するブラウザエンジン毎のファクトリの配列</param>
+        /// <param name="factories">対応させるブラウザ用のファクトリのシーケンス</param>
+        /// <param name="generators">対応させるブラウザ用のジェネレータのシーケンス</param>
+        /// <exception cref="ArgumentException">引数generatorsに同一のEngineIdを持つ要素が含まれている場合にスローされます。</exception>
         public CookieGetters(
             IEnumerable<ICookieImporterFactory> factories = null,
             IEnumerable<ICookieImporterGenerator> generators = null)
@@ -41,9 +42,9 @@ namespace SunokoLibrary.Application
         Dictionary<string, ICookieImporterGenerator> _generators;
 
         /// <summary>
-        /// Cookie取得用インスタンスのリストを取得する
+        /// 使用できるICookieImporterのリストを取得します。
         /// </summary>
-        /// <param name="availableOnly">利用可能なものだけを選択するかどうか</param>
+        /// <param name="availableOnly">利用可能なものだけを出力するか指定します。</param>
         public Task<ICookieImporter[]> GetInstancesAsync(bool availableOnly)
         {
             return Task.Factory.StartNew(() => _factories
@@ -53,10 +54,12 @@ namespace SunokoLibrary.Application
                 .Where(item => item.IsAvailable || !availableOnly).ToArray());
         }
         /// <summary>
-        /// 設定値を復元したCookie取得用インスタンスを取得する。直前まで使用していたICookieImporterのConfigを保存しておいたりすると起動時に最適な既定値を選んでくれる。
+        /// 設定値を指定したICookieImporterを取得します。アプリ終了時に直前まで使用していた
+        /// ICookieImporterのConfigを設定として保存すれば、起動時にConfigをこのメソッドに
+        /// 渡す事で適切なICookieImporterを再取得する事ができます。
         /// </summary>
-        /// <param name="targetConfig">任意のブラウザ環境設定</param>
-        /// <param name="allowDefault">生成不可の場合に既定のCookieImporterを返すか</param>
+        /// <param name="targetConfig">再取得対象のブラウザの構成情報</param>
+        /// <param name="allowDefault">取得不可の場合に既定のCookieImporterを返すかを指定できます。</param>
         public async Task<ICookieImporter> GetInstanceAsync(BrowserConfig targetConfig = null, bool allowDefault = true)
         {
             var foundGetter = null as ICookieImporter;
@@ -99,11 +102,11 @@ namespace SunokoLibrary.Application
             Default = new CookieGetters(ImporterFactories, ImporterGenerators);
         }
         /// <summary>
-        /// 対応するブラウザのリスト
+        /// GetInstancesAsync(availableOnly)が使うFactoryを追加できます。
         /// </summary>
         public static ConcurrentQueue<ICookieImporterFactory> ImporterFactories { get; private set; }
         /// <summary>
-        /// 対応するブラウザエンジンのリスト
+        /// GetInstanceAsync(targetConfig, allowDefault)が使うGeneratorを追加できます。
         /// </summary>
         public static ConcurrentQueue<ICookieImporterGenerator> ImporterGenerators { get; private set; }
         /// <summary>

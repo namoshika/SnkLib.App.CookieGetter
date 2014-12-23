@@ -10,10 +10,12 @@ using System.Threading.Tasks;
 namespace SunokoLibrary.Application.Browsers
 {
     /// <summary>
-    /// IEのキャッシュファイルから直接Cookieを取得する。
+    /// IEのCacheファイルから直接Cookieを取得します。
     /// </summary>
     public class IEFindCacheCookieGetter : CookieGetterBase
     {
+#pragma warning disable 1591
+
         //クラス命名センスとしてwininet.dllのFindNextUrlCacheEntryの文脈を用いる。
         //純粋にapi上で片付ける方法が不明なのでwininetのapi自体は使っていない。
         public IEFindCacheCookieGetter(BrowserConfig config, int primaryLevel)
@@ -54,7 +56,7 @@ namespace SunokoLibrary.Application.Browsers
                 return ImportResult.AccessError;
             }
 
-            //クッキーを有効期限で昇順に並び替えて、Expiresが最新のもので上書きされるようにする
+            //Cookieを有効期限で昇順に並び替えて、Expiresが最新のもので上書きされるようにする
             cookies.Sort((a, b) =>
                 a == null && b == null ? 0 :
                 a == null ? -1 :
@@ -65,10 +67,13 @@ namespace SunokoLibrary.Application.Browsers
                 container.Add(cookie);
             return ImportResult.Success;
         }
+
+#pragma warning restore 1591
+
         /// <summary>
-        /// IEのCookieテキストからCookieを取得する
+        /// IEのCookieテキストからCookieを取得します。
         /// </summary>
-        /// <exception cref="CookieImporterException" />
+        /// <exception cref="CookieImportException" />
         IEnumerable<Cookie> ParseCookies(string cacheCookiesText)
         {
             var cookies = new List<Cookie>();
@@ -105,12 +110,13 @@ namespace SunokoLibrary.Application.Browsers
             return cookies;
         }
         /// <summary>
-        /// IEのCookieファイルを読み込む。この時、引数sendingTargetへ送信できるCookieが含まれるファイルのみ読み込む。
+        /// IEのCookieファイルを読み込みます。この時、引数sendingTargetへ送信できる
+        /// Cookieが含まれるファイルのみが読み込まれます。
         /// </summary>
         /// <param name="cacheFilePath">Cookieファイル</param>
         /// <param name="sendingTarget">通信したいURL</param>
         /// <returns>Cookieファイル本文。</returns>
-        /// <exception cref="CookieImporterException" />
+        /// <exception cref="CookieImportException" />
         /// <exception cref="OutOfMemoryException" />
         static string ReadAllTextIfHasSendableCookie(string cacheFilePath, Uri sendingTarget)
         {

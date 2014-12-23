@@ -11,10 +11,12 @@ using System.Threading.Tasks;
 namespace SunokoLibrary.Application.Browsers
 {
     /// <summary>
-    /// 保護モードIEブラウザのクッキーを取得する
+    /// 保護モードIEブラウザからCookieを取得します。
     /// </summary>
     public class IEPMCookieGetter : IECookieGetter
     {
+#pragma warning disable 1591
+
         public IEPMCookieGetter(BrowserConfig config, int primaryLevel) : base(config, primaryLevel) { }
 
         public override bool IsAvailable { get { return Win32Api.GetIEVersion().Major >= 8; } }
@@ -46,6 +48,8 @@ namespace SunokoLibrary.Application.Browsers
             }
         }
 
+#pragma warning restore 1591
+
         string PrivateGetCookiesWinApi(Uri url, string key)
         {
 #if DEBUG
@@ -57,7 +61,7 @@ namespace SunokoLibrary.Application.Browsers
 #endif
             var ieVersion = Win32Api.GetIEVersion();
             //IEのバージョンによって使えるAPIに違いがあるため、分岐させる。
-            //IE11以上はクッキー取得APIを使用する。IE11からはx64モード下でも使用可能になっている。
+            //IE11以上はCookie取得APIを使用する。IE11からはx64モード下でも使用可能になっている。
             //IE8以上もx86環境では問題ないので一緒に取得させておく。
             if ((ieVersion.Major >= 11 || ieVersion.Major >= 8 && Environment.Is64BitProcess == false) && specifyPath_Debug < 0 || specifyPath_Debug == 0)
             {
@@ -67,7 +71,7 @@ namespace SunokoLibrary.Application.Browsers
                     lpszCookieData != null, string.Format("win32api.GetCookieFromProtectedModeIE error code:{0}", hResult));
                 return lpszCookieData ?? string.Empty;
             }
-            //IE8以上はクッキー取得APIを使用する。
+            //IE8以上はCookie取得APIを使用する。
             //x64モード下での使用は未対応なのでx86の子プロセスを経由させる
             else if (ieVersion.Major >= 8 && specifyPath_Debug < 0 || specifyPath_Debug == 1)
             {

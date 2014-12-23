@@ -7,8 +7,18 @@ using System.Threading.Tasks;
 
 namespace SunokoLibrary.Application.Browsers
 {
+    /// <summary>
+    /// 特定のファイル構造のパターンからブラウザを
+    /// 見つけてICookieImporterを取得します。
+    /// </summary>
     public abstract class SmartBrowserManager : ICookieImporterFactory
     {
+        /// <summary>
+        /// パターンを入力してインスタンスを生成します。
+        /// </summary>
+        /// <param name="searchTarget">検索する対象の名前</param>
+        /// <param name="targetType">対象の種類</param>
+        /// <param name="generator">対象を含むファイルパスからFactoryを生成するメソッド</param>
         public SmartBrowserManager(
             string searchTarget, PathType targetType, Func<string, string, ICookieImporterFactory> generator)
         {
@@ -20,6 +30,7 @@ namespace SunokoLibrary.Application.Browsers
         PathType _targetType;
         Func<string, string, ICookieImporterFactory> _generator;
 
+#pragma warning disable 1591
         public IEnumerable<ICookieImporter> GetCookieImporters()
         {
             var browsers = AppDataFolders
@@ -71,6 +82,8 @@ namespace SunokoLibrary.Application.Browsers
 
             return browsers.SelectMany(item => item.GetCookieImporters());
         }
+#pragma warning restore 1591
+
         bool ExistsTarget(string targetPath)
         { return _targetType == PathType.File ? File.Exists(targetPath) : Directory.Exists(targetPath); }
 
@@ -83,8 +96,12 @@ namespace SunokoLibrary.Application.Browsers
         }
         readonly static string[] AppDataFolders;
     }
+    /// <summary>
+    /// Chromium系列のブラウザからICookieImporterを取得します。
+    /// </summary>
     public class SmartBlinkBrowserManager : SmartBrowserManager
     {
+#pragma warning disable 1591
         public SmartBlinkBrowserManager()
             : base("User Data", PathType.Directory, (appDataPath, userDataPath) =>
                 {
@@ -95,9 +112,14 @@ namespace SunokoLibrary.Application.Browsers
                     return string.IsNullOrEmpty(appName) == false
                         ? new BlinkBrowserManager(appName, userDataPath) : null;
                 }) { }
+#pragma warning restore 1591
     }
+    /// <summary>
+    /// Gecko系列のブラウザからICookieImporterを取得します。
+    /// </summary>
     public class SmartGeckoBrowserManager : SmartBrowserManager
     {
+#pragma warning disable 1591
         public SmartGeckoBrowserManager()
             : base("profiles.ini", PathType.File, (appDataPath, userDataPath) =>
                 {
@@ -108,5 +130,6 @@ namespace SunokoLibrary.Application.Browsers
                     return string.IsNullOrEmpty(appName) == false
                         ? new GeckoBrowserManager(appName, Path.GetDirectoryName(userDataPath)) : null;
                 }) { }
+#pragma warning restore 1591
     }
 }

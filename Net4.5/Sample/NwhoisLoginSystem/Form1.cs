@@ -10,6 +10,7 @@ using Hal.CookieGetterSharp;
 
 namespace NwhoisLoginSystem
 {
+#pragma warning disable 0618 //Obsolete属性の警告を無効化"
     public partial class Form1 : Form
     {
         const string SETTING_FILE = "NwhoisLoginSystem.bin";
@@ -195,6 +196,5 @@ namespace NwhoisLoginSystem
         }
 
     }
-
-
+#pragma warning restore 0618
 }

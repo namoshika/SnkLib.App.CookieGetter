@@ -16,11 +16,14 @@ namespace SunokoLibrary.Windows.Forms
     /// </summary>
     public class NicoSessionComboBox : BrowserComboBox
     {
+#pragma warning disable 1591
         protected override void InitLayout()
         {
             base.InitLayout();
             Initialize(new BrowserSelector(CookieGetters.Default, getter => new NicoAccountSelectorItem(getter)));
         }
+#pragma warning restore 1591
+
         class NicoAccountSelectorItem : BrowserItem
         {
             public NicoAccountSelectorItem(ICookieImporter getter) : base(getter) { }

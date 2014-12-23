@@ -17,7 +17,7 @@ namespace SunokoLibrary.Application
         public static ulong DateTimeToUnixTime(DateTime dateTime)
         { return (ulong)(dateTime - unix).TotalSeconds; }
         /// <summary>
-        /// %APPDATA%などを実際のパスに変換する
+        /// %APPDATA%などを実際のパスに変換します。
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -32,7 +32,7 @@ namespace SunokoLibrary.Application
     static class Win32Api
     {
         /// <summary>
-        /// CryptProtectDataでデータを暗号化する。
+        /// CryptProtectDataでデータを暗号化します。
         /// </summary>
         /// <param name="unencryptedData">処理対象のデータ</param>
         /// <returns>暗号化されたデータ</returns>
@@ -66,7 +66,7 @@ namespace SunokoLibrary.Application
             return decryptedBytes;
         }
         /// <summary>
-        /// CryptUnprotectDataで暗号化されたデータを復号化する。
+        /// CryptUnprotectDataで暗号化されたデータを復号化します。
         /// </summary>
         /// <param name="encryptedData">暗号化されたデータ</param>
         /// <returns>復号化されたデータ</returns>
@@ -100,7 +100,7 @@ namespace SunokoLibrary.Application
             return decryptedBytes;
         }
         /// <summary>
-        /// 保護モードIEからCookieを取得する
+        /// 保護モードIEからCookieを取得します。
         /// </summary>
         /// <param name="cookiesText">取得したCookieの代入先</param>
         /// <param name="targetUrl">Cookieを送りたいページのURL</param>
@@ -135,7 +135,7 @@ namespace SunokoLibrary.Application
             while (true);
         }
         /// <summary>
-        /// 従来モードIEからCookieを取得する
+        /// 従来モードIEからCookieを取得します。
         /// </summary>
         /// <param name="cookiesText">取得したCookieの代入先</param>
         /// <param name="targetUrl">Cookieを送りたいページのURL</param>
@@ -147,7 +147,7 @@ namespace SunokoLibrary.Application
             var lpszCookieData = new StringBuilder(cookieSize);
             var dwSizeP = new IntPtr(cookieSize);
 
-            //クッキー文字列取得
+            //Cookie文字列取得
             do
             {
                 bool bResult;
@@ -179,7 +179,7 @@ namespace SunokoLibrary.Application
             while (true);
         }
         /// <summary>
-        /// IEのバージョンを取得する
+        /// IEのバージョンを取得します。
         /// </summary>
         /// <returns>ex:11.0.9600.17239</returns>
         public static Version GetIEVersion()

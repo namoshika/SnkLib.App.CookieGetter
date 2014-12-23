@@ -7,8 +7,20 @@ using System.Threading.Tasks;
 
 namespace SunokoLibrary.Application.Browsers
 {
+    /// <summary>
+    /// Chromium系列のブラウザからICookieImporterを取得する基盤クラス
+    /// </summary>
     public class BlinkBrowserManager : BrowserManagerBase
     {
+        /// <summary>
+        /// 指定したブラウザ情報でインスタンスを生成します。
+        /// </summary>
+        /// <param name="name">ブラウザ名</param>
+        /// <param name="dataFolder">UserDataのフォルダパス</param>
+        /// <param name="primaryLevel">ブラウザの格</param>
+        /// <param name="cookieFileName">Cookieファイルの名前</param>
+        /// <param name="defaultFolder">デフォルトのプロファイルフォルダの名前</param>
+        /// <param name="profileFolderStarts">デフォルト以外のプロファイルフォルダの名前のプレフィックス</param>
         public BlinkBrowserManager(
             string name, string dataFolder, int primaryLevel = 2, string cookieFileName = "Cookies",
             string defaultFolder = "Default", string profileFolderStarts = "Profile")
@@ -25,6 +37,8 @@ namespace SunokoLibrary.Application.Browsers
             _profileFolderStarts = profileFolderStarts;
         }
 
+#pragma warning disable 1591
+
         internal const string ENGINE_ID = "Blink";
         int _primaryLevel;
         string _name;
@@ -37,10 +51,12 @@ namespace SunokoLibrary.Application.Browsers
         { return GetDefaultProfiles().Concat(GetProfiles()); }
         public override ICookieImporter GetCookieImporter(BrowserConfig config)
         { return new BlinkCookieGetter(config, 2); }
+
+#pragma warning restore 1591
+
         /// <summary>
-        /// ユーザのデフォルト環境設定を用いたICookieImporter生成。
+        /// ユーザのデフォルト環境設定を用いたICookieImporter生成します。
         /// </summary>
-        /// <param name="getterGenerator">configを任意のimporterに変換する</param>
         /// <returns>長さ1の列挙子</returns>
         IEnumerable<ICookieImporter> GetDefaultProfiles()
         {
@@ -51,10 +67,8 @@ namespace SunokoLibrary.Application.Browsers
             return new ICookieImporter[] { new BlinkCookieGetter(conf, _primaryLevel) };
         }
         /// <summary>
-        /// ブラウザが持っているデフォルト以外の全ての環境設定からICookieImporterを生成する。
+        /// ブラウザが持っているデフォルト以外の全ての環境設定からICookieImporterを生成します。
         /// </summary>
-        /// <param name="getterGenerator">configを任意のimporterに変換する</param>
-        /// <returns></returns>
         IEnumerable<ICookieImporter> GetProfiles()
         {
             var paths = Enumerable.Empty<ICookieImporter>();

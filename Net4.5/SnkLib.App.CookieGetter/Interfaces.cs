@@ -15,15 +15,15 @@ namespace SunokoLibrary.Application
     public interface ICookieImporter
     {
         /// <summary>
-        /// Cookieを取得するブラウザに関する情報を取得する。
+        /// Cookieを取得するブラウザに関する情報を取得します。
         /// </summary>
         BrowserConfig Config { get; }
         /// <summary>
-        /// Cookie保存の形態を取得する。
+        /// Cookie保存の形態を取得します。
         /// </summary>
         PathType CookiePathType { get; }
         /// <summary>
-        /// 利用可能かどうかを取得する。
+        /// 利用可能かどうかを取得します。
         /// </summary>
         bool IsAvailable { get; }
         /// <summary>
@@ -38,14 +38,20 @@ namespace SunokoLibrary.Application
         /// <returns>処理の成功不成功</returns>
         Task<ImportResult> GetCookiesAsync(Uri targetUrl, CookieContainer container);
         /// <summary>
-        /// 自身と設定の異なるICookieImporterを生成する。
+        /// 自身と設定の異なるICookieImporterを生成します。
         /// </summary>
         ICookieImporter Generate(BrowserConfig config);
     }
     /// <summary>
     /// パス指定対象の種類を定義します。
     /// </summary>
-    public enum PathType { File, Directory }
+    public enum PathType
+    {
+        /// <summary>ファイル</summary>
+        File,
+        /// <summary>フォルダ</summary>
+        Directory,
+    }
     /// <summary>
     /// Cookie取得の実行結果を定義します。
     /// </summary>
@@ -95,29 +101,41 @@ namespace SunokoLibrary.Application
     public interface ICookieImporterManager
     {
         /// <summary>
-        /// Cookie取得用インスタンスのリストを取得する
+        /// 使用できるICookieImporterのリストを取得します。
         /// </summary>
-        /// <param name="availableOnly">利用可能なものだけを選択するかどうか</param>
+        /// <param name="availableOnly">利用可能なものに絞る</param>
         Task<ICookieImporter[]> GetInstancesAsync(bool availableOnly);
         /// <summary>
-        /// 設定値を復元したCookie取得用インスタンスを取得する。直前まで使用していたICookieImporterのConfigを保存しておいたりすると起動時に最適な既定値を選んでくれる。
+        /// 設定値を指定したICookieImporterを取得します。アプリ終了時に直前まで使用していた
+        /// ICookieImporterのConfigを設定として保存すれば、起動時にConfigをこのメソッドに
+        /// 渡す事で適切なICookieImporterを再生成してくれる。
         /// </summary>
-        /// <param name="targetConfig">任意のブラウザ環境設定</param>
-        /// <param name="allowDefault">生成不可の場合に既定のCookieImporterを返すか</param>
+        /// <param name="targetConfig">再取得対象のブラウザの構成情報</param>
+        /// <param name="allowDefault">取得不可の場合に既定のCookieImporterを返すかを指定できます。</param>
         Task<ICookieImporter> GetInstanceAsync(BrowserConfig targetConfig, bool allowDefault);
     }
 
     /// <summary>
-    /// クッキー取得に関する例外。
+    /// Cookie取得に関する例外。
     /// </summary>
     [Serializable]
     public class CookieImportException : Exception
     {
+        /// <summary>例外を生成します。</summary>
+        /// <param name="message">エラーの捕捉</param>
+        /// <param name="result">エラーの種類</param>
         public CookieImportException(string message, ImportResult result)
             : base(message) { Result = result; }
+        /// <summary>例外を再スローさせるための例外を生成します。</summary>
+        /// <param name="message">エラーの捕捉</param>
+        /// <param name="result">エラーの種類</param>
+        /// <param name="inner">内部例外</param>
         public CookieImportException(string message, ImportResult result, Exception inner)
             : base(message, inner) { Result = result; }
 
+        /// <summary>
+        /// 例外要因の大まかな種類
+        /// </summary>
         public ImportResult Result { get; private set; }
     }
 }

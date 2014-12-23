@@ -6,8 +6,13 @@ using System.Threading.Tasks;
 
 namespace SunokoLibrary.Application.Browsers
 {
+    /// <summary>
+    /// Qt上のWebkitでよく使われるCookieファイル形式からCookieを取得します。
+    /// </summary>
     public class WebkitQtCookieGetter : CookieGetterBase
     {
+#pragma warning disable 1591
+
         public WebkitQtCookieGetter(BrowserConfig config, int primaryLevel) : base(config, PathType.File, primaryLevel) { }
         public override ICookieImporter Generate(BrowserConfig config)
         { return new WebkitQtCookieGetter(config, PrimaryLevel); }
@@ -40,11 +45,13 @@ namespace SunokoLibrary.Application.Browsers
             }
         }
 
+#pragma warning restore 1591
+
         CookieCollection ParseCookieSettings(string line)
         {
             var container = new CookieCollection();
 
-            // クッキー情報の前についているよくわからないヘッダー情報を取り除く
+            // Cookie情報の前についているよくわからないヘッダー情報を取り除く
             // 対象：
             // 　\\xと２桁の１６進数値
             // 　\\\\

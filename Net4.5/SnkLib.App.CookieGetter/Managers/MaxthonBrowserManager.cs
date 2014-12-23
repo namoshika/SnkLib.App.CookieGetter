@@ -5,9 +5,12 @@ using System.Threading.Tasks;
 
 namespace SunokoLibrary.Application.Browsers
 {
+    /// <summary>
+    /// MaxthonからICookieImporterを取得します。
+    /// </summary>
     public class MaxthonBrowserManager : ICookieImporterFactory
     {
-        const string COOKIEPATH = "%APPDATA%\\Maxthon3\\Users\\guest\\Cookie\\Cookie.dat";
+#pragma warning disable 1591
         public IEnumerable<ICookieImporter> GetCookieImporters()
         {
             var name = "Maxthon webkit";
@@ -18,5 +21,8 @@ namespace SunokoLibrary.Application.Browsers
             var status = new BrowserConfig(name, "Default", path, BlinkBrowserManager.ENGINE_ID, false);
             return new ICookieImporter[] { new BlinkCookieGetter(status, 2) };
         }
+#pragma warning restore 1591
+
+        const string COOKIEPATH = "%APPDATA%\\Maxthon3\\Users\\guest\\Cookie\\Cookie.dat";
     }
 }

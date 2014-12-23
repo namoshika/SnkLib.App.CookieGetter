@@ -10,18 +10,18 @@ using System.Xml.Serialization;
 namespace SunokoLibrary.Application
 {
     /// <summary>
-    /// Cookie取得用の項目の保持
+    /// Cookie取得用の項目を保持します。
     /// </summary>
     [TypeConverter(typeof(BrowserConfigConverter))]
     [DebuggerDisplay("{BrowserName,nq}({ProfileName,nq}): {CookiePath,nq}")]
     public class BrowserConfig : IXmlSerializable
     {
         /// <summary>
-        /// 内容を指定してインスタンスを生成
+        /// 対象のブラウザの構成情報を指定してインスタンスを生成します。
         /// </summary>
         /// <param name="browserName">ブラウザの名前</param>
-        /// <param name="profileName">ブラウザのプロファイル名</param>
-        /// <param name="cookiePath">ブラウザのCookieファイルパス</param>
+        /// <param name="profileName">対象の構成情報にブラウザ側で付けられた固有名称</param>
+        /// <param name="cookiePath">Cookieファイルパス</param>
         /// <param name="engineId">ブラウザのエンジン識別子</param>
         /// <param name="isCustomized">ユーザ定義による設定かどうか</param>
         public BrowserConfig(string browserName, string profileName, string cookiePath, string engineId, bool isCustomized)
@@ -32,34 +32,39 @@ namespace SunokoLibrary.Application
             EngineId = engineId;
             IsCustomized = isCustomized;
         }
+        /// <summary>
+        /// シリアル化用。使用しないでください。
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public BrowserConfig() { }
 
         /// <summary>
-        /// ユーザーによるカスタム設定かを取得する。
+        /// ユーザーによるカスタム設定かを取得します。
         /// </summary>
         public bool IsCustomized { get; private set; }
         /// <summary>
-        /// ブラウザ名を取得する。
+        /// ブラウザ名を取得します。
         /// </summary>
         public string BrowserName { get; private set; }
         /// <summary>
-        /// プロフィール名を取得する。
+        /// プロフィール名を取得します。
         /// </summary>
         public string ProfileName { get; private set; }
         /// <summary>
-        /// クッキーが保存されているフォルダを取得、設定する。
+        /// Cookieが保存されている場所を取得します。
         /// </summary>
         public string CookiePath { get; private set; }
         /// <summary>
-        /// 使用されているブラウザエンジンの種類を取得する。
+        /// 使用されているブラウザエンジンの種類を取得します。
         /// </summary>
         public string EngineId { get; private set; }
         /// <summary>
-        /// 引数で指定された値で上書きしたコピーを生成する。
+        /// 引数で指定された値で上書きしたコピーを生成します。
         /// </summary>
         public BrowserConfig GenerateCopy(string name = null, string profileName = null, string cookiePath = null)
         { return new BrowserConfig(name ?? BrowserName, profileName ?? ProfileName, cookiePath ?? CookiePath, EngineId, true); }
+
+#pragma warning disable 1591
         public override int GetHashCode()
         { return CookiePath == null ? 0 : CookiePath.GetHashCode(); }
         public override bool Equals(object obj)
@@ -134,6 +139,7 @@ namespace SunokoLibrary.Application
                 writer.WriteEndElement();
             }
         }
+#pragma warning restore 1591
 
         class BrowserConfigConverter : TypeConverter
         {
