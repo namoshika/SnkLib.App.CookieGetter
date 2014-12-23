@@ -20,13 +20,22 @@ namespace SunokoLibrary.Application
         /// </summary>
         /// <param name="factories">登録するブラウザ毎のファクトリの配列</param>
         /// <param name="generators">登録するブラウザエンジン毎のファクトリの配列</param>
-        public CookieGetters(ICookieImporterFactory[] factories, ICookieImporterGenerator[] generators)
+        public CookieGetters(
+            IEnumerable<ICookieImporterFactory> factories = null,
+            IEnumerable<ICookieImporterGenerator> generators = null)
         {
-            _factories = factories;
-            _generators = generators
-                .OfType<ICookieImporterGenerator>()
-                .SelectMany(item => item.EngineIds.Select(id => new { Importer = item, EngineId = id}))
-                .ToDictionary(item => item.EngineId, item => item.Importer);
+            try
+            {
+                _factories = factories.ToArray() ?? ImporterFactories.ToArray();
+                _generators = (generators ?? ImporterGenerators)
+                    .SelectMany(item => item.EngineIds.Select(id => new { Importer = item, EngineId = id }))
+                    .ToDictionary(item => item.EngineId, item => item.Importer);
+            }
+            catch (ArgumentException e)
+            {
+                throw new ArgumentException(
+                    "引数generators内に同一のEngineIdを持つ要素を含む事はできません。", e);
+            }
         }
         ICookieImporterFactory[] _factories;
         Dictionary<string, ICookieImporterGenerator> _generators;
@@ -70,7 +79,7 @@ namespace SunokoLibrary.Application
 
         static CookieGetters()
         {
-            BrowserManagers = new ConcurrentQueue<ICookieImporterFactory>(new ICookieImporterFactory[] {
+            ImporterFactories = new ConcurrentQueue<ICookieImporterFactory>(new ICookieImporterFactory[] {
                 new IEBrowserManager(),
                 new FirefoxBrowserManager(),
                 new GoogleChromeBrowserManager(),
@@ -83,23 +92,23 @@ namespace SunokoLibrary.Application
                 new SmartBlinkBrowserManager(),
                 new SmartGeckoBrowserManager(),
             });
-            BrowserEngines = new ConcurrentQueue<ICookieImporterGenerator>(new ICookieImporterGenerator[] {
+            ImporterGenerators = new ConcurrentQueue<ICookieImporterGenerator>(new ICookieImporterGenerator[] {
                 new IEBrowserManager(), new ChromiumBrowserManager(),
                 new FirefoxBrowserManager(), new WebkitQtBrowserManager(),
             });
-            Default = new CookieGetters(BrowserManagers.ToArray(), BrowserEngines.ToArray());
+            Default = new CookieGetters(ImporterFactories, ImporterGenerators);
         }
         /// <summary>
         /// 対応するブラウザのリスト
         /// </summary>
-        public static ConcurrentQueue<ICookieImporterFactory> BrowserManagers { get; private set; }
+        public static ConcurrentQueue<ICookieImporterFactory> ImporterFactories { get; private set; }
         /// <summary>
         /// 対応するブラウザエンジンのリスト
         /// </summary>
-        public static ConcurrentQueue<ICookieImporterGenerator> BrowserEngines { get; private set; }
+        public static ConcurrentQueue<ICookieImporterGenerator> ImporterGenerators { get; private set; }
         /// <summary>
         /// 既定のCookieGettersを取得します。
         /// </summary>
-        public static CookieGetters Default { get; private set; }
+        public static ICookieImporterManager Default { get; private set; }
     }
 }
