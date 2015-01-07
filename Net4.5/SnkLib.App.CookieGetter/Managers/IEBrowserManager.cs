@@ -12,8 +12,8 @@ namespace SunokoLibrary.Application.Browsers
     {
 #pragma warning disable 1591
 
-        public IEBrowserManager() : base(
-            new[] { ENGINE_ID_NORMAL_IE, ENGINE_ID_PROTECTED_IE, ENGINE_ID_ENHANCED_PROTECTED_IE }) { }
+        public IEBrowserManager()
+        { EngineIds = new[] { ENGINE_ID_NORMAL_IE, ENGINE_ID_PROTECTED_IE, ENGINE_ID_ENHANCED_PROTECTED_IE }; }
         public override IEnumerable<ICookieImporter> GetCookieImporters()
         {
             var cookieFolder = Environment.GetFolderPath(Environment.SpecialFolder.Cookies);
@@ -46,7 +46,8 @@ namespace SunokoLibrary.Application.Browsers
         public ICookieImporter GetIECookieGetter()
         {
             var cookieFolder = Environment.GetFolderPath(Environment.SpecialFolder.Cookies);
-            return new IECookieGetter(new BrowserConfig("IE Normal", "Default", cookieFolder, ENGINE_ID_NORMAL_IE, false), 0);
+            return new IECookieGetter(new BrowserConfig(
+                "IE Normal", "Default", cookieFolder, ENGINE_ID_NORMAL_IE, false), 0);
         }
         /// <summary>
         /// 保護モードのIEからCookieを取得するICookieImporterを取得します。
@@ -55,7 +56,8 @@ namespace SunokoLibrary.Application.Browsers
         {
             var cookieFolder = System.IO.Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.Cookies), "low");
-            return new IEPMCookieGetter(new BrowserConfig("IE Protected", "Default", cookieFolder, ENGINE_ID_PROTECTED_IE, false), 0);
+            return new IEPMCookieGetter(new BrowserConfig(
+                "IE Protected", "Default", cookieFolder, ENGINE_ID_PROTECTED_IE, false), 0);
         }
         /// <summary>
         /// 拡張保護モードのIEからCookieを取得するICookieImporterを取得します。
@@ -64,12 +66,15 @@ namespace SunokoLibrary.Application.Browsers
         {
             var cookieFolder = Utility.ReplacePathSymbols(
                 @"%LOCALAPPDATA%\Packages\windows_ie_ac_001\AC\INetCookies");
-            return new IEFindCacheCookieGetter(
-                new BrowserConfig("IE Enhanced Protected", "Default", cookieFolder, ENGINE_ID_ENHANCED_PROTECTED_IE, false), 0);
+            return new IEFindCacheCookieGetter(new BrowserConfig(
+                "IE Enhanced Protected", "Default", cookieFolder, ENGINE_ID_ENHANCED_PROTECTED_IE, false), 0);
         }
 
-        internal const string ENGINE_ID_NORMAL_IE = "NormalIE";
-        internal const string ENGINE_ID_PROTECTED_IE = "ProtectedIE";
-        internal const string ENGINE_ID_ENHANCED_PROTECTED_IE = "EnhancedProtectedIE";
+        internal const string ENGINE_ID_NORMAL_IE =
+            "SunokoLibrary.Application.Browsers.IEBrowserManager.NormalIE";
+        internal const string ENGINE_ID_PROTECTED_IE =
+            "SunokoLibrary.Application.Browsers.IEBrowserManager.ProtectedIE";
+        internal const string ENGINE_ID_ENHANCED_PROTECTED_IE =
+            "SunokoLibrary.Application.Browsers.IEBrowserManager.EnhancedProtectedIE";
     }
 }

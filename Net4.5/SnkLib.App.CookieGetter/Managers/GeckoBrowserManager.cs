@@ -20,10 +20,11 @@ namespace SunokoLibrary.Application.Browsers
         /// <param name="primaryLevel">ブラウザの格</param>
         /// <param name="cookieFileName">Cookieファイルの名前</param>
         /// <param name="iniFileName">設定ファイルの名前</param>
+        /// <param name="engineId">エンジン識別子</param>
         public GeckoBrowserManager(
             string name, string dataFolder, int primaryLevel = 2,
-            string cookieFileName = "cookies.sqlite", string iniFileName = "profiles.ini")
-            : base(new[] { ENGINE_ID })
+            string cookieFileName = "cookies.sqlite", string iniFileName = "profiles.ini", string engineId = null)
+            : base(engineId != null ? new[] { engineId } : null)
         {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException("引数nameをnullや空文字にする事は出来ません。");
@@ -34,7 +35,6 @@ namespace SunokoLibrary.Application.Browsers
             _iniFileName = iniFileName;
             _cookieFileName = cookieFileName;
         }
-        internal const string ENGINE_ID = "Gecko";
         int _primaryLevel;
         string _name;
         string _dataFolder;
@@ -46,11 +46,11 @@ namespace SunokoLibrary.Application.Browsers
         public override IEnumerable<ICookieImporter> GetCookieImporters()
         {
             var getters = UserProfile.GetProfiles(_dataFolder, _iniFileName)
-                .Select(prof => new BrowserConfig(_name, prof.Name, Path.Combine(prof.Path, _cookieFileName), ENGINE_ID, false))
+                .Select(prof => new BrowserConfig(_name, prof.Name, Path.Combine(prof.Path, _cookieFileName), EngineIds[0], false))
                 .Select(inf => (ICookieImporter)new GeckoCookieGetter(inf, _primaryLevel))
                 .ToArray();
             getters = getters.Length == 0
-                ? new ICookieImporter[] { new GeckoCookieGetter(new BrowserConfig(_name, "Default", null, ENGINE_ID, false), _primaryLevel) } : getters;
+                ? new ICookieImporter[] { new GeckoCookieGetter(new BrowserConfig(_name, "Default", null, EngineIds[0], false), _primaryLevel) } : getters;
             return getters;
         }
         public override ICookieImporter GetCookieImporter(BrowserConfig config)

@@ -13,8 +13,6 @@ namespace SunokoLibrary.Application.Browsers
     {
 #pragma warning disable 1591
 
-        public WebkitQtBrowserManager() : base(new[] { ENGINE_ID }) { }
-        internal const string ENGINE_ID = "WebkitQt";
         public override IEnumerable<ICookieImporter> GetCookieImporters()
         { return Enumerable.Empty<ICookieImporter>(); }
         public override ICookieImporter GetCookieImporter(BrowserConfig config)

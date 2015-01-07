@@ -13,8 +13,12 @@ namespace SunokoLibrary.Application.Browsers
     {
 #pragma warning disable 1591
 
-        public BrowserManagerBase(string[] engineIds) { EngineIds = engineIds; }
-        public string[] EngineIds { get; private set; }
+        public BrowserManagerBase(IEnumerable<string> engineIds = null)
+        {
+            EngineIds = (engineIds ?? Enumerable.Empty<string>())
+                .DefaultIfEmpty(GetType().FullName).ToArray();
+        }
+        public string[] EngineIds { get; protected set; }
 
         public abstract IEnumerable<ICookieImporter> GetCookieImporters();
         public abstract ICookieImporter GetCookieImporter(BrowserConfig config);

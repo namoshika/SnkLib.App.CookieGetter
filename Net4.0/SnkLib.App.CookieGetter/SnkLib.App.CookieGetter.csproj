@@ -116,6 +116,9 @@
     <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Managers\ChromiumBrowserManager.cs">
       <Link>Managers\ChromiumBrowserManager.cs</Link>
     </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Managers\ComplexBrowserManager.cs">
+      <Link>Managers\ComplexBrowserManager.cs</Link>
+    </Compile>
     <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Managers\FirefoxBrowserManager.cs">
       <Link>Managers\FirefoxBrowserManager.cs</Link>
     </Compile>

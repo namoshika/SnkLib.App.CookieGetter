@@ -65,6 +65,7 @@
     <Compile Include="IProxyService.cs" />
     <Compile Include="Managers\BrowserManagerBase.cs" />
     <Compile Include="Managers\ChromiumBrowserManager.cs" />
+    <Compile Include="Managers\ComplexBrowserManager.cs" />
     <Compile Include="Managers\FirefoxBrowserManager.cs" />
     <Compile Include="Managers\GeckoBrowserManager.cs" />
     <Compile Include="Managers\GoogleChromeBrowserManager.cs" />

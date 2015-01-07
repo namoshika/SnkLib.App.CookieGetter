@@ -11,27 +11,23 @@ namespace SunokoLibrary.Application.Browsers
     /// 特定のファイル構造のパターンからブラウザを
     /// 見つけてICookieImporterを取得します。
     /// </summary>
-    public abstract class SmartBrowserManager : ICookieImporterFactory
+    public abstract class SmartBrowserManager : BrowserManagerBase
     {
         /// <summary>
         /// パターンを入力してインスタンスを生成します。
         /// </summary>
         /// <param name="searchTarget">検索する対象の名前</param>
         /// <param name="targetType">対象の種類</param>
-        /// <param name="generator">対象を含むファイルパスからFactoryを生成するメソッド</param>
-        public SmartBrowserManager(
-            string searchTarget, PathType targetType, Func<string, string, ICookieImporterFactory> generator)
+        public SmartBrowserManager(string searchTarget, PathType targetType)
         {
             _searchTarget = searchTarget;
             _targetType = targetType;
-            _generator = generator;
         }
         string _searchTarget;
         PathType _targetType;
-        Func<string, string, ICookieImporterFactory> _generator;
 
 #pragma warning disable 1591
-        public IEnumerable<ICookieImporter> GetCookieImporters()
+        public override IEnumerable<ICookieImporter> GetCookieImporters()
         {
             var browsers = AppDataFolders
                 .SelectMany(appDataPath =>
@@ -45,10 +41,10 @@ namespace SunokoLibrary.Application.Browsers
                      * ユーザデータを発見したらその中身は探索しない。しかし、同一ベンダ、同一製品で複数の
                      * 系統というのは存在しうるため、兄弟フォルダなどの探索は継続する。
                      */
-                    
+
                     //製品フォルダを列挙
                     IEnumerable<string> tmp;
-                    try{ tmp = Directory.EnumerateDirectories(appDataPath);}
+                    try { tmp = Directory.EnumerateDirectories(appDataPath); }
                     catch (UnauthorizedAccessException)
                     { return Enumerable.Empty<Tuple<string, string>>(); }
                     catch (System.Security.SecurityException)
@@ -77,11 +73,13 @@ namespace SunokoLibrary.Application.Browsers
                         .Where(path => Path.GetFileName(path) == _searchTarget)
                         .Select(path => Tuple.Create(appDataPath, path));
                 })
-                .Select(inf => _generator(inf.Item1, inf.Item2))
+                .Select(inf => Generate(inf.Item1, inf.Item2, EngineIds[0]))
                 .Where(factory => factory != null);
 
             return browsers.SelectMany(item => item.GetCookieImporters());
         }
+        public abstract override ICookieImporter GetCookieImporter(BrowserConfig config);
+        protected abstract ICookieImporterFactory Generate(string appDataPath, string userDataPath, string engineId);
 #pragma warning restore 1591
 
         bool ExistsTarget(string targetPath)
@@ -102,16 +100,18 @@ namespace SunokoLibrary.Application.Browsers
     public class SmartBlinkBrowserManager : SmartBrowserManager
     {
 #pragma warning disable 1591
-        public SmartBlinkBrowserManager()
-            : base("User Data", PathType.Directory, (appDataPath, userDataPath) =>
-                {
-                    var appName = Path.GetDirectoryName(userDataPath
-                        .Substring(appDataPath.Length))
-                        .Split(new[] { "\\" }, StringSplitOptions.RemoveEmptyEntries)
-                        .LastOrDefault();
-                    return string.IsNullOrEmpty(appName) == false
-                        ? new BlinkBrowserManager(appName, userDataPath) : null;
-                }) { }
+        public SmartBlinkBrowserManager() : base("User Data", PathType.Directory) { }
+        public override ICookieImporter GetCookieImporter(BrowserConfig config)
+        { return new BlinkCookieGetter(config, 2); }
+        protected override ICookieImporterFactory Generate(string appDataPath, string userDataPath, string engineId)
+        {
+            var appName = Path.GetDirectoryName(userDataPath
+                .Substring(appDataPath.Length))
+                .Split(new[] { "\\" }, StringSplitOptions.RemoveEmptyEntries)
+                .LastOrDefault();
+            return string.IsNullOrEmpty(appName) == false
+                ? new BlinkBrowserManager(appName, userDataPath, engineId: engineId) : null;
+        }
 #pragma warning restore 1591
     }
     /// <summary>
@@ -120,16 +120,18 @@ namespace SunokoLibrary.Application.Browsers
     public class SmartGeckoBrowserManager : SmartBrowserManager
     {
 #pragma warning disable 1591
-        public SmartGeckoBrowserManager()
-            : base("profiles.ini", PathType.File, (appDataPath, userDataPath) =>
-                {
-                    var appName = Path.GetDirectoryName(userDataPath
-                        .Substring(appDataPath.Length))
-                        .Split(new []{"\\"}, StringSplitOptions.RemoveEmptyEntries)
-                        .LastOrDefault();
-                    return string.IsNullOrEmpty(appName) == false
-                        ? new GeckoBrowserManager(appName, Path.GetDirectoryName(userDataPath)) : null;
-                }) { }
+        public SmartGeckoBrowserManager() : base("profiles.ini", PathType.File) { }
+        public override ICookieImporter GetCookieImporter(BrowserConfig config)
+        { return new GeckoCookieGetter(config, 2); }
+        protected override ICookieImporterFactory Generate(string appDataPath, string userDataPath, string engineId)
+        {
+            var appName = Path.GetDirectoryName(userDataPath
+                .Substring(appDataPath.Length))
+                .Split(new[] { "\\" }, StringSplitOptions.RemoveEmptyEntries)
+                .LastOrDefault();
+            return string.IsNullOrEmpty(appName) == false
+                ? new GeckoBrowserManager(appName, Path.GetDirectoryName(userDataPath), engineId: engineId) : null;
+        }
 #pragma warning restore 1591
     }
 }

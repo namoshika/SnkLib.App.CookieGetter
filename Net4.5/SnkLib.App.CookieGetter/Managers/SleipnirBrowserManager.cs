@@ -8,24 +8,16 @@ namespace SunokoLibrary.Application.Browsers
     /// <summary>
     /// SleipnirからICookieImporterを取得します。
     /// </summary>
-    public class SleipnirBrowserManager : ICookieImporterFactory
+    public class SleipnirBrowserManager : ComplexBrowserManager
     {
 #pragma warning disable 1591
-        public IEnumerable<ICookieImporter> GetCookieImporters()
-        {
-            var importers =
-                new[]{
-                    _pnir3GeckoBrowserManager.GetCookieImporters(),
-                    _pnir3BlinkBrowserManager.GetCookieImporters(),
-                    _pnir5BlinkBrowserManager.GetCookieImporters(),
-                };
-            return importers.SelectMany(item => item);
-        }
+        public SleipnirBrowserManager()
+            : base(new ICookieImporterFactory[] {
+                new Sleipnir3GeckoBrowserManager(),
+                new Sleipnir3WekitBrowserManager(),
+                new Sleipnir5BlinkBrowserManager(),
+            }) { }
 #pragma warning restore 1591
-
-        static readonly Sleipnir3GeckoBrowserManager _pnir3GeckoBrowserManager = new Sleipnir3GeckoBrowserManager();
-        static readonly Sleipnir3WekitBrowserManager _pnir3BlinkBrowserManager = new Sleipnir3WekitBrowserManager();
-        static readonly Sleipnir5BlinkBrowserManager _pnir5BlinkBrowserManager = new Sleipnir5BlinkBrowserManager();
 
         class Sleipnir3GeckoBrowserManager : GeckoBrowserManager
         {
