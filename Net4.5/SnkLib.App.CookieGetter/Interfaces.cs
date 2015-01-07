@@ -75,19 +75,13 @@ namespace SunokoLibrary.Application
     public interface ICookieImporterFactory
     {
         /// <summary>
-        /// 利用可能なすべてのICookieImporterを取得します。
-        /// </summary>
-        IEnumerable<ICookieImporter> GetCookieImporters();
-    }
-    /// <summary>
-    /// BrowserConfigからICookieImporterを生成する操作を定義します。
-    /// </summary>
-    public interface ICookieImporterGenerator
-    {
-        /// <summary>
         /// 対応しているブラウザエンジンの識別子の配列を取得します。
         /// </summary>
         string[] EngineIds { get; }
+        /// <summary>
+        /// 利用可能なすべてのICookieImporterを取得します。
+        /// </summary>
+        IEnumerable<ICookieImporter> GetCookieImporters();
         /// <summary>
         /// 指定されたブラウザ構成情報からICookieImporterを取得します。
         /// </summary>

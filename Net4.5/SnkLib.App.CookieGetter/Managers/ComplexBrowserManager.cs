@@ -15,16 +15,25 @@ namespace SunokoLibrary.Application.Browsers
 
         public ComplexBrowserManager(IEnumerable<ICookieImporterFactory> innerFactories)
         {
-            _pnirBrowserManagers = innerFactories.ToArray();
+            _pnirBrowserManagers = innerFactories.ToDictionary(factory => factory.EngineIds[0]);
+            EngineIds = _pnirBrowserManagers.Keys.ToArray();
         }
-        readonly ICookieImporterFactory[] _pnirBrowserManagers;
+        public string[] EngineIds { get; private set; }
+        readonly Dictionary<string, ICookieImporterFactory> _pnirBrowserManagers;
 
         public IEnumerable<ICookieImporter> GetCookieImporters()
         {
             var importers = _pnirBrowserManagers
-                .SelectMany(pair => pair.GetCookieImporters()
+                .SelectMany(pair => pair.Value.GetCookieImporters()
                 .ToArray());
             return importers;
+        }
+        public ICookieImporter GetCookieImporter(BrowserConfig config)
+        {
+            ICookieImporterFactory manager;
+            if (!_pnirBrowserManagers.TryGetValue(config.EngineId, out manager))
+                throw new ArgumentException("引数configのEngineIdsに対応していません。");
+            return manager.GetCookieImporter(config);
         }
 
 #pragma warning restore 1591
