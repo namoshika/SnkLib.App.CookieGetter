@@ -28,8 +28,8 @@ namespace SunokoLibrary.Application.Browsers
             public override IEnumerable<ICookieImporter> GetCookieImporters()
             {
                 var path = SearchCookieDirectory();
-                var status = new BrowserConfig("Lunascape Gecko", "Default", path, EngineIds[0], false);
-                return new ICookieImporter[] { new GeckoCookieGetter(status, 2) };
+                var config = new BrowserConfig("Lunascape Gecko", "Default", path, EngineIds[0], false);
+                return new ICookieImporter[] { new GeckoCookieGetter(config, 2) };
             }
             public override ICookieImporter GetCookieImporter(BrowserConfig config)
             { return new GeckoCookieGetter(config, 2); }
@@ -61,8 +61,8 @@ namespace SunokoLibrary.Application.Browsers
             public override IEnumerable<ICookieImporter> GetCookieImporters()
             {
                 var path = SearchCookieDirectory();
-                var option = new BrowserConfig("Lunascape Webkit", "Default", path, EngineIds[0], false);
-                return new ICookieImporter[] { new WebkitQtCookieGetter(option, 2) };
+                var config = new BrowserConfig("Lunascape Webkit", "Default", path, EngineIds[0], false);
+                return new ICookieImporter[] { new WebkitQtCookieGetter(config, 2) };
             }
             public override ICookieImporter GetCookieImporter(BrowserConfig config)
             { return new WebkitQtCookieGetter(config, 2); }

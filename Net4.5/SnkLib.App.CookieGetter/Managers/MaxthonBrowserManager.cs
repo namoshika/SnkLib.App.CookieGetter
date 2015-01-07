@@ -18,8 +18,8 @@ namespace SunokoLibrary.Application.Browsers
             if (!System.IO.File.Exists(path))
                 path = null;
 
-            var status = new BrowserConfig(name, "Default", path, EngineIds[0], false);
-            return new ICookieImporter[] { new BlinkCookieGetter(status, 2) };
+            var config = new BrowserConfig(name, "Default", path, EngineIds[0], false);
+            return new ICookieImporter[] { new BlinkCookieGetter(config, 2) };
         }
         public override ICookieImporter GetCookieImporter(BrowserConfig config)
         { return new BlinkCookieGetter(config, 2); }

@@ -28,7 +28,7 @@ namespace SunokoLibrary.Application.Browsers
         public CookieGetterBase(BrowserConfig config, PathType cookiePathType, int primaryLevel)
         {
             if (config == null)
-                throw new ArgumentNullException("引数statusがnullです。");
+                throw new ArgumentNullException("引数configがnullです。");
             Config = config;
             CookiePathType = cookiePathType;
             PrimaryLevel = primaryLevel;
