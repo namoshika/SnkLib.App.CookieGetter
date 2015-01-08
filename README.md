@@ -42,13 +42,13 @@ masterで本家との互換性を追究しつつ、Gecko, Webkit系のIBrowserMa
 * Publish: 生成したnupkgの出力先
 * UnitTests: 動作確認。
 
-##使い方(開発者向け)
+##使い方
 使用したいプロジェクトへNuGetで以下のパッケージをインストールします。
 * [SnkLib.App.CookieGetter](https://www.nuget.org/packages/SnkLib.App.CookieGetter/)を追加する(必須)。
 * [SnkLib.App.CookieGetter.Forms](https://www.nuget.org/packages/SnkLib.App.CookieGetter.Forms/)を追加する  
   (オプション。Windows Forms向けのUI部品が入っています。)。
 
-以下の解説は新クラスの使い方です。本家とは設計が異なります。本家と同じ設計を使いたい場合にはNET4.5フォルダ内のCookieGetterSharpを使用します。オススメはしません。
+以下の解説は新クラスの使い方です。本家とは設計が異なります。本家と同じ設計を使いたい場合にはNET4.5フォルダ内のCookieGetterSharpを使用します。オススメはしません。あえて使いたい場合にはReleasesからCookieGetterSharpを入手してください。
 
 ```C#
 //以下の名前空間を参照します。
