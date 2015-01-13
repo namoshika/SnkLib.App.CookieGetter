@@ -11,7 +11,7 @@ namespace SunokoLibrary.Windows.ViewModels
     using SunokoLibrary.Application;
 
     /// <summary>
-    /// ブラウザ選択UI用ViewModel。CookieGettersとUIの間を取り持ち、UI側の状態遷移を保持します。
+    /// ブラウザ選択UI用ViewModel。CookieImportersとUIの間を取り持ち、UI側の状態遷移を保持します。
     /// </summary>
     public class BrowserSelector : INotifyPropertyChanged
     {
@@ -86,8 +86,8 @@ namespace SunokoLibrary.Windows.ViewModels
                 lock (_updaterSyn)
                 {
                     var browserItem = SelectedIndex >= 0 && SelectedIndex < Items.Count ? Items[SelectedIndex] : null; ;
-                    var getter = browserItem != null ? browserItem.Getter : null;
-                    return getter;
+                    var importer = browserItem != null ? browserItem.Importer : null;
+                    return importer;
                 }
             }
         }
@@ -100,25 +100,25 @@ namespace SunokoLibrary.Windows.ViewModels
         /// </summary>
         public async Task UpdateAsync()
         {
-            ICookieImporter currentGetter = null;
+            ICookieImporter currentImporter = null;
             BrowserConfig currentConfig = null;
             try
             {
                 //設定復元用に選択中のブラウザを取得。
                 await _updateSem.WaitAsync();
-                currentGetter = SelectedImporter;
-                currentConfig = currentGetter != null ? currentGetter.Config : null;
+                currentImporter = SelectedImporter;
+                currentConfig = currentImporter != null ? currentImporter.Config : null;
                 SelectedIndex = -1;
 
                 IsUpdating = true;
                 var browserItems = (await _importerManager.GetInstancesAsync(!IsAllBrowserMode))
                     .ToArray()
-                    .OrderBy(getter => getter, _getterComparer)
-                    .Select(getter =>
+                    .OrderBy(importer => importer, _importerComparer)
+                    .Select(importer =>
                         {
                             try
                             {
-                                var item = _itemGenerator(getter);
+                                var item = _itemGenerator(importer);
                                 item.Initialize();
                                 return item;
                             }
@@ -177,19 +177,19 @@ namespace SunokoLibrary.Windows.ViewModels
         }
         async Task PrivateSetConfigAsync(BrowserConfig config)
         {
-            //引数configが使えるGetterを取得する。無い場合は適当なのを見繕う
-            var getter = await _importerManager.GetInstanceAsync(config, true);
+            //引数configが使えるImporterを取得する。無い場合は適当なのを見繕う
+            var importer = await _importerManager.GetInstanceAsync(config, true);
             lock (_updaterSyn)
             {
-                //取得したGetterのItems内での場所を検索する。
+                //取得したImporterのItems内での場所を検索する。
                 //idxがどのItemsも指定していない場合はカスタム設定を生成
-                var idx = Items.Select(item => item.Getter.Config).TakeWhile(conf => conf != getter.Config).Count();
+                var idx = Items.Select(item => item.Importer.Config).TakeWhile(conf => conf != importer.Config).Count();
                 if (idx == Items.Count)
                 {
                     BrowserItem customItem;
                     try
                     {
-                        customItem = _itemGenerator(getter);
+                        customItem = _itemGenerator(importer);
                         customItem.Initialize();
                     }
                     catch (Exception e)
@@ -219,8 +219,8 @@ namespace SunokoLibrary.Windows.ViewModels
         protected virtual void OnPropertyChanged([CallerMemberName]string memberName = null)
         { PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(memberName)); }
 
-        static GetterComparer _getterComparer = new GetterComparer();
-        class GetterComparer : IComparer<ICookieImporter>
+        static ImporterComparer _importerComparer = new ImporterComparer();
+        class ImporterComparer : IComparer<ICookieImporter>
         {
             public int Compare(ICookieImporter x, ICookieImporter y)
             {
@@ -251,13 +251,13 @@ namespace SunokoLibrary.Windows.ViewModels
         /// <summary>
         /// 指定されたICookieImporterからインスタンスを生成します。
         /// </summary>
-        /// <param name="getter">対象のブラウザ</param>
-        public BrowserItem(ICookieImporter getter)
+        /// <param name="importer">対象のブラウザ</param>
+        public BrowserItem(ICookieImporter importer)
         {
-            Getter = getter;
-            BrowserName = getter.Config.BrowserName;
-            ProfileName = getter.Config.ProfileName;
-            IsCustomized = getter.Config.IsCustomized;
+            Importer = importer;
+            BrowserName = importer.Config.BrowserName;
+            ProfileName = importer.Config.ProfileName;
+            IsCustomized = importer.Config.IsCustomized;
         }
         bool _isCustomized;
         string _browserName, _profileName;
@@ -265,7 +265,7 @@ namespace SunokoLibrary.Windows.ViewModels
         /// <summary>
         /// Cookie取得用インスタンスを取得します。
         /// </summary>
-        public ICookieImporter Getter { get; private set; }
+        public ICookieImporter Importer { get; private set; }
         /// <summary>
         /// 既存の項目に設定変更を行って生成した項目かどうかを取得します。
         /// </summary>

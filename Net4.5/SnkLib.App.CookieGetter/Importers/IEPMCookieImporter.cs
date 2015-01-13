@@ -13,15 +13,15 @@ namespace SunokoLibrary.Application.Browsers
     /// <summary>
     /// 保護モードIEブラウザからCookieを取得します。
     /// </summary>
-    public class IEPMCookieGetter : IECookieGetter
+    public class IEPMCookieImporter : IECookieImporter
     {
 #pragma warning disable 1591
 
-        public IEPMCookieGetter(BrowserConfig config, int primaryLevel) : base(config, primaryLevel) { }
+        public IEPMCookieImporter(BrowserConfig config, int primaryLevel) : base(config, primaryLevel) { }
 
         public override bool IsAvailable { get { return Win32Api.GetIEVersion().Major >= 8; } }
         public override ICookieImporter Generate(BrowserConfig config)
-        { return new IEPMCookieGetter(config, PrimaryLevel); }
+        { return new IEPMCookieImporter(config, PrimaryLevel); }
         protected override ImportResult ProtectedGetCookies(Uri targetUrl, CookieContainer container)
         {
             if (IsAvailable == false)

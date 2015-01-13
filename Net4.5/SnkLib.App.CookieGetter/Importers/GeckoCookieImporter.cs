@@ -11,15 +11,15 @@ namespace SunokoLibrary.Application.Browsers
     /// <summary>
     /// FirefoxからCookieを取得します。
     /// </summary>
-    public class GeckoCookieGetter : SqlCookieGetter
+    public class GeckoCookieImporter : SqlCookieImporter
     {
 #pragma warning disable 1591
 
-        public GeckoCookieGetter(BrowserConfig config, int primaryLevel) : base(config, primaryLevel) { }
+        public GeckoCookieImporter(BrowserConfig config, int primaryLevel) : base(config, primaryLevel) { }
         const string SELECT_QUERY = "SELECT value, name, host, path, expiry FROM moz_cookies";
 
         public override ICookieImporter Generate(BrowserConfig config)
-        { return new GeckoCookieGetter(config, PrimaryLevel); }
+        { return new GeckoCookieImporter(config, PrimaryLevel); }
         protected override ImportResult ProtectedGetCookies(Uri targetUrl, System.Net.CookieContainer container)
         {
             if (IsAvailable == false)

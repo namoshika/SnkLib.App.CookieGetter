@@ -59,36 +59,36 @@ namespace SunokoLibrary.Application
         /// <param name="allowDefault">取得不可の場合に既定のCookieImporterを返すかを指定できます。</param>
         public async Task<ICookieImporter> GetInstanceAsync(BrowserConfig targetConfig = null, bool allowDefault = true)
         {
-            var foundGetter = null as ICookieImporter;
-            var getterList = await GetInstancesAsync(false);
+            var foundImporter = null as ICookieImporter;
+            var importerList = await GetInstancesAsync(false);
 
             if (targetConfig != null)
             {
                 //引数targetConfigと同一のImporterを探す。
                 //あればそのまま使う。なければ登録されたジェネレータから新たに生成する。
-                foundGetter = getterList.FirstOrDefault(item => item.Config == targetConfig);
+                foundImporter = importerList.FirstOrDefault(item => item.Config == targetConfig);
                 ICookieImporterFactory foundFactory;
-                if (foundGetter == null && _factoryDict.TryGetValue(targetConfig.EngineId, out foundFactory))
-                    foundGetter = foundFactory.GetCookieImporter(targetConfig);
+                if (foundImporter == null && _factoryDict.TryGetValue(targetConfig.EngineId, out foundFactory))
+                    foundImporter = foundFactory.GetCookieImporter(targetConfig);
             }
-            if (allowDefault && foundGetter == null)
-                foundGetter = getterList.FirstOrDefault(importer => importer.IsAvailable);
+            if (allowDefault && foundImporter == null)
+                foundImporter = importerList.FirstOrDefault(importer => importer.IsAvailable);
 
-            return foundGetter;
+            return foundImporter;
         }
 
         static CookieGetters()
         {
             ImporterFactories = new ConcurrentQueue<ICookieImporterFactory>(new ICookieImporterFactory[] {
-                new IEBrowserManager(),
-                new FirefoxBrowserManager(),
-                new GoogleChromeBrowserManager(),
-                new OperaWebkitBrowserManager(),
-                new ChromiumBrowserManager(),
-                new LunascapeBrowserManager(),
-                new MaxthonBrowserManager(),
-                new SleipnirBrowserManager(),
-                new TungstenBrowserManager(),
+                new IEImporterFactory(),
+                new FirefoxImporterFactory(),
+                new ChromeImporterFactory(),
+                new OperaWebkitImporterFactory(),
+                new ChromiumImporterFactory(),
+                new LunascapeImporterFactory(),
+                new MaxthonImporterFactory(),
+                new SleipnirImporterFactory(),
+                new TungstenImporterFactory(),
                 new SmartBlinkBrowserManager(),
                 new SmartGeckoBrowserManager(),
             });

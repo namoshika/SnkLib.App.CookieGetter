@@ -77,80 +77,80 @@
     <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\CookieGetters.cs">
       <Link>CookieGetters.cs</Link>
     </Compile>
-    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Getters\BlinkCookieGetter.cs">
-      <Link>Getters\BlinkCookieGetter.cs</Link>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\BlinkImporterFactory.cs">
+      <Link>Factories\BlinkImporterFactory.cs</Link>
     </Compile>
-    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Getters\CookieGetterBase.cs">
-      <Link>Getters\CookieGetterBase.cs</Link>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\ChromeImporterFactory.cs">
+      <Link>Factories\ChromeImporterFactory.cs</Link>
     </Compile>
-    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Getters\GeckoCookieGetter.cs">
-      <Link>Getters\GeckoCookieGetter.cs</Link>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\ChromiumImporterFactory.cs">
+      <Link>Factories\ChromiumImporterFactory.cs</Link>
     </Compile>
-    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Getters\IECookieGetter.cs">
-      <Link>Getters\IECookieGetter.cs</Link>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\ComplexImporterFactory.cs">
+      <Link>Factories\ComplexImporterFactory.cs</Link>
     </Compile>
-    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Getters\IEFindCacheCookieGetter.cs">
-      <Link>Getters\IEFindCacheCookieGetter.cs</Link>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\FirefoxImporterFactory.cs">
+      <Link>Factories\FirefoxImporterFactory.cs</Link>
     </Compile>
-    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Getters\IEPMCookieGetter.cs">
-      <Link>Getters\IEPMCookieGetter.cs</Link>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\GeckoImporterFactory.cs">
+      <Link>Factories\GeckoImporterFactory.cs</Link>
     </Compile>
-    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Getters\SqlCookieGetter.cs">
-      <Link>Getters\SqlCookieGetter.cs</Link>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\IEImporterFactory.cs">
+      <Link>Factories\IEImporterFactory.cs</Link>
     </Compile>
-    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Getters\WebkitQtCookieGetter.cs">
-      <Link>Getters\WebkitQtCookieGetter.cs</Link>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\ImporterFactoryBase.cs">
+      <Link>Factories\ImporterFactoryBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\LunascapeImporterFactory.cs">
+      <Link>Factories\LunascapeImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\MaxthonImporterFactory.cs">
+      <Link>Factories\MaxthonImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\OperaWebkitImporterFactory.cs">
+      <Link>Factories\OperaWebkitImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\SleipnirImporterFactory.cs">
+      <Link>Factories\SleipnirImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\SmartImporterFactory.cs">
+      <Link>Factories\SmartImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\TungstenImporterFactory.cs">
+      <Link>Factories\TungstenImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\WebkitQtImporterFactory.cs">
+      <Link>Factories\WebkitQtImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Importers\BlinkCookieImporter.cs">
+      <Link>Getters\BlinkCookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Importers\CookieImporterBase.cs">
+      <Link>Getters\CookieImporterBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Importers\GeckoCookieImporter.cs">
+      <Link>Getters\GeckoCookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Importers\IECookieImporter.cs">
+      <Link>Getters\IECookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Importers\IEFindCacheCookieImporter.cs">
+      <Link>Getters\IEFindCacheCookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Importers\IEPMCookieImporter.cs">
+      <Link>Getters\IEPMCookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Importers\SqlCookieImporter.cs">
+      <Link>Getters\SqlCookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Importers\WebkitQtCookieImporter.cs">
+      <Link>Getters\WebkitQtCookieImporter.cs</Link>
     </Compile>
     <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Interfaces.cs">
       <Link>Interfaces.cs</Link>
     </Compile>
     <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\IProxyService.cs">
       <Link>IProxyService.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Managers\BlinkBrowserManager.cs">
-      <Link>Managers\BlinkBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Managers\BrowserManagerBase.cs">
-      <Link>Managers\BrowserManagerBase.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Managers\ChromiumBrowserManager.cs">
-      <Link>Managers\ChromiumBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Managers\ComplexBrowserManager.cs">
-      <Link>Managers\ComplexBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Managers\FirefoxBrowserManager.cs">
-      <Link>Managers\FirefoxBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Managers\GeckoBrowserManager.cs">
-      <Link>Managers\GeckoBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Managers\GoogleChromeBrowserManager.cs">
-      <Link>Managers\GoogleChromeBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Managers\IEBrowserManager.cs">
-      <Link>Managers\IEBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Managers\LunascapeBrowserManager.cs">
-      <Link>Managers\LunascapeBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Managers\MaxthonBrowserManager.cs">
-      <Link>Managers\MaxthonBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Managers\OperaWebkitBrowserManager.cs">
-      <Link>Managers\OperaWebkitBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Managers\SleipnirBrowserManager.cs">
-      <Link>Managers\SleipnirBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Managers\SmartBrowserManager.cs">
-      <Link>Managers\SmartBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Managers\TungstenBrowserManager.cs">
-      <Link>Managers\TungstenBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Managers\WebkitQtBrowserManager.cs">
-      <Link>Managers\WebkitQtBrowserManager.cs</Link>
     </Compile>
     <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Utility.cs">
       <Link>Utility.cs</Link>

@@ -51,19 +51,19 @@ namespace SunokoLibrary.Windows.Forms
         /// </summary>
         public async Task ShowCookieDialogAsync()
         {
-            var currentGetter = Selector.SelectedImporter;
-            var currentCookiePath = currentGetter.Config.CookiePath;
+            var currentImporter = Selector.SelectedImporter;
+            var currentCookiePath = currentImporter.Config.CookiePath;
             BrowserConfig newConfig = null;
             DialogResult res;
-            switch (currentGetter.CookiePathType)
+            switch (currentImporter.CookiePathType)
             {
                 case PathType.Directory:
                     if (System.IO.Directory.Exists(currentCookiePath))
-                        openFolderDialog.SelectedPath = currentGetter.Config.CookiePath;
+                        openFolderDialog.SelectedPath = currentImporter.Config.CookiePath;
                     if ((res = openFolderDialog.ShowDialog()) == DialogResult.OK)
                     {
                         currentCookiePath = openFolderDialog.SelectedPath;
-                        newConfig = currentGetter.Config.GenerateCopy(cookiePath: currentCookiePath);
+                        newConfig = currentImporter.Config.GenerateCopy(cookiePath: currentCookiePath);
                     }
                     break;
                 case PathType.File:
@@ -75,7 +75,7 @@ namespace SunokoLibrary.Windows.Forms
                     if ((res = openFileDialog.ShowDialog()) == DialogResult.OK)
                     {
                         currentCookiePath = openFileDialog.FileName;
-                        newConfig = currentGetter.Config.GenerateCopy(cookiePath: currentCookiePath);
+                        newConfig = currentImporter.Config.GenerateCopy(cookiePath: currentCookiePath);
                     }
                     break;
                 default:

@@ -20,13 +20,13 @@ namespace SunokoLibrary.Windows.Forms
         protected override void InitLayout()
         {
             base.InitLayout();
-            Initialize(new BrowserSelector(CookieGetters.Default, getter => new NicoAccountSelectorItem(getter)));
+            Initialize(new BrowserSelector(CookieGetters.Default, importer => new NicoAccountSelectorItem(importer)));
         }
 #pragma warning restore 1591
 
         class NicoAccountSelectorItem : BrowserItem
         {
-            public NicoAccountSelectorItem(ICookieImporter getter) : base(getter) { }
+            public NicoAccountSelectorItem(ICookieImporter importer) : base(importer) { }
             string _accountName, _displayText;
             public string AccountName
             {
@@ -49,22 +49,22 @@ namespace SunokoLibrary.Windows.Forms
             public async override void Initialize()
             {
                 var baseText = string.Format("{0}{1}{2}",
-                    Getter.Config.IsCustomized ? "カスタム設定 " : string.Empty,
-                    Getter.Config.BrowserName,
-                    Getter.Config.ProfileName.ToLowerInvariant() == "default" ? string.Empty : string.Format(" {0}", Getter.Config.ProfileName));
+                    Importer.Config.IsCustomized ? "カスタム設定 " : string.Empty,
+                    Importer.Config.BrowserName,
+                    Importer.Config.ProfileName.ToLowerInvariant() == "default" ? string.Empty : string.Format(" {0}", Importer.Config.ProfileName));
                 DisplayText = string.Format("{0} (loading...)", baseText);
-                AccountName = await GetUserName(Getter);
+                AccountName = await GetUserName(Importer);
                 DisplayText = string.IsNullOrEmpty(AccountName) == false
                     ? string.Format("{0} ({1})", baseText, AccountName) : baseText;
             }
-            static async Task<string> GetUserName(ICookieImporter cookieGetter)
+            static async Task<string> GetUserName(ICookieImporter cookieImporter)
             {
                 try
                 {
                     var url = new Uri("http://www.nicovideo.jp/my/channel");
                     var container = new CookieContainer();
                     var client = new HttpClient(new HttpClientHandler() { CookieContainer = container });
-                    await cookieGetter.GetCookiesAsync(url, container);
+                    await cookieImporter.GetCookiesAsync(url, container);
                     var res = await client.GetStringAsync(url);
 
                     if (string.IsNullOrEmpty(res))

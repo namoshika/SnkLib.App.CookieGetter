@@ -12,11 +12,11 @@ namespace SunokoLibrary.Application.Browsers
     /// <summary>
     /// Cookieの保存にSQLiteを使用するタイプのブラウザからCookieを取得します。
     /// </summary>
-    public abstract class SqlCookieGetter : CookieGetterBase
+    public abstract class SqlCookieImporter : CookieImporterBase
     {
 #pragma warning disable 1591
 
-        public SqlCookieGetter(BrowserConfig config, int primaryLevel) : base(config, PathType.File, primaryLevel) { }
+        public SqlCookieImporter(BrowserConfig config, int primaryLevel) : base(config, PathType.File, primaryLevel) { }
 
 #pragma warning restore 1591
 

@@ -11,14 +11,14 @@ namespace SunokoLibrary.Application.Browsers
     /// 特定のファイル構造のパターンからブラウザを
     /// 見つけてICookieImporterを取得します。
     /// </summary>
-    public abstract class SmartBrowserManager : BrowserManagerBase
+    public abstract class SmartImporterFactory : ImporterFactoryBase
     {
         /// <summary>
         /// パターンを入力してインスタンスを生成します。
         /// </summary>
         /// <param name="searchTarget">検索する対象の名前</param>
         /// <param name="targetType">対象の種類</param>
-        public SmartBrowserManager(string searchTarget, PathType targetType)
+        public SmartImporterFactory(string searchTarget, PathType targetType)
         {
             _searchTarget = searchTarget;
             _targetType = targetType;
@@ -85,7 +85,7 @@ namespace SunokoLibrary.Application.Browsers
         bool ExistsTarget(string targetPath)
         { return _targetType == PathType.File ? File.Exists(targetPath) : Directory.Exists(targetPath); }
 
-        static SmartBrowserManager()
+        static SmartImporterFactory()
         {
             AppDataFolders = new[] {
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -97,12 +97,12 @@ namespace SunokoLibrary.Application.Browsers
     /// <summary>
     /// Chromium系列のブラウザからICookieImporterを取得します。
     /// </summary>
-    public class SmartBlinkBrowserManager : SmartBrowserManager
+    public class SmartBlinkBrowserManager : SmartImporterFactory
     {
 #pragma warning disable 1591
         public SmartBlinkBrowserManager() : base("User Data", PathType.Directory) { }
         public override ICookieImporter GetCookieImporter(BrowserConfig config)
-        { return new BlinkCookieGetter(config, 2); }
+        { return new BlinkCookieImporter(config, 2); }
         protected override ICookieImporterFactory Generate(string appDataPath, string userDataPath, string engineId)
         {
             var appName = Path.GetDirectoryName(userDataPath
@@ -110,19 +110,19 @@ namespace SunokoLibrary.Application.Browsers
                 .Split(new[] { "\\" }, StringSplitOptions.RemoveEmptyEntries)
                 .LastOrDefault();
             return string.IsNullOrEmpty(appName) == false
-                ? new BlinkBrowserManager(appName, userDataPath, engineId: engineId) : null;
+                ? new BlinkImporterFactory(appName, userDataPath, engineId: engineId) : null;
         }
 #pragma warning restore 1591
     }
     /// <summary>
     /// Gecko系列のブラウザからICookieImporterを取得します。
     /// </summary>
-    public class SmartGeckoBrowserManager : SmartBrowserManager
+    public class SmartGeckoBrowserManager : SmartImporterFactory
     {
 #pragma warning disable 1591
         public SmartGeckoBrowserManager() : base("profiles.ini", PathType.File) { }
         public override ICookieImporter GetCookieImporter(BrowserConfig config)
-        { return new GeckoCookieGetter(config, 2); }
+        { return new GeckoCookieImporter(config, 2); }
         protected override ICookieImporterFactory Generate(string appDataPath, string userDataPath, string engineId)
         {
             var appName = Path.GetDirectoryName(userDataPath
@@ -130,7 +130,7 @@ namespace SunokoLibrary.Application.Browsers
                 .Split(new[] { "\\" }, StringSplitOptions.RemoveEmptyEntries)
                 .LastOrDefault();
             return string.IsNullOrEmpty(appName) == false
-                ? new GeckoBrowserManager(appName, Path.GetDirectoryName(userDataPath), engineId: engineId) : null;
+                ? new GeckoImporterFactory(appName, Path.GetDirectoryName(userDataPath), engineId: engineId) : null;
         }
 #pragma warning restore 1591
     }

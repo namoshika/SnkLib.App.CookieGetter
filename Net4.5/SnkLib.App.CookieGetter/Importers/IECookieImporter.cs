@@ -12,14 +12,14 @@ namespace SunokoLibrary.Application.Browsers
     /// <summary>
     /// IEからCookieを取得します。
     /// </summary>
-    public class IECookieGetter : CookieGetterBase
+    public class IECookieImporter : CookieImporterBase
     {
 #pragma warning disable 1591
 
-        public IECookieGetter(BrowserConfig config, int primaryLevel) : base(config, PathType.Directory, primaryLevel) { }
+        public IECookieImporter(BrowserConfig config, int primaryLevel) : base(config, PathType.Directory, primaryLevel) { }
         public override bool IsAvailable { get { return true; } }
         public override ICookieImporter Generate(BrowserConfig config)
-        { return new IECookieGetter(config, PrimaryLevel); }
+        { return new IECookieImporter(config, PrimaryLevel); }
         protected override ImportResult ProtectedGetCookies(Uri targetUrl, System.Net.CookieContainer container)
         {
             string cookiesText;

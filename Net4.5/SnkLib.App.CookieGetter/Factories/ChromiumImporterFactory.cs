@@ -7,10 +7,10 @@ namespace SunokoLibrary.Application.Browsers
     /// <summary>
     /// ChromiumからICookieImporterを取得します。
     /// </summary>
-    public class ChromiumBrowserManager : BlinkBrowserManager
+    public class ChromiumImporterFactory : BlinkImporterFactory
     {
 #pragma warning disable 1591
-        public ChromiumBrowserManager() : base("Chromium", "%LOCALAPPDATA%\\Chromium\\User Data\\") { }
+        public ChromiumImporterFactory() : base("Chromium", "%LOCALAPPDATA%\\Chromium\\User Data\\") { }
 #pragma warning restore 1591
     }
 }

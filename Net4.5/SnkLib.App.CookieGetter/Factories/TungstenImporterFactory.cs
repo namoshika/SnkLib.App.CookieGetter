@@ -8,10 +8,10 @@ namespace SunokoLibrary.Application.Browsers
     /// <summary>
     /// TungstenからICookieImporterを取得します。
     /// </summary>
-    public class TungstenBrowserManager : BlinkBrowserManager
+    public class TungstenImporterFactory : BlinkImporterFactory
     {
 #pragma warning disable 1591
-        public TungstenBrowserManager() : base("TungstenBlink", "%APPDATA%\\Tungsten\\profile") { }
+        public TungstenImporterFactory() : base("TungstenBlink", "%APPDATA%\\Tungsten\\profile") { }
 #pragma warning restore 1591
     }
 }

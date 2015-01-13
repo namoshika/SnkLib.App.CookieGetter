@@ -90,80 +90,80 @@
     <Compile Include="..\SnkLib.App.CookieGetter\CookieGetters.cs">
       <Link>Core\CookieGetters.cs</Link>
     </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\Getters\BlinkCookieGetter.cs">
-      <Link>Core\Getters\BlinkCookieGetter.cs</Link>
+    <Compile Include="..\SnkLib.App.CookieGetter\Factories\BlinkImporterFactory.cs">
+      <Link>Core\Factories\BlinkImporterFactory.cs</Link>
     </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\Getters\CookieGetterBase.cs">
-      <Link>Core\Getters\CookieGetterBase.cs</Link>
+    <Compile Include="..\SnkLib.App.CookieGetter\Factories\ChromeImporterFactory.cs">
+      <Link>Core\Factories\ChromeImporterFactory.cs</Link>
     </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\Getters\GeckoCookieGetter.cs">
-      <Link>Core\Getters\GeckoCookieGetter.cs</Link>
+    <Compile Include="..\SnkLib.App.CookieGetter\Factories\ChromiumImporterFactory.cs">
+      <Link>Core\Factories\ChromiumImporterFactory.cs</Link>
     </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\Getters\IECookieGetter.cs">
-      <Link>Core\Getters\IECookieGetter.cs</Link>
+    <Compile Include="..\SnkLib.App.CookieGetter\Factories\ComplexImporterFactory.cs">
+      <Link>Core\Factories\ComplexImporterFactory.cs</Link>
     </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\Getters\IEFindCacheCookieGetter.cs">
-      <Link>Core\Getters\IEFindCacheCookieGetter.cs</Link>
+    <Compile Include="..\SnkLib.App.CookieGetter\Factories\FirefoxImporterFactory.cs">
+      <Link>Core\Factories\FirefoxImporterFactory.cs</Link>
     </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\Getters\IEPMCookieGetter.cs">
-      <Link>Core\Getters\IEPMCookieGetter.cs</Link>
+    <Compile Include="..\SnkLib.App.CookieGetter\Factories\GeckoImporterFactory.cs">
+      <Link>Core\Factories\GeckoImporterFactory.cs</Link>
     </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\Getters\SqlCookieGetter.cs">
-      <Link>Core\Getters\SqlCookieGetter.cs</Link>
+    <Compile Include="..\SnkLib.App.CookieGetter\Factories\IEImporterFactory.cs">
+      <Link>Core\Factories\IEImporterFactory.cs</Link>
     </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\Getters\WebkitQtCookieGetter.cs">
-      <Link>Core\Getters\WebkitQtCookieGetter.cs</Link>
+    <Compile Include="..\SnkLib.App.CookieGetter\Factories\ImporterFactoryBase.cs">
+      <Link>Core\Factories\ImporterFactoryBase.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Factories\LunascapeImporterFactory.cs">
+      <Link>Core\Factories\LunascapeImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Factories\MaxthonImporterFactory.cs">
+      <Link>Core\Factories\MaxthonImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Factories\OperaWebkitImporterFactory.cs">
+      <Link>Core\Factories\OperaWebkitImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Factories\SleipnirImporterFactory.cs">
+      <Link>Core\Factories\SleipnirImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Factories\SmartImporterFactory.cs">
+      <Link>Core\Factories\SmartImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Factories\TungstenImporterFactory.cs">
+      <Link>Core\Factories\TungstenImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Factories\WebkitQtImporterFactory.cs">
+      <Link>Core\Factories\WebkitQtImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Importers\BlinkCookieImporter.cs">
+      <Link>Core\Importers\BlinkCookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Importers\CookieImporterBase.cs">
+      <Link>Core\Importers\CookieImporterBase.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Importers\GeckoCookieImporter.cs">
+      <Link>Core\Importers\GeckoCookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Importers\IECookieImporter.cs">
+      <Link>Core\Importers\IECookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Importers\IEFindCacheCookieImporter.cs">
+      <Link>Core\Importers\IEFindCacheCookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Importers\IEPMCookieImporter.cs">
+      <Link>Core\Importers\IEPMCookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Importers\SqlCookieImporter.cs">
+      <Link>Core\Importers\SqlCookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Importers\WebkitQtCookieImporter.cs">
+      <Link>Core\Importers\WebkitQtCookieImporter.cs</Link>
     </Compile>
     <Compile Include="..\SnkLib.App.CookieGetter\Interfaces.cs">
       <Link>Core\Interfaces.cs</Link>
     </Compile>
     <Compile Include="..\SnkLib.App.CookieGetter\IProxyService.cs">
       <Link>Core\IProxyService.cs</Link>
-    </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\Managers\BlinkBrowserManager.cs">
-      <Link>Core\Managers\BlinkBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\Managers\BrowserManagerBase.cs">
-      <Link>Core\Managers\BrowserManagerBase.cs</Link>
-    </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\Managers\ChromiumBrowserManager.cs">
-      <Link>Core\Managers\ChromiumBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\Managers\ComplexBrowserManager.cs">
-      <Link>Core\Managers\ComplexBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\Managers\FirefoxBrowserManager.cs">
-      <Link>Core\Managers\FirefoxBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\Managers\GeckoBrowserManager.cs">
-      <Link>Core\Managers\GeckoBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\Managers\GoogleChromeBrowserManager.cs">
-      <Link>Core\Managers\GoogleChromeBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\Managers\IEBrowserManager.cs">
-      <Link>Core\Managers\IEBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\Managers\LunascapeBrowserManager.cs">
-      <Link>Core\Managers\LunascapeBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\Managers\MaxthonBrowserManager.cs">
-      <Link>Core\Managers\MaxthonBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\Managers\OperaWebkitBrowserManager.cs">
-      <Link>Core\Managers\OperaWebkitBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\Managers\SleipnirBrowserManager.cs">
-      <Link>Core\Managers\SleipnirBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\Managers\SmartBrowserManager.cs">
-      <Link>Core\Managers\SmartBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\Managers\TungstenBrowserManager.cs">
-      <Link>Core\Managers\TungstenBrowserManager.cs</Link>
-    </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\Managers\WebkitQtBrowserManager.cs">
-      <Link>Core\Managers\WebkitQtBrowserManager.cs</Link>
     </Compile>
     <Compile Include="..\SnkLib.App.CookieGetter\Utility.cs">
       <Link>Core\Utility.cs</Link>
@@ -175,8 +175,8 @@
     <Compile Include="CookieStatus.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Interfaces.cs" />
-    <Compile Include="Managers\PaleMoonBrowserManager.cs" />
-    <Compile Include="Managers\SeaMonkeyBrowserManager.cs" />
+    <Compile Include="Factories\PaleMoonImporterFactory.cs" />
+    <Compile Include="Factories\SeaMonkeyImporterFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>

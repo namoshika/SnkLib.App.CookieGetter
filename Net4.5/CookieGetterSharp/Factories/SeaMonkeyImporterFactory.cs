@@ -5,8 +5,8 @@ using System.Text;
 
 namespace Hal.CookieGetterSharp
 {
-    class SeaMonkeyBrowserManager : GeckoBrowserManager
+    class SeaMonkeyImporterFactory : GeckoImporterFactory
     {
-        public SeaMonkeyBrowserManager() : base("SeaMonkey", "%APPDATA%\\Mozilla\\SeaMonkey") { }
+        public SeaMonkeyImporterFactory() : base("SeaMonkey", "%APPDATA%\\Mozilla\\SeaMonkey") { }
     }
 }

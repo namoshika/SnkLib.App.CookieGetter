@@ -55,8 +55,8 @@ namespace Hal.CookieGetterSharp
         static CookieGetter()
         {
             //対応させていないブラウザ、派生ブラウザとして省かれているブラウザを対応させる
-            CookieGetters.ImporterFactories.Enqueue(new PaleMoonBrowserManager());
-            CookieGetters.ImporterFactories.Enqueue(new SeaMonkeyBrowserManager());
+            CookieGetters.ImporterFactories.Enqueue(new PaleMoonImporterFactory());
+            CookieGetters.ImporterFactories.Enqueue(new SeaMonkeyImporterFactory());
 
             //コア部分にはBrowserTypeが無いため、ブラウザ名とBrowserTypeの対応関係を
             //定義してBrowserType値の生成に使うする。
@@ -90,14 +90,14 @@ namespace Hal.CookieGetterSharp
         public static ICookieGetter[] CreateInstances(bool availableOnly)
         {
             var getters = CookieGetters.Default.GetInstancesAsync(availableOnly)
-                .ContinueWith(tsk => tsk.Result.Select(getter => new CookieGetter(getter)))
+                .ContinueWith(tsk => tsk.Result.Select(importer => new CookieGetter(importer)))
                 .Result.ToArray();
             return getters;
         }
         public static ICookieGetter CreateInstance(BrowserType type)
         {
             return CreateInstances(false)
-                .Where(getter => getter.Status.BrowserType == type)
+                .Where(getters => getters.Status.BrowserType == type)
                 .FirstOrDefault();
         }
         public static ICookieGetter CreateInstance(CookieStatus status)

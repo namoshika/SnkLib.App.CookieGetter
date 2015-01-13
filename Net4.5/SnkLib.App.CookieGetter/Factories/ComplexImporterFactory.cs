@@ -9,11 +9,11 @@ namespace SunokoLibrary.Application.Browsers
     /// <summary>
     /// 複数のFactoryを内部で保持し、それらを1つのFactoryとして扱えるようにする仕組みを提供します。
     /// </summary>
-    public class ComplexBrowserManager : ICookieImporterFactory
+    public class ComplexImporterFactory : ICookieImporterFactory
     {
 #pragma warning disable 1591
 
-        public ComplexBrowserManager(IEnumerable<ICookieImporterFactory> innerFactories)
+        public ComplexImporterFactory(IEnumerable<ICookieImporterFactory> innerFactories)
         {
             _pnirBrowserManagers = innerFactories.ToDictionary(factory => factory.EngineIds[0]);
             EngineIds = _pnirBrowserManagers.Keys.ToArray();

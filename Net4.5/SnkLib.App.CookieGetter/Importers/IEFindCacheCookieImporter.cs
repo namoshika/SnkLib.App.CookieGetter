@@ -12,13 +12,13 @@ namespace SunokoLibrary.Application.Browsers
     /// <summary>
     /// IEのCacheファイルから直接Cookieを取得します。
     /// </summary>
-    public class IEFindCacheCookieGetter : CookieGetterBase
+    public class IEFindCacheCookieImporter : CookieImporterBase
     {
 #pragma warning disable 1591
 
         //クラス命名センスとしてwininet.dllのFindNextUrlCacheEntryの文脈を用いる。
         //純粋にapi上で片付ける方法が不明なのでwininetのapi自体は使っていない。
-        public IEFindCacheCookieGetter(BrowserConfig config, int primaryLevel)
+        public IEFindCacheCookieImporter(BrowserConfig config, int primaryLevel)
             : base(config, PathType.Directory, primaryLevel) { }
         public override bool IsAvailable
         {
@@ -29,7 +29,7 @@ namespace SunokoLibrary.Application.Browsers
             }
         }
         public override ICookieImporter Generate(BrowserConfig config)
-        { return new IEFindCacheCookieGetter(config, PrimaryLevel); }
+        { return new IEFindCacheCookieImporter(config, PrimaryLevel); }
         protected override ImportResult ProtectedGetCookies(Uri targetUrl, CookieContainer container)
         {
             if (IsAvailable == false)

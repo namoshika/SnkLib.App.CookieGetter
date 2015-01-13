@@ -9,17 +9,17 @@ namespace SunokoLibrary.Application.Browsers
     /// <summary>
     /// LunascapeからICookieImporterを取得します。
     /// </summary>
-    public class LunascapeBrowserManager : ComplexBrowserManager
+    public class LunascapeImporterFactory : ComplexImporterFactory
     {
 #pragma warning disable 1591
-        public LunascapeBrowserManager()
+        public LunascapeImporterFactory()
             : base(new ICookieImporterFactory[] {
                 new LunascapeGeckoBrowserManager(),
                 new LunascapeWebkitBrowserManager(),
             }) { }
 #pragma warning restore 1591
 
-        class LunascapeGeckoBrowserManager : BrowserManagerBase
+        class LunascapeGeckoBrowserManager : ImporterFactoryBase
         {
             const string LUNASCAPE_PLUGIN_FOLDER5 = "%APPDATA%\\Lunascape\\Lunascape5\\ApplicationData\\gecko\\cookies.sqlite";
             const string LUNASCAPE_PLUGIN_FOLDER6 = "%APPDATA%\\Lunascape\\Lunascape6\\plugins";
@@ -29,10 +29,10 @@ namespace SunokoLibrary.Application.Browsers
             {
                 var path = SearchCookieDirectory();
                 var config = new BrowserConfig("Lunascape Gecko", "Default", path, EngineIds[0], false);
-                return new ICookieImporter[] { new GeckoCookieGetter(config, 2) };
+                return new ICookieImporter[] { new GeckoCookieImporter(config, 2) };
             }
             public override ICookieImporter GetCookieImporter(BrowserConfig config)
-            { return new GeckoCookieGetter(config, 2); }
+            { return new GeckoCookieImporter(config, 2); }
             /// <summary>
             /// Lunascape6のプラグインフォルダからFirefoxのCookieが保存されているパスを検索します。
             /// </summary>
@@ -53,7 +53,7 @@ namespace SunokoLibrary.Application.Browsers
                 return cookiePath;
             }
         }
-        class LunascapeWebkitBrowserManager : BrowserManagerBase
+        class LunascapeWebkitBrowserManager : ImporterFactoryBase
         {
             const string LUNASCAPE_PLUGIN_FOLDER = "%APPDATA%\\Lunascape\\Lunascape6\\plugins";
             const string COOKIEPATH = "data\\cookies.ini";
@@ -62,10 +62,10 @@ namespace SunokoLibrary.Application.Browsers
             {
                 var path = SearchCookieDirectory();
                 var config = new BrowserConfig("Lunascape Webkit", "Default", path, EngineIds[0], false);
-                return new ICookieImporter[] { new WebkitQtCookieGetter(config, 2) };
+                return new ICookieImporter[] { new WebkitQtCookieImporter(config, 2) };
             }
             public override ICookieImporter GetCookieImporter(BrowserConfig config)
-            { return new WebkitQtCookieGetter(config, 2); }
+            { return new WebkitQtCookieImporter(config, 2); }
             /// <summary>
             /// Lunascape6のプラグインフォルダからFirefoxのCookieが保存されているパスを検索する
             /// </summary>

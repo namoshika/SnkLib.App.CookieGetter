@@ -8,7 +8,7 @@ namespace SunokoLibrary.Application.Browsers
     /// <summary>
     /// MaxthonからICookieImporterを取得します。
     /// </summary>
-    public class MaxthonBrowserManager : BrowserManagerBase
+    public class MaxthonImporterFactory : ImporterFactoryBase
     {
 #pragma warning disable 1591
         public override IEnumerable<ICookieImporter> GetCookieImporters()
@@ -19,10 +19,10 @@ namespace SunokoLibrary.Application.Browsers
                 path = null;
 
             var config = new BrowserConfig(name, "Default", path, EngineIds[0], false);
-            return new ICookieImporter[] { new BlinkCookieGetter(config, 2) };
+            return new ICookieImporter[] { new BlinkCookieImporter(config, 2) };
         }
         public override ICookieImporter GetCookieImporter(BrowserConfig config)
-        { return new BlinkCookieGetter(config, 2); }
+        { return new BlinkCookieImporter(config, 2); }
 #pragma warning restore 1591
 
         const string COOKIEPATH = "%APPDATA%\\Maxthon3\\Users\\guest\\Cookie\\Cookie.dat";

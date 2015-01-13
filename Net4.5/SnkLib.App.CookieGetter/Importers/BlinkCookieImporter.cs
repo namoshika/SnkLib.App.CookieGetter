@@ -12,17 +12,17 @@ namespace SunokoLibrary.Application.Browsers
     /// <summary>
     /// GoogleChromeからCookieを取得します。
     /// </summary>
-    public class BlinkCookieGetter : SqlCookieGetter
+    public class BlinkCookieImporter : SqlCookieImporter
     {
 #pragma warning disable 1591
 
-        public BlinkCookieGetter(BrowserConfig config, int primaryLevel) : base(config, primaryLevel) { }
+        public BlinkCookieImporter(BrowserConfig config, int primaryLevel) : base(config, primaryLevel) { }
         const string SELECT_QUERY_VERSION = "SELECT value FROM meta WHERE key='version';";
         const string SELECT_QUERY = "SELECT 0, value, name, host_key, path, expires_utc FROM cookies";
         const string SELECT_QUERY_V7 = "SELECT 7, encrypted_value, name, host_key, path, expires_utc FROM cookies";
 
         public override ICookieImporter Generate(BrowserConfig config)
-        { return new BlinkCookieGetter(config, PrimaryLevel); }
+        { return new BlinkCookieImporter(config, PrimaryLevel); }
         protected override ImportResult ProtectedGetCookies(Uri targetUrl, CookieContainer container)
         {
             if (IsAvailable == false)

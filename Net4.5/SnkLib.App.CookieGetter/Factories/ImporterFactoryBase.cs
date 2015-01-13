@@ -9,11 +9,11 @@ namespace SunokoLibrary.Application.Browsers
     /// <summary>
     /// ICookieImporterFactoryの実装の作成を支援する基盤クラスです。
     /// </summary>
-    public abstract class BrowserManagerBase : ICookieImporterFactory
+    public abstract class ImporterFactoryBase : ICookieImporterFactory
     {
 #pragma warning disable 1591
 
-        public BrowserManagerBase(IEnumerable<string> engineIds = null)
+        public ImporterFactoryBase(IEnumerable<string> engineIds = null)
         {
             EngineIds = (engineIds ?? Enumerable.Empty<string>())
                 .DefaultIfEmpty(GetType().FullName).ToArray();

@@ -12,7 +12,7 @@ namespace SunokoLibrary.Application.Browsers
     /// ICookieImporterの実装の作成を支援する基盤クラスです。
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{Config.BrowserName,nq}({Config.ProfileName,nq}): {Config.CookiePath,nq}")]
-    public abstract class CookieGetterBase : ICookieImporter
+    public abstract class CookieImporterBase : ICookieImporter
     {
         /// <summary>
         /// 指定されたconfigからCookieを取得するICookieImporterを生成します。
@@ -25,7 +25,7 @@ namespace SunokoLibrary.Application.Browsers
         /// 並べ替え時に用いられる数値。
         /// OSブラウザ: 0、有名ブラウザ: 1、派生ブラウザ: 2
         /// </param>
-        public CookieGetterBase(BrowserConfig config, PathType cookiePathType, int primaryLevel)
+        public CookieImporterBase(BrowserConfig config, PathType cookiePathType, int primaryLevel)
         {
             if (config == null)
                 throw new ArgumentNullException("引数configがnullです。");

@@ -10,7 +10,7 @@ namespace SunokoLibrary.Application.Browsers
     /// <summary>
     /// Chromium系列のブラウザからICookieImporterを取得する基盤クラス
     /// </summary>
-    public class BlinkBrowserManager : BrowserManagerBase
+    public class BlinkImporterFactory : ImporterFactoryBase
     {
         /// <summary>
         /// 指定したブラウザ情報でインスタンスを生成します。
@@ -22,7 +22,7 @@ namespace SunokoLibrary.Application.Browsers
         /// <param name="defaultFolder">デフォルトのプロファイルフォルダの名前</param>
         /// <param name="profileFolderStarts">デフォルト以外のプロファイルフォルダの名前のプレフィックス</param>
         /// <param name="engineId">エンジン識別子</param>
-        public BlinkBrowserManager(
+        public BlinkImporterFactory(
             string name, string dataFolder, int primaryLevel = 2, string cookieFileName = "Cookies",
             string defaultFolder = "Default", string profileFolderStarts = "Profile", string engineId = null)
             : base(engineId != null ? new[] { engineId } : null)
@@ -50,7 +50,7 @@ namespace SunokoLibrary.Application.Browsers
         public override IEnumerable<ICookieImporter> GetCookieImporters()
         { return GetDefaultProfiles().Concat(GetProfiles()); }
         public override ICookieImporter GetCookieImporter(BrowserConfig config)
-        { return new BlinkCookieGetter(config, 2); }
+        { return new BlinkCookieImporter(config, 2); }
 
 #pragma warning restore 1591
 
@@ -64,7 +64,7 @@ namespace SunokoLibrary.Application.Browsers
             if (_dataFolder != null)
                 path = Path.Combine(_dataFolder, _defaultFolderName, _cookieFileName);
             var conf = new BrowserConfig(_name, _defaultFolderName, path, EngineIds[0], false);
-            return new ICookieImporter[] { new BlinkCookieGetter(conf, _primaryLevel) };
+            return new ICookieImporter[] { new BlinkCookieImporter(conf, _primaryLevel) };
         }
         /// <summary>
         /// ブラウザが持っているデフォルト以外の全ての環境設定からICookieImporterを生成します。
@@ -78,7 +78,7 @@ namespace SunokoLibrary.Application.Browsers
                     .Where(path => Path.GetFileName(path).StartsWith(_profileFolderStarts, StringComparison.OrdinalIgnoreCase))
                     .Select(path => Path.Combine(path, _cookieFileName))
                     .Where(path => File.Exists(path))
-                    .Select(path => new BlinkCookieGetter(new BrowserConfig(
+                    .Select(path => new BlinkCookieImporter(new BrowserConfig(
                         _name, Path.GetFileName(Path.GetDirectoryName(path)), path, EngineIds[0], false), _primaryLevel));
                 return paths;
             }

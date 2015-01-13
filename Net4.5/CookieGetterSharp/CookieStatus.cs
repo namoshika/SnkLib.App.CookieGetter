@@ -57,9 +57,9 @@ namespace Hal.CookieGetterSharp
             set { _displayName = this.Name.Equals(value) ? null : value; }
         }
 
-        TResult GetValue<TResult>(Func<TResult> getter)
+        TResult GetValue<TResult>(Func<TResult> importer)
         {
-            try { return getter(); }
+            try { return importer(); }
             catch (CookieImportException e)
             { throw new CookieGetterException(e); }
         }

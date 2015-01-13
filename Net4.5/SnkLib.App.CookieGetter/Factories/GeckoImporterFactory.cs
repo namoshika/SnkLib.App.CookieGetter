@@ -10,7 +10,7 @@ namespace SunokoLibrary.Application.Browsers
     /// <summary>
     /// Firefox系列のブラウザからICookieImporterを取得する基盤クラス
     /// </summary>
-    public class GeckoBrowserManager : BrowserManagerBase
+    public class GeckoImporterFactory : ImporterFactoryBase
     {
         /// <summary>
         /// 指定したブラウザ情報でインスタンスを生成します。
@@ -21,7 +21,7 @@ namespace SunokoLibrary.Application.Browsers
         /// <param name="cookieFileName">Cookieファイルの名前</param>
         /// <param name="iniFileName">設定ファイルの名前</param>
         /// <param name="engineId">エンジン識別子</param>
-        public GeckoBrowserManager(
+        public GeckoImporterFactory(
             string name, string dataFolder, int primaryLevel = 2,
             string cookieFileName = "cookies.sqlite", string iniFileName = "profiles.ini", string engineId = null)
             : base(engineId != null ? new[] { engineId } : null)
@@ -45,16 +45,16 @@ namespace SunokoLibrary.Application.Browsers
 
         public override IEnumerable<ICookieImporter> GetCookieImporters()
         {
-            var getters = UserProfile.GetProfiles(_dataFolder, _iniFileName)
+            var importers = UserProfile.GetProfiles(_dataFolder, _iniFileName)
                 .Select(prof => new BrowserConfig(_name, prof.Name, Path.Combine(prof.Path, _cookieFileName), EngineIds[0], false))
-                .Select(inf => (ICookieImporter)new GeckoCookieGetter(inf, _primaryLevel))
+                .Select(inf => (ICookieImporter)new GeckoCookieImporter(inf, _primaryLevel))
                 .ToArray();
-            getters = getters.Length == 0
-                ? new ICookieImporter[] { new GeckoCookieGetter(new BrowserConfig(_name, "Default", null, EngineIds[0], false), _primaryLevel) } : getters;
-            return getters;
+            importers = importers.Length == 0
+                ? new ICookieImporter[] { new GeckoCookieImporter(new BrowserConfig(_name, "Default", null, EngineIds[0], false), _primaryLevel) } : importers;
+            return importers;
         }
         public override ICookieImporter GetCookieImporter(BrowserConfig config)
-        { return new GeckoCookieGetter(config, 2); }
+        { return new GeckoCookieImporter(config, 2); }
 
 #pragma warning restore 1591
 

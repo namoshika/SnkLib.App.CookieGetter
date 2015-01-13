@@ -9,13 +9,13 @@ namespace SunokoLibrary.Application.Browsers
     /// <summary>
     /// Qt上のWebkitでよく使われるCookieファイル形式からCookieを取得します。
     /// </summary>
-    public class WebkitQtCookieGetter : CookieGetterBase
+    public class WebkitQtCookieImporter : CookieImporterBase
     {
 #pragma warning disable 1591
 
-        public WebkitQtCookieGetter(BrowserConfig config, int primaryLevel) : base(config, PathType.File, primaryLevel) { }
+        public WebkitQtCookieImporter(BrowserConfig config, int primaryLevel) : base(config, PathType.File, primaryLevel) { }
         public override ICookieImporter Generate(BrowserConfig config)
-        { return new WebkitQtCookieGetter(config, PrimaryLevel); }
+        { return new WebkitQtCookieImporter(config, PrimaryLevel); }
         protected override ImportResult ProtectedGetCookies(Uri targetUrl, CookieContainer container)
         {
             if (IsAvailable == false)

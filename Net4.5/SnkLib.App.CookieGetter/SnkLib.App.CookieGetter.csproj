@@ -53,31 +53,31 @@
     <Compile Include="BrowserConfig.cs" />
     <Compile Include="CookieGetters.cs" />
     <Compile Include="BrowserSelector.cs" />
-    <Compile Include="Getters\IEFindCacheCookieGetter.cs" />
-    <Compile Include="Getters\BlinkCookieGetter.cs" />
-    <Compile Include="Getters\CookieGetterBase.cs" />
-    <Compile Include="Getters\GeckoCookieGetter.cs" />
-    <Compile Include="Getters\IECookieGetter.cs" />
-    <Compile Include="Getters\IEPMCookieGetter.cs" />
-    <Compile Include="Getters\SqlCookieGetter.cs" />
-    <Compile Include="Getters\WebkitQtCookieGetter.cs" />
+    <Compile Include="Importers\IEFindCacheCookieImporter.cs" />
+    <Compile Include="Importers\BlinkCookieImporter.cs" />
+    <Compile Include="Importers\CookieImporterBase.cs" />
+    <Compile Include="Importers\GeckoCookieImporter.cs" />
+    <Compile Include="Importers\IECookieImporter.cs" />
+    <Compile Include="Importers\IEPMCookieImporter.cs" />
+    <Compile Include="Importers\SqlCookieImporter.cs" />
+    <Compile Include="Importers\WebkitQtCookieImporter.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="IProxyService.cs" />
-    <Compile Include="Managers\BrowserManagerBase.cs" />
-    <Compile Include="Managers\ChromiumBrowserManager.cs" />
-    <Compile Include="Managers\ComplexBrowserManager.cs" />
-    <Compile Include="Managers\FirefoxBrowserManager.cs" />
-    <Compile Include="Managers\GeckoBrowserManager.cs" />
-    <Compile Include="Managers\GoogleChromeBrowserManager.cs" />
-    <Compile Include="Managers\IEBrowserManager.cs" />
-    <Compile Include="Managers\LunascapeBrowserManager.cs" />
-    <Compile Include="Managers\MaxthonBrowserManager.cs" />
-    <Compile Include="Managers\OperaWebkitBrowserManager.cs" />
-    <Compile Include="Managers\SleipnirBrowserManager.cs" />
-    <Compile Include="Managers\SmartBrowserManager.cs" />
-    <Compile Include="Managers\TungstenBrowserManager.cs" />
-    <Compile Include="Managers\BlinkBrowserManager.cs" />
-    <Compile Include="Managers\WebkitQtBrowserManager.cs" />
+    <Compile Include="Factories\ImporterFactoryBase.cs" />
+    <Compile Include="Factories\ChromiumImporterFactory.cs" />
+    <Compile Include="Factories\ComplexImporterFactory.cs" />
+    <Compile Include="Factories\FirefoxImporterFactory.cs" />
+    <Compile Include="Factories\GeckoImporterFactory.cs" />
+    <Compile Include="Factories\ChromeImporterFactory.cs" />
+    <Compile Include="Factories\IEImporterFactory.cs" />
+    <Compile Include="Factories\LunascapeImporterFactory.cs" />
+    <Compile Include="Factories\MaxthonImporterFactory.cs" />
+    <Compile Include="Factories\OperaWebkitImporterFactory.cs" />
+    <Compile Include="Factories\SleipnirImporterFactory.cs" />
+    <Compile Include="Factories\SmartImporterFactory.cs" />
+    <Compile Include="Factories\TungstenImporterFactory.cs" />
+    <Compile Include="Factories\BlinkImporterFactory.cs" />
+    <Compile Include="Factories\WebkitQtImporterFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>
@@ -86,7 +86,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Getters\IEFindCacheCookieGetter.Memo.txt" />
+    <None Include="Importers\IEFindCacheCookieGetter.Memo.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Net4.0\SnkLib.App.CookieGetter.x86Proxy\bin\Release\SnkLib.App.CookieGetter.x86Proxy.exe">
