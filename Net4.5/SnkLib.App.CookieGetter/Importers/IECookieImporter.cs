@@ -20,26 +20,25 @@ namespace SunokoLibrary.Application.Browsers
         public override bool IsAvailable { get { return true; } }
         public override ICookieImporter Generate(BrowserConfig config)
         { return new IECookieImporter(config, PrimaryLevel); }
-        protected override ImportResult ProtectedGetCookies(Uri targetUrl, System.Net.CookieContainer container)
+        protected override ImportResult ProtectedGetCookies(Uri targetUrl)
         {
             string cookiesText;
             var hResult = Win32Api.GetCookiesFromIE(out cookiesText, targetUrl, null);
             Debug.Assert(cookiesText != null, "InternetGetCookie error code: " + hResult);
 
             if (cookiesText == null)
-                return ImportResult.AccessError;
+                return new ImportResult(null, ImportState.AccessError);
             try
             {
                 var cookies = new CookieCollection();
                 foreach (var item in ParseCookies(cookiesText, targetUrl))
                     cookies.Add(item);
-                container.Add(cookies);
-                return ImportResult.Success;
+                return new ImportResult(cookies, ImportState.Success);
             }
             catch (CookieImportException ex)
             {
                 TraceFail(this, "Cookie読み込みに失敗。", ex.ToString());
-                return ex.Result;
+                return new ImportResult(null, ex.Result);
             }
         }
 
@@ -58,14 +57,14 @@ namespace SunokoLibrary.Application.Browsers
                 if (2 > chunks.Length)
                 {
                     TraceFail(this, "IE Cookie解析に失敗。", string.Format("cookieHeader: {0}\r\nurl: {1}", cookieHeader, url));
-                    throw new CookieImportException("IE Cookieの解析に失敗。", ImportResult.ConvertError);
+                    throw new CookieImportException("IE Cookieの解析に失敗。", ImportState.ConvertError);
                 }
                 var name = chunks[0].Trim();
                 var value = chunks[1].Trim();
                 if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(value))
                 {
                     TraceFail(this, "IE Cookieの解析に失敗。", string.Format("cookieHeader: {0}\r\nurl: {1}", cookieHeader, url));
-                    throw new CookieImportException("IE Cookieの解析に失敗。", ImportResult.ConvertError);
+                    throw new CookieImportException("IE Cookieの解析に失敗。", ImportState.ConvertError);
                 }
 
                 cookie.Name = name;

@@ -125,7 +125,7 @@ namespace SunokoLibrary.Windows.ViewModels
                             catch (Exception e)
                             {
                                 throw new CookieImportException(
-                                    string.Format("{0}の生成に失敗しました。", typeof(BrowserItem).Name), ImportResult.UnknownError, e);
+                                    string.Format("{0}の生成に失敗しました。", typeof(BrowserItem).Name), ImportState.UnknownError, e);
                             }
                         });
 
@@ -195,7 +195,7 @@ namespace SunokoLibrary.Windows.ViewModels
                     catch (Exception e)
                     {
                         throw new CookieImportException(
-                            string.Format("{0}の生成に失敗しました。", typeof(BrowserItem).Name), ImportResult.UnknownError, e);
+                            string.Format("{0}の生成に失敗しました。", typeof(BrowserItem).Name), ImportState.UnknownError, e);
                     }
                     if (_addedCustom)
                         Items[Items.Count - 1] = customItem;

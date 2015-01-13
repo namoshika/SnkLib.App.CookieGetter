@@ -34,13 +34,45 @@ namespace SunokoLibrary.Application
         /// 指定されたURLとの通信に使えるCookieを返します。
         /// </summary>
         /// <param name="targetUrl">通信先のURL</param>
-        /// <param name="container">取得Cookieを入れる対象</param>
         /// <returns>処理の成功不成功</returns>
-        Task<ImportResult> GetCookiesAsync(Uri targetUrl, CookieContainer container);
+        Task<ImportResult> GetCookiesAsync(Uri targetUrl);
         /// <summary>
         /// 自身と設定の異なるICookieImporterを生成します。
         /// </summary>
         ICookieImporter Generate(BrowserConfig config);
+    }
+    /// <summary>
+    /// Cookie取得結果を扱うクラスです。
+    /// </summary>
+    public class ImportResult
+    {
+#pragma warning disable 1591
+        public ImportResult(CookieCollection cookies, ImportState status)
+        {
+            Cookies = cookies;
+            Status = status;
+        }
+#pragma warning restore 1591
+
+        /// <summary>
+        /// ブラウザから取得されたCookieを取得します。
+        /// </summary>
+        public CookieCollection Cookies { get; private set; }
+        /// <summary>
+        /// 処理の成功不成功の状態を取得します。
+        /// </summary>
+        public ImportState Status { get; private set; }
+        /// <summary>
+        /// 引数として指定したCookieContainerにブラウザから取得したCookieを追加します。
+        /// </summary>
+        /// <param name="targetContainer">追加先のコンテナ</param>
+        /// <returns>インスタンスが保持するStatusをそのまま返します。</returns>
+        public ImportState AddTo(CookieContainer targetContainer)
+        {
+            if (Status == ImportState.Success)
+                targetContainer.Add(Cookies);
+            return Status;
+        }
     }
     /// <summary>
     /// パス指定対象の種類を定義します。
@@ -55,7 +87,7 @@ namespace SunokoLibrary.Application
     /// <summary>
     /// Cookie取得の実行結果を定義します。
     /// </summary>
-    public enum ImportResult
+    public enum ImportState
     {
         /// <summary>処理が正常終了状態にあります。</summary>
         Success,
@@ -118,18 +150,18 @@ namespace SunokoLibrary.Application
         /// <summary>例外を生成します。</summary>
         /// <param name="message">エラーの捕捉</param>
         /// <param name="result">エラーの種類</param>
-        public CookieImportException(string message, ImportResult result)
+        public CookieImportException(string message, ImportState result)
             : base(message) { Result = result; }
         /// <summary>例外を再スローさせるための例外を生成します。</summary>
         /// <param name="message">エラーの捕捉</param>
         /// <param name="result">エラーの種類</param>
         /// <param name="inner">内部例外</param>
-        public CookieImportException(string message, ImportResult result, Exception inner)
+        public CookieImportException(string message, ImportState result, Exception inner)
             : base(message, inner) { Result = result; }
 
         /// <summary>
         /// 例外要因の大まかな種類
         /// </summary>
-        public ImportResult Result { get; private set; }
+        public ImportState Result { get; private set; }
     }
 }

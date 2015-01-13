@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>SnkLib.App.CookieGetter.Forms</id>
-        <version>1.2.0.0</version>
+        <version>1.3.0.0</version>
         <title>SnkLib.App.CookieGetter.Forms</title>
         <authors>namoshika</authors>
         <owners>namoshika</owners>
@@ -18,10 +18,10 @@
         </references>
         <dependencies>
             <group targetFramework="net45">
-                <dependency id="SnkLib.App.CookieGetter" version="1.3.0.0" />
+                <dependency id="SnkLib.App.CookieGetter" version="2.0.0.0" />
             </group>
             <group targetFramework="net40">
-                <dependency id="SnkLib.App.CookieGetter" version="1.3.0.0" />
+                <dependency id="SnkLib.App.CookieGetter" version="2.0.0.0" />
                 <dependency id="Microsoft.Bcl.Async" version="1.0.168" />
                 <dependency id="Microsoft.Net.Http" version="2.2.28" />
             </group>

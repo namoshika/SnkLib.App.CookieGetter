@@ -64,9 +64,11 @@ namespace SunokoLibrary.Windows.Forms
                     var url = new Uri("http://www.nicovideo.jp/my/channel");
                     var container = new CookieContainer();
                     var client = new HttpClient(new HttpClientHandler() { CookieContainer = container });
-                    await cookieImporter.GetCookiesAsync(url, container);
-                    var res = await client.GetStringAsync(url);
+                    var result = await cookieImporter.GetCookiesAsync(url);
+                    if (result.AddTo(container) != ImportState.Success)
+                        return null;
 
+                    var res = await client.GetStringAsync(url);
                     if (string.IsNullOrEmpty(res))
                         return null;
                     var namem = Regex.Match(res, "nickname = \"([^<>]+)\";", RegexOptions.Singleline);

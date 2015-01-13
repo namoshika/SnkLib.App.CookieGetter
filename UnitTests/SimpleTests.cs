@@ -126,7 +126,8 @@ namespace UnitTest
         {
             var cookies = new CookieContainer();
             var url = new Uri("http://nicovideo.jp/");
-            await importer.GetCookiesAsync(url, cookies);
+            var res = await importer.GetCookiesAsync(url);
+            res.AddTo(cookies);
 
             LogWriter.WriteLine("{0}:\t{1} ({2})",
                 importer.IsAvailable ? "OK" : "Error", importer.Config.BrowserName, importer.Config.ProfileName);

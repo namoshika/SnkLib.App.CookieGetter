@@ -26,15 +26,14 @@ namespace Hal.CookieGetterSharp
         {
             try
             {
-                var cookies = new CookieContainer();
-                var res = Importer.GetCookiesAsync(url, cookies).Result;
-                switch (res)
+                var res = Importer.GetCookiesAsync(url).Result;
+                switch (res.Status)
                 {
-                    case ImportResult.Success:
-                    case ImportResult.Unavailable:
-                        return cookies.GetCookies(url);
+                    case ImportState.Success:
+                    case ImportState.Unavailable:
+                        return res.Cookies;
                     default:
-                        throw new CookieImportException("Cookie取得に失敗しました。", res);
+                        throw new CookieImportException("Cookie取得に失敗しました。", res.Status);
                 }
             }
             catch (CookieImportException e)

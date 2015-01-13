@@ -33,13 +33,13 @@ namespace Sample
                     var currentGetter = nicoSessionComboBox1.Selector.SelectedImporter;
                     if (currentGetter != null)
                     {
-                        var result = await currentGetter.GetCookiesAsync(TargetUrl, cookieContainer);
-                        var cookie = cookieContainer.GetCookies(TargetUrl)["user_session"];
+                        var result = await currentGetter.GetCookiesAsync(TargetUrl);
+                        var cookie = result.Cookies["user_session"];
                         //UI更新
                         txtCookiePath.Text = currentGetter.Config.CookiePath;
                         btnOpenCookieFileDialog.Enabled = true;
                         txtUserSession.Text = cookie != null ? cookie.Value : null;
-                        txtUserSession.Enabled = result == ImportResult.Success;
+                        txtUserSession.Enabled = result.Status == ImportState.Success;
                         Properties.Settings.Default.SelectedBrowserConfig = currentGetter.Config;
                         Properties.Settings.Default.Save();
                     }

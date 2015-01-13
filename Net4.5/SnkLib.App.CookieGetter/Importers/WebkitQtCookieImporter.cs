@@ -16,32 +16,33 @@ namespace SunokoLibrary.Application.Browsers
         public WebkitQtCookieImporter(BrowserConfig config, int primaryLevel) : base(config, PathType.File, primaryLevel) { }
         public override ICookieImporter Generate(BrowserConfig config)
         { return new WebkitQtCookieImporter(config, PrimaryLevel); }
-        protected override ImportResult ProtectedGetCookies(Uri targetUrl, CookieContainer container)
+        protected override ImportResult ProtectedGetCookies(Uri targetUrl)
         {
             if (IsAvailable == false)
-                return ImportResult.Unavailable;
+                return new ImportResult(null, ImportState.Unavailable);
             try
             {
-                var res = ImportResult.ConvertError;
+                var cookies = new CookieCollection();
+                var res = ImportState.ConvertError;
                 using (var sr = new System.IO.StreamReader(Config.CookiePath))
                     while (!sr.EndOfStream)
                     {
                         var line = sr.ReadLine();
                         if (line.StartsWith("cookies="))
-                            container.Add(ParseCookieSettings(line));
-                        res = ImportResult.Success;
+                            cookies.Add(ParseCookieSettings(line));
+                        res = ImportState.Success;
                     }
-                return res;
+                return new ImportResult(cookies, res);
             }
             catch (System.IO.IOException ex)
             {
                 TraceFail(this, "読み込みでエラーが発生しました。", ex.ToString());
-                return ImportResult.AccessError;
+                return new ImportResult(null,ImportState.AccessError);
             }
             catch (Exception ex)
             {
                 TraceFail(this, "読み込みでエラーが発生しました。", ex.ToString());
-                return ImportResult.ConvertError;
+                return new ImportResult(null, ImportState.ConvertError);
             }
         }
 

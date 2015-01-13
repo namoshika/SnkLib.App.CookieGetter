@@ -48,7 +48,7 @@ masterで本家との互換性を追究しつつ、Gecko, Webkit系のIBrowserMa
 * [SnkLib.App.CookieGetter.Forms](https://www.nuget.org/packages/SnkLib.App.CookieGetter.Forms/)を追加する  
   (オプション。Windows Forms向けのUI部品が入っています。)。
 
-以下の解説は新クラスの使い方です。本家とは設計が異なります。本家と同じ設計を使いたい場合にはNET4.5フォルダ内のCookieGetterSharpを使用します。オススメはしません。あえて使いたい場合にはReleasesからCookieGetterSharpを入手してください。
+これらの解説は新クラスの使い方です。本家とは設計が異なります。本家と同じ設計を使いたい場合にはNET4.5フォルダ内のCookieGetterSharpを使用します。オススメはしません。あえて使いたい場合にはReleasesからCookieGetterSharpを入手してください。
 
 ```C#
 //以下の名前空間を参照します。
@@ -59,13 +59,15 @@ var importableBrowsers = await CookieGetters.GetInstancesAsync(true);
 
 //Cookieの取得は以下のようにします。
 //引数として指定されたCookieContainerに取得結果を追加していく設計です。
-var cookies = new CookieContainer();
 var cookieGetter = importableBrowsers.First();
 var targetUrl = new Uri("http://nicovideo.jp/");
-await cookieGetter.GetCookiesAsync(targetUrl, cookies);
+var result = await cookieGetter.GetCookiesAsync(targetUrl);
 
+//通信に使う際にはCookieContainerへ取得結果を追加して使用します。
+var cookies = new CookieContainer();
+cookies.Add(result.Cookies);
 //個別の値を取得したい場合は以下のようにします。
-var cookie = cookies.GetCookies(targetUrl)["user_session"];
+var cookie = result.Cookies["user_session"];
 
 //次回起動時用の構成を保存します。
 Properties.Settings.Default.BrowserName = cookieGetter.Config.BrowserName;

@@ -22,10 +22,10 @@ namespace SunokoLibrary.Application.Browsers
         public override bool IsAvailable { get { return Win32Api.GetIEVersion().Major >= 8; } }
         public override ICookieImporter Generate(BrowserConfig config)
         { return new IEPMCookieImporter(config, PrimaryLevel); }
-        protected override ImportResult ProtectedGetCookies(Uri targetUrl, CookieContainer container)
+        protected override ImportResult ProtectedGetCookies(Uri targetUrl)
         {
             if (IsAvailable == false)
-                return ImportResult.Unavailable;
+                return new ImportResult(null, ImportState.Unavailable);
             try
             {
                 var cookiesText = PrivateGetCookiesWinApi(targetUrl, null);
@@ -35,16 +35,15 @@ namespace SunokoLibrary.Application.Browsers
                     var cookies = new CookieCollection();
                     foreach (var item in ParseCookies(cookiesText, targetUrl))
                         cookies.Add(item);
-                    container.Add(cookies);
-                    return ImportResult.Success;
+                    return new ImportResult(cookies, ImportState.Success);
                 }
                 else
-                    return ImportResult.AccessError;
+                    return new ImportResult(null, ImportState.AccessError);
             }
             catch (CookieImportException ex)
             {
                 TraceFail(this, "Cookie読み込みに失敗。", ex.ToString());
-                return ex.Result;
+                return new ImportResult(null, ex.Result);
             }
         }
 

@@ -47,12 +47,12 @@ namespace SunokoLibrary.Application.Browsers
                     ? false : System.IO.File.Exists(Config.CookiePath);
             }
         }
-        public Task<ImportResult> GetCookiesAsync(Uri targetUrl, CookieContainer container)
+        public Task<ImportResult> GetCookiesAsync(Uri targetUrl)
         {
             //同期コンテキストが確実にUIスレッド以外になるようにする。
             //awaitのある処理をUIスレッドでTask.Wait()した場合、デッドロックが発生する事がある。
             //その対策としてここで別スレッドから呼び出す事を保証する。
-            return Task.Factory.StartNew(() => ProtectedGetCookies(targetUrl, container));
+            return Task.Factory.StartNew(() => ProtectedGetCookies(targetUrl));
         }
         public abstract ICookieImporter Generate(BrowserConfig config);
 
@@ -62,9 +62,8 @@ namespace SunokoLibrary.Application.Browsers
         /// Cookie取得処理の本体。
         /// </summary>
         /// <param name="targetUrl">Cookieが送信されるURL</param>
-        /// <param name="container">取得結果が追加されるコンテナ</param>
         /// <returns>処理結果の状態</returns>
-        protected abstract ImportResult ProtectedGetCookies(Uri targetUrl, CookieContainer container);
+        protected abstract ImportResult ProtectedGetCookies(Uri targetUrl);
         /// <summary>
         /// 失敗した処理の情報を出力します。
         /// </summary>

@@ -101,12 +101,12 @@ namespace SunokoLibrary.Application.Browsers
             catch (IOException ex)
             {
                 throw new CookieImportException(
-                  "Cookieを取得中、一時ファイルの生成に失敗しました。", ImportResult.AccessError, ex);
+                  "Cookieを取得中、一時ファイルの生成に失敗しました。", ImportState.AccessError, ex);
             }
             catch (SQLiteException ex)
             {
                 throw new CookieImportException(
-                  "Cookieを取得中、Sqliteアクセスでエラーが発生しました。", ImportResult.ConvertError, ex);
+                  "Cookieを取得中、Sqliteアクセスでエラーが発生しました。", ImportState.ConvertError, ex);
             }
             finally
             {
