@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -121,8 +125,18 @@ namespace UnitTest
             await CheckImporters(importer, true, true);
             LogWriter.WriteLine();
         }
+        [TestMethod]
+        public async Task RxTest()
+        {
+            var importResult = await CookieGetters.Default.GetInstancesAsync(true).ToObservable()
+                .SelectMany(items => items)
+                .SelectMany(item => item.GetCookiesAsync(new Uri("http://nicovideo.jp")))
+                .SelectMany(async item => new { ImportedObj = item, IsLogined = (await GetUserName(item)) != null })
+                .Where(item => item.IsLogined)
+                .Select(item => item.ImportedObj);
+        }
 
-        async Task CheckImporters(ICookieImporter importer, bool expectedIsAvailable, bool checkUserSession)
+        static async Task CheckImporters(ICookieImporter importer, bool expectedIsAvailable, bool checkUserSession)
         {
             var cookies = new CookieContainer();
             var url = new Uri("http://nicovideo.jp/");
@@ -156,6 +170,27 @@ namespace UnitTest
                 Assert.AreEqual(0, cookies.GetCookies(url).Count,
                     string.Format("{0}からIsAvailableがfalse状態でCookieを取得する事は出来ませんが、取得されてしまっています。", importer.Config.BrowserName));
             }
+        }
+        static async Task<string> GetUserName(ImportResult importObj)
+        {
+            try
+            {
+                var url = new Uri("http://www.nicovideo.jp/my/channel");
+                var container = new CookieContainer();
+                var client = new HttpClient(new HttpClientHandler() { CookieContainer = container });
+                if (importObj.AddTo(container) != ImportState.Success)
+                    return null;
+
+                var res = await client.GetStringAsync(url);
+                if (string.IsNullOrEmpty(res))
+                    return null;
+                var namem = Regex.Match(res, "nickname = \"([^<>]+)\";", RegexOptions.Singleline);
+                if (namem.Success)
+                    return namem.Groups[1].Value;
+                else
+                    return null;
+            }
+            catch (System.Net.Http.HttpRequestException) { return null; }
         }
     }
 }
