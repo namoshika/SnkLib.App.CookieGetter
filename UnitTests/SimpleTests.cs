@@ -92,11 +92,11 @@ namespace UnitTest
 
             //使用不可なImporterの確認
             foreach (var item in (await CookieGetters.Default.GetInstancesAsync(false)).Where(importer => !importer.IsAvailable))
-                await CheckImporters(item, false, false);
+                await CheckImporters(item, ImportState.Unavailable, false, false);
 
             //使用可能なImporterの確認
             foreach (var item in (await CookieGetters.Default.GetInstancesAsync(true)))
-                await CheckImporters(item, true, false);
+                await CheckImporters(item, ImportState.Success, true, false);
 
             LogWriter.WriteLine();
         }
@@ -110,7 +110,7 @@ namespace UnitTest
             {
                 var browserName = System.IO.Path.GetFileNameWithoutExtension(filePath);
                 var importer = new BlinkCookieImporter(new BrowserConfig(browserName, "Default", filePath, typeof(BlinkImporterFactory).FullName, false), 2);
-                await CheckImporters(importer, true, true);
+                await CheckImporters(importer, ImportState.Success, true, true);
             }
             LogWriter.WriteLine();
         }
@@ -118,12 +118,30 @@ namespace UnitTest
         public async Task BlinkImporterTest()
         {
             LogWriter.WriteLine("===================");
-            LogWriter.WriteLine(" BlinkImporter Test");
+            LogWriter.WriteLine(" BlinkCookieImporter Test");
             LogWriter.WriteLine("===================");
+            
+            //Cookiesが存在する場合
             var importer = new BlinkCookieImporter(
-                new BrowserConfig("BlinkBrowser", "BlinkProfile", @".\TestDatas\blinkCookies.sqlite3", typeof(BlinkImporterFactory).FullName, false), 2);
-            await CheckImporters(importer, true, true);
+                new BrowserConfig("BlinkBrowser_blinkCookies.sqlite3", "BlinkProfile", @".\TestDatas\blinkCookies.sqlite3", null, false), 2);
+            await CheckImporters(importer, ImportState.Success, true, true);
+
+            //Cookiesが存在しない場合
+            importer = new BlinkCookieImporter(
+                new BrowserConfig("BlinkBrowser_empty", "BlinkProfile", string.Empty, null, false), 2);
+            await CheckImporters(importer, ImportState.Unavailable, false, false);
+
             LogWriter.WriteLine();
+        }
+        [TestMethod]
+        public void IEPMImporterProxyTest()
+        {
+            var importer = new IEPMCookieImporter(new BrowserConfig(
+                "IE Normal", "Default", null, typeof(IEImporterFactory).FullName, false), 2);
+            
+            var cookieHeader = importer.InternalGetCookiesWinApiOnProxy(new Uri("http://nicovideo.jp"), null);
+            Assert.AreNotEqual(null, cookieHeader);
+            Assert.AreNotEqual(string.Empty, cookieHeader);
         }
         [TestMethod]
         public async Task RxTest()
@@ -136,7 +154,7 @@ namespace UnitTest
                 .Select(item => item.ImportedObj);
         }
 
-        static async Task CheckImporters(ICookieImporter importer, bool expectedIsAvailable, bool checkUserSession)
+        static async Task CheckImporters(ICookieImporter importer, ImportState expectedState, bool expectedIsAvailable, bool checkUserSession)
         {
             var cookies = new CookieContainer();
             var url = new Uri("http://nicovideo.jp/");
@@ -146,15 +164,13 @@ namespace UnitTest
             LogWriter.WriteLine("{0}:\t{1} ({2})",
                 importer.IsAvailable ? "OK" : "Error", importer.Config.BrowserName, importer.Config.ProfileName);
 
-            Assert.IsNotNull(importer.Config.BrowserName,
-                string.Format("Config.BrowserNameにはブラウザ名が入りますが、取得できませんでした。"));
-            Assert.IsNotNull(importer.Config.ProfileName,
-                string.Format("{0}のConfig.ProfileNameにはプロフィール名が入りますが、取得できませんでした。", importer.Config.BrowserName));
+            Assert.AreEqual(expectedState, res.Status);
+            Assert.IsNotNull(importer.Config.BrowserName);
+            Assert.IsNotNull(importer.Config.ProfileName);
+            Assert.AreEqual(expectedIsAvailable, importer.IsAvailable);
 
             if (expectedIsAvailable)
             {
-                Assert.IsTrue(importer.IsAvailable,
-                    string.Format("{0}のIsAvailableはtrueである必要がありますが、false状態です。", importer.Config.BrowserName));
                 Assert.IsNotNull(importer.Config.CookiePath,
                     string.Format("{0}のConfig.CookiePathにはプロフィール名が入りますが、取得できませんでした。", importer.Config.BrowserName));
                 Assert.AreNotEqual(0, cookies.GetCookies(url).Count,
@@ -165,8 +181,6 @@ namespace UnitTest
             }
             else
             {
-                Assert.IsFalse(importer.IsAvailable,
-                    string.Format("{0}のIsAvailableはfalseである必要がありますが、true状態です。", importer.Config.BrowserName));
                 Assert.AreEqual(0, cookies.GetCookies(url).Count,
                     string.Format("{0}からIsAvailableがfalse状態でCookieを取得する事は出来ませんが、取得されてしまっています。", importer.Config.BrowserName));
             }

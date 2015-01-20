@@ -28,7 +28,22 @@ namespace SunokoLibrary.Application.Browsers
                 return new ImportResult(null, ImportState.Unavailable);
             try
             {
-                var cookiesText = PrivateGetCookiesWinApi(targetUrl, null);
+                //IEのバージョンによって使えるAPIに違いがあるため、分岐させる。
+                //APIは呼び出す環境で違いがある。IE8-x-IE10 on x64の時にはx86の子プロセスで取得させる。
+                // [環境ごとの違い一覧]
+                // * x<IE8 on x86,x64       使用不可
+                // * IE8<=x<IE11 on x86     使用可能
+                // * IE8<=x<IE11 on x64     使用不可
+                // * IE11<=x on x86,x64     使用可能
+                var ieVersion = Win32Api.GetIEVersion();
+                string cookiesText;
+                if (ieVersion.Major >= 11 || ieVersion.Major >= 8 && Environment.Is64BitProcess == false)
+                    cookiesText = InternalGetCookiesWinApi(targetUrl, null);
+                else if (ieVersion.Major >= 8)
+                    cookiesText = InternalGetCookiesWinApiOnProxy(targetUrl, null);
+                else
+                    return new ImportResult(null, ImportState.Unavailable); 
+
                 Debug.Assert(cookiesText != null, "IEGetProtectedModeCookie: error");
                 if (cookiesText != null)
                 {
@@ -49,71 +64,53 @@ namespace SunokoLibrary.Application.Browsers
 
 #pragma warning restore 1591
 
-        string PrivateGetCookiesWinApi(Uri url, string key)
+        internal string InternalGetCookiesWinApi(Uri url, string key)
         {
-#if DEBUG
-            //動作確認用
-            //-1:分岐指定なし、0:IE11以上時の処理、1:IE8以上でx64の時の処理
-            var specifyPath_Debug = -1;
-#else
-            var specifyPath_Debug = -1;
-#endif
-            var ieVersion = Win32Api.GetIEVersion();
-            //IEのバージョンによって使えるAPIに違いがあるため、分岐させる。
-            //IE11以上はCookie取得APIを使用する。IE11からはx64モード下でも使用可能になっている。
-            //IE8以上もx86環境では問題ないので一緒に取得させておく。
-            if ((ieVersion.Major >= 11 || ieVersion.Major >= 8 && Environment.Is64BitProcess == false) && specifyPath_Debug < 0 || specifyPath_Debug == 0)
-            {
-                string lpszCookieData;
-                var hResult = Win32Api.GetCookiesFromProtectedModeIE(out lpszCookieData, url, key);
-                Debug.Assert(
-                    lpszCookieData != null, string.Format("win32api.GetCookieFromProtectedModeIE error code:{0}", hResult));
-                return lpszCookieData ?? string.Empty;
-            }
-            //IE8以上はCookie取得APIを使用する。
-            //x64モード下での使用は未対応なのでx86の子プロセスを経由させる
-            else if (ieVersion.Major >= 8 && specifyPath_Debug < 0 || specifyPath_Debug == 1)
-            {
-                var processId = Process.GetCurrentProcess().Id.ToString();
-                var endpointUrl = new Uri(string.Format("net.pipe://localhost/SnkLib.App.CookieGetter.x86Proxy/{0}/Service/", processId));
-                var lpszCookieData = string.Empty;
-                ChannelFactory<IProxyService> proxyFactory = null;
-                Process proxyProcess = null;
-                //多重呼び出しされる事がよくあるため、既に起動しているx86ProxyServiceの存在を期待する。
-                //初回呼び出しなど期待外れもあり得るので2回は試行する。
-                for (var i = 0; i < 2; i++)
-                    try
+            string lpszCookieData;
+            var hResult = Win32Api.GetCookiesFromProtectedModeIE(out lpszCookieData, url, key);
+            Debug.Assert(
+                lpszCookieData != null, string.Format("win32api.GetCookieFromProtectedModeIE error code:{0}", hResult));
+            return lpszCookieData;
+        }
+        internal string InternalGetCookiesWinApiOnProxy(Uri url, string key)
+        {
+            var processId = Process.GetCurrentProcess().Id.ToString();
+            var endpointUrl = new Uri(string.Format("net.pipe://localhost/SnkLib.App.CookieGetter.x86Proxy/{0}/Service/", processId));
+            string lpszCookieData = null;
+            ChannelFactory<IProxyService> proxyFactory = null;
+            Process proxyProcess = null;
+            //多重呼び出しされる事がよくあるため、既に起動しているx86ProxyServiceの存在を期待する。
+            //初回呼び出しなど期待外れもあり得るので2回は試行する。
+            for (var i = 0; i < 2; i++)
+                try
+                {
+                    proxyFactory = new ChannelFactory<IProxyService>(new NetNamedPipeBinding(), endpointUrl.AbsoluteUri);
+                    var proxy = proxyFactory.CreateChannel();
+                    var hResult = proxy.GetCookiesFromProtectedModeIE(out lpszCookieData, url, key);
+                    Debug.Assert(
+                        lpszCookieData != null, string.Format("proxy.GetCookieFromProtectedModeIE error code:{0}", hResult));
+                    break;
+                }
+                catch (CommunicationException)
+                {
+                    //x86Serviceからの起動完了通知受信用
+                    using (var pipeServer = new System.IO.Pipes.AnonymousPipeServerStream(
+                        System.IO.Pipes.PipeDirection.In, HandleInheritability.Inheritable))
                     {
-                        proxyFactory = new ChannelFactory<IProxyService>(new NetNamedPipeBinding(), endpointUrl.AbsoluteUri);
-                        var proxy = proxyFactory.CreateChannel();
-                        var hResult = proxy.GetCookiesFromProtectedModeIE(out lpszCookieData, url, key);
-                        Debug.Assert(
-                            lpszCookieData != null, string.Format("proxy.GetCookieFromProtectedModeIE error code:{0}", hResult));
-                        break;
+                        proxyProcess = Process.Start(
+                            new System.Diagnostics.ProcessStartInfo()
+                            {
+                                FileName = ".\\SnkLib.App.CookieGetter.x86Proxy.exe",
+                                //サービス側のendpointUrlに必要な情報をコマンドライン引数として渡す
+                                Arguments = string.Join(" ", new[] { processId, pipeServer.GetClientHandleAsString(), }),
+                                CreateNoWindow = true,
+                                UseShellExecute = false,
+                            });
+                        pipeServer.ReadByte();
                     }
-                    catch (CommunicationException)
-                    {
-                        //x86Serviceからの起動完了通知受信用
-                        using (var pipeServer = new System.IO.Pipes.AnonymousPipeServerStream(
-                            System.IO.Pipes.PipeDirection.In, HandleInheritability.Inheritable))
-                        {
-                            proxyProcess = Process.Start(
-                                new System.Diagnostics.ProcessStartInfo()
-                                {
-                                    FileName = ".\\SnkLib.App.CookieGetter.x86Proxy.exe",
-                                    //サービス側のendpointUrlに必要な情報をコマンドライン引数として渡す
-                                    Arguments = string.Join(" ", new[] { processId, pipeServer.GetClientHandleAsString(), }),
-                                    CreateNoWindow = true,
-                                    UseShellExecute = false,
-                                });
-                            pipeServer.ReadByte();
-                        }
-                    }
-                    finally { proxyFactory.Abort(); }
-                return lpszCookieData ?? string.Empty;
-            }
-            else
-                return string.Empty;
+                }
+                finally { proxyFactory.Abort(); }
+            return lpszCookieData;
         }
     }
 }
