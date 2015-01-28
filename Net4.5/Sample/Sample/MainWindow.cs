@@ -34,7 +34,7 @@ namespace Sample
                     if (currentGetter != null)
                     {
                         var result = await currentGetter.GetCookiesAsync(TargetUrl);
-                        var cookie = result.Cookies["user_session"];
+                        var cookie = result.Status == ImportState.Success ? result.Cookies["user_session"] : null;
                         //UI更新
                         txtCookiePath.Text = currentGetter.Config.CookiePath;
                         btnOpenCookieFileDialog.Enabled = true;
