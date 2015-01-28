@@ -1,9 +1,11 @@
 ﻿#SnkLib.App.CookieGetter
 
 ブラウザのCookieを.NETアプリで使えるようにするライブラリです。  
-<http://com.nicovideo.jp/community/co235502> で配布されているCookieGetterSharpを元に、互換性を維持した上での設計の改善を施したものです。.NET4.0以上で動きます。
+<http://com.nicovideo.jp/community/co235502> で配布されているCookieGetterSharpを元に、設計の改善を施しています。.NET4.0以上で動きます。
 
-本家と同水準でIE, Chrome, Firefox, Lunascape, Maxthon, Sleipnir, Tungsten などに対応しています。また、Kinzaなどの本家が対応していない派生ブラウザ系統への包括的な対応と設定保存周りの使い勝手の改善などが行われています。
+本家と同水準でIE, Chrome, Firefox, Lunascape, Maxthon, Sleipnir, Tungsten などに対応しています。加えてKinzaなどの本家が未対応の派生ブラウザへの包括的な対応と設定保存周りの使い勝手の改善が行われています。
+
+また、既存のアプリのCookieGetterSharpをNET4.5\CookieGetterSharpにある互換ライブラリと差し替える事でこのライブラリの強化機能を得る使い方も出来ます(.NET4.5以上)。互換ライブラリはReleasesにSnkLib.App.CookieGetter.Sharpとしてビルド済みのものが配布されています。
 
 ## ライセンス
 以下のライセンス下にあります。  
@@ -18,7 +20,6 @@
 
 ##方針
 現在、以下のブランチの方針下にあります。
-masterで本家との互換性を追究しつつ、Gecko, Webkit系のIBrowserManagerのマルチプロファイル周りの重複コード除去や各種コードのリファクタリング、設定保存周りの使い勝手向上を目指した改造が行われています。
 
 * base: 本家そのまんま。
 * master: 設計の改善。
@@ -47,8 +48,6 @@ masterで本家との互換性を追究しつつ、Gecko, Webkit系のIBrowserMa
 * [SnkLib.App.CookieGetter](https://www.nuget.org/packages/SnkLib.App.CookieGetter/)を追加する(必須)。
 * [SnkLib.App.CookieGetter.Forms](https://www.nuget.org/packages/SnkLib.App.CookieGetter.Forms/)を追加する  
   (オプション。Windows Forms向けのUI部品が入っています。)。
-
-これらの解説は新クラスの使い方です。本家とは設計が異なります。本家と同じ設計を使いたい場合にはNET4.5フォルダ内のCookieGetterSharpを使用します。オススメはしません。あえて使いたい場合にはReleasesからCookieGetterSharpを入手してください。
 
 ```C#
 //以下の名前空間を参照します。
