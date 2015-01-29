@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 
 namespace SunokoLibrary.Application
 {
-    static class Utility
+    internal static class Utility
     {
         static DateTime unix = new DateTime(1970, 1, 1, 9, 0, 0);
         public static DateTime UnixTimeToDateTime(ulong UnixTime)
@@ -29,8 +29,12 @@ namespace SunokoLibrary.Application
             return path;
         }
     }
-    static class Win32Api
+    internal static class Win32Api
     {
+        public const uint INTERNET_COOKIE_THIRD_PARTY = 0x00000010;
+        public const uint INTERNET_COOKIE_HTTPONLY = 0x00002000;
+        public const uint INTERNET_FLAG_RESTRICTED_ZONE = 0x00020000;
+
         /// <summary>
         /// CryptProtectDataでデータを暗号化します。
         /// </summary>
@@ -105,8 +109,9 @@ namespace SunokoLibrary.Application
         /// <param name="cookiesText">取得したCookieの代入先</param>
         /// <param name="targetUrl">Cookieを送りたいページのURL</param>
         /// <param name="valueKey">読み出したいCookieのキー値</param>
+        /// <param name="paramsFlag">取得するCookieの範囲フラグ</param>
         /// <returns>引数targetUrlに対して使えるCookieヘッダー値</returns>
-        public static int GetCookiesFromProtectedModeIE(out string cookiesText, Uri targetUrl, string valueKey = null)
+        public static int GetCookiesFromProtectedModeIE(out string cookiesText, Uri targetUrl, string valueKey = null, uint paramsFlag = INTERNET_COOKIE_HTTPONLY)
         {
             var cookieSize = 4096;
             var lpszCookieData = new StringBuilder(cookieSize);
@@ -115,7 +120,7 @@ namespace SunokoLibrary.Application
             do
             {
                 var hResult = IEGetProtectedModeCookie(
-                    targetUrl.OriginalString, valueKey, lpszCookieData, ref cookieSize, INTERNET_COOKIE_HTTPONLY);
+                    targetUrl.OriginalString, valueKey, lpszCookieData, ref cookieSize, paramsFlag);
                 switch ((uint)hResult)
                 {
                     case 0x8007007A://バッファー不足
@@ -140,6 +145,7 @@ namespace SunokoLibrary.Application
         /// <param name="cookiesText">取得したCookieの代入先</param>
         /// <param name="targetUrl">Cookieを送りたいページのURL</param>
         /// <param name="valueKey">読み出したいCookieのキー値</param>
+        /// <param name="paramsFlag">取得するCookieの範囲フラグ</param>
         /// <returns>引数targetUrlに対して使えるCookieヘッダー値</returns>
         public static int GetCookiesFromIE(out string cookiesText, Uri targetUrl, string valueKey = null)
         {
@@ -192,15 +198,18 @@ namespace SunokoLibrary.Application
             catch { return null; }
         }
 
-        const uint INTERNET_COOKIE_THIRD_PARTY = 0x00000010;
-        const uint INTERNET_COOKIE_HTTPONLY = 0x00002000;
-        const uint INTERNET_FLAG_RESTRICTED_ZONE = 0x00020000;
         [DllImport("Wininet", CharSet = CharSet.Unicode, SetLastError = true)]
         static extern bool InternetGetCookieEx(string lpszURL, string lpszCookieName, StringBuilder lpszCookieData, ref int lpdwSize, uint dwFlags, IntPtr lpReserved);
         [DllImport("Wininet", CharSet = CharSet.Unicode)]
         static extern bool InternetGetCookie(string lpszURL, string lpszCookieName, StringBuilder lpszCookieData, ref uint lpdwSize);
         [DllImport("ieframe.dll", CharSet = CharSet.Unicode)]
         static extern int IEGetProtectedModeCookie(string lpszURL, string lpszCookieName, StringBuilder pszCookieData, ref int pcchCookieData, uint dwFlags);
+        [DllImport("Crypt32.dll", CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Unicode)]
+        static extern bool CryptProtectData(ref DATA_BLOB pDataIn, string ppszDataDescr, ref  DATA_BLOB pOptionalEntropy, IntPtr pvReserved, IntPtr pPromptStruct, uint dwFlags, [In, Out]ref DATA_BLOB pDataOut);
+        [DllImport("Crypt32.dll", CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Unicode)]
+        static extern bool CryptUnprotectData(ref DATA_BLOB pDataIn, string ppszDataDescr, ref  DATA_BLOB pOptionalEntropy, IntPtr pvReserved, IntPtr pPromptStruct, uint dwFlags, [In, Out]ref DATA_BLOB pDataOut);
+        [DllImport("Kernel32.dll")]
+        static extern IntPtr LocalFree(IntPtr hMem);
 
         [StructLayout(LayoutKind.Sequential)]
         struct DATA_BLOB
@@ -208,12 +217,5 @@ namespace SunokoLibrary.Application
             public uint cbData;
             public IntPtr pbData;
         }
-
-        [DllImport("Crypt32.dll", CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Unicode)]
-        static extern bool CryptProtectData(ref DATA_BLOB pDataIn, string ppszDataDescr, ref  DATA_BLOB pOptionalEntropy, IntPtr pvReserved, IntPtr pPromptStruct, uint dwFlags, [In, Out]ref DATA_BLOB pDataOut);
-        [DllImport("Crypt32.dll", CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Unicode)]
-        static extern bool CryptUnprotectData(ref DATA_BLOB pDataIn, string ppszDataDescr, ref  DATA_BLOB pOptionalEntropy, IntPtr pvReserved, IntPtr pPromptStruct, uint dwFlags, [In, Out]ref DATA_BLOB pDataOut);
-        [DllImport("Kernel32.dll")]
-        static extern IntPtr LocalFree(IntPtr hMem);
     }
 }

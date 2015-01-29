@@ -136,10 +136,7 @@ namespace UnitTest
         [TestMethod]
         public void IEPMImporterProxyTest()
         {
-            var importer = new IEPMCookieImporter(new BrowserConfig(
-                "IE Normal", "Default", null, typeof(IEImporterFactory).FullName, false), 2);
-            
-            var cookieHeader = importer.InternalGetCookiesWinApiOnProxy(new Uri("http://nicovideo.jp"), null);
+            var cookieHeader = IEPMCookieImporter.InternalGetCookiesWinApiOnProxy(new Uri("http://nicovideo.jp"), null);
             Assert.AreNotEqual(null, cookieHeader);
             Assert.AreNotEqual(string.Empty, cookieHeader);
         }

@@ -64,7 +64,7 @@ namespace SunokoLibrary.Application.Browsers
 
 #pragma warning restore 1591
 
-        internal string InternalGetCookiesWinApi(Uri url, string key)
+        internal static string InternalGetCookiesWinApi(Uri url, string key)
         {
             string lpszCookieData;
             var hResult = Win32Api.GetCookiesFromProtectedModeIE(out lpszCookieData, url, key);
@@ -72,7 +72,7 @@ namespace SunokoLibrary.Application.Browsers
                 lpszCookieData != null, string.Format("win32api.GetCookieFromProtectedModeIE error code:{0}", hResult));
             return lpszCookieData;
         }
-        internal string InternalGetCookiesWinApiOnProxy(Uri url, string key)
+        internal static string InternalGetCookiesWinApiOnProxy(Uri url, string key)
         {
             var processId = Process.GetCurrentProcess().Id.ToString();
             var endpointUrl = new Uri(string.Format("net.pipe://localhost/SnkLib.App.CookieGetter.x86Proxy/{0}/Service/", processId));
