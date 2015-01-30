@@ -53,7 +53,8 @@ namespace SunokoLibrary.Application
             //復号化
             bool isSucc;
             isSucc = Win32Api.CryptProtectData(ref input, null, ref dammy, IntPtr.Zero, IntPtr.Zero, 0, ref output);
-            Debug.Assert(isSucc, "CryptUnprotectData error: データ暗号化に失敗。");
+            Trace.Assert(isSucc, "SnkLib.App.CookieGetter: error",
+                "CryptProtectedData()でエラーが発生しました。データ暗号化で予期せぬ失敗が発生しています。");
             if (isSucc == false)
                 return null;
 
@@ -62,10 +63,12 @@ namespace SunokoLibrary.Application
             Marshal.Copy(output.pbData, decryptedBytes, 0, (int)output.cbData);
             //output解放
             isSucc = Win32Api.LocalFree(output.pbData) == IntPtr.Zero;
-            Debug.Assert(isSucc, "CryptUnprotectData error: データ暗号化後のoutputリソース解放に失敗。");
+            Trace.Assert(isSucc, "SnkLib.App.CookieGetter: error",
+                "CryptProtectedData()でエラーが発生しました。データ暗号化後のoutputリソース解放で予期せぬ失敗が発生しています。");
             //input解放
             isSucc = Win32Api.LocalFree(input.pbData) == IntPtr.Zero;
-            Debug.Assert(isSucc, "CryptUnprotectData error: データ暗号化後のinputリソース解放に失敗。");
+            Trace.Assert(isSucc, "SnkLib.App.CookieGetter: error",
+                "CryptProtectedData()でエラーが発生しました。データ暗号化後のoutputリソース解放で予期せぬ失敗が発生しています。");
 
             return decryptedBytes;
         }
@@ -87,7 +90,8 @@ namespace SunokoLibrary.Application
             //復号化
             bool isSucc;
             isSucc = Win32Api.CryptUnprotectData(ref input, null, ref dammy, IntPtr.Zero, IntPtr.Zero, 0, ref output);
-            Debug.Assert(isSucc, "CryptUnprotectData error: データ復号に失敗。");
+            Trace.Assert(isSucc, "SnkLib.App.CookieGetter: error",
+                "DecryptProtectedData()でエラーが発生しました。データ復号化で予期せぬ失敗が発生しています。");
             if (isSucc == false)
                 return null;
 
@@ -96,10 +100,12 @@ namespace SunokoLibrary.Application
             Marshal.Copy(output.pbData, decryptedBytes, 0, (int)output.cbData);
             //output解放
             isSucc = Win32Api.LocalFree(output.pbData) == IntPtr.Zero;
-            Debug.Assert(isSucc, "CryptUnprotectData error: データ復号後のoutputリソース解放に失敗。");
+            Trace.Assert(isSucc, "SnkLib.App.CookieGetter: error",
+                "DecryptProtectedData()でエラーが発生しました。データ復号化後のoutputリソース解放で予期せぬ失敗が発生しています。");
             //input解放
             isSucc = Win32Api.LocalFree(input.pbData) == IntPtr.Zero;
-            Debug.Assert(isSucc, "CryptUnprotectData error: データ復号後のinputリソース解放に失敗。");
+            Trace.Assert(isSucc, "SnkLib.App.CookieGetter: error",
+                "DecryptProtectedData()でエラーが発生しました。データ復号化後のinputリソース解放で予期せぬ失敗が発生しています。");
 
             return decryptedBytes;
         }
@@ -154,7 +160,7 @@ namespace SunokoLibrary.Application
         /// <param name="valueKey">読み出したいCookieのキー値</param>
         /// <param name="paramsFlag">取得するCookieの範囲フラグ</param>
         /// <returns>引数targetUrlに対して使えるCookieヘッダー値</returns>
-        public static int GetCookiesFromIE(out string cookiesText, Uri targetUrl, string valueKey = null)
+        public static int GetCookiesFromIE(out string cookiesText, Uri targetUrl, string valueKey = null, uint paramsFlag = INTERNET_COOKIE_HTTPONLY)
         {
             var cookieSize = 4096;
             var lpszCookieData = new StringBuilder(cookieSize);
@@ -165,7 +171,7 @@ namespace SunokoLibrary.Application
             for (int i = 0; ; i++)
             {
                 bool bResult;
-                if (bResult = Win32Api.InternetGetCookieEx(targetUrl.OriginalString, valueKey, lpszCookieData, ref cookieSize, Win32Api.INTERNET_COOKIE_HTTPONLY, IntPtr.Zero))
+                if (bResult = Win32Api.InternetGetCookieEx(targetUrl.OriginalString, valueKey, lpszCookieData, ref cookieSize, paramsFlag, IntPtr.Zero))
                 {
                     cookiesText = lpszCookieData.ToString();
                     return 0x00000000;

@@ -24,8 +24,9 @@ namespace SunokoLibrary.Application.Browsers
         {
             string cookiesText;
             var hResult = Win32Api.GetCookiesFromIE(out cookiesText, targetUrl, null);
-            Debug.Assert(cookiesText != null, "InternetGetCookie error code: " + hResult);
 
+            Trace.Assert(cookiesText != null, "SnkLib.App.CookieGetter: error",
+                "Win32Api.GetCookiesFromIE()の戻り値がnullでした。ノーマルIEからのCookie取得で予期せぬ失敗が発生しています。");
             if (cookiesText == null)
                 return new ImportResult(null, ImportState.AccessError);
             try
