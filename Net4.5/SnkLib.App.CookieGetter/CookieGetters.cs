@@ -69,7 +69,10 @@ namespace SunokoLibrary.Application
                 foundImporter = importerList.FirstOrDefault(item => item.Config == targetConfig);
                 ICookieImporterFactory foundFactory;
                 if (foundImporter == null && _factoryDict.TryGetValue(targetConfig.EngineId, out foundFactory))
+                {
                     foundImporter = foundFactory.GetCookieImporter(targetConfig);
+                    foundImporter = foundImporter.IsAvailable ? foundImporter : null;
+                }
             }
             if (allowDefault && foundImporter == null)
                 foundImporter = importerList.FirstOrDefault(importer => importer.IsAvailable);
