@@ -117,13 +117,21 @@ namespace SunokoLibrary.Application
             var lpszCookieData = new StringBuilder(cookieSize);
             var dwSizeP = new IntPtr(cookieSize);
 
-            do
+            cookiesText = null;
+            for (int i = 0; ; i++)
             {
                 var hResult = IEGetProtectedModeCookie(
                     targetUrl.OriginalString, valueKey, lpszCookieData, ref cookieSize, paramsFlag);
                 switch ((uint)hResult)
                 {
                     case 0x8007007A://バッファー不足
+                        if (i >= 10)
+                        {
+                            Trace.Fail(
+                                "SnkLib.App.CookieGetter error",
+                                "GetCookiesFromProtectedModeIE()でエラーが発生しました。取得するCookieのサイズが想定サイズを超えています。");
+                            return hResult;
+                        }
                         cookieSize = cookieSize + 256;
                         lpszCookieData.Capacity = cookieSize;
                         continue;
@@ -137,7 +145,6 @@ namespace SunokoLibrary.Application
                         return hResult;
                 }
             }
-            while (true);
         }
         /// <summary>
         /// 従来モードIEからCookieを取得します。
@@ -154,7 +161,8 @@ namespace SunokoLibrary.Application
             var dwSizeP = new IntPtr(cookieSize);
 
             //Cookie文字列取得
-            do
+            cookiesText = null;
+            for (int i = 0; ; i++)
             {
                 bool bResult;
                 if (bResult = Win32Api.InternetGetCookieEx(targetUrl.OriginalString, valueKey, lpszCookieData, ref cookieSize, Win32Api.INTERNET_COOKIE_HTTPONLY, IntPtr.Zero))
@@ -162,27 +170,30 @@ namespace SunokoLibrary.Application
                     cookiesText = lpszCookieData.ToString();
                     return 0x00000000;
                 }
-                else
+                //Errorが出ていた時
+                var hResult = Marshal.GetHRForLastWin32Error();
+                switch ((uint)hResult)
                 {
-                    var errorNo = Marshal.GetHRForLastWin32Error();
-                    switch ((uint)errorNo)
-                    {
-                        case 0x00000000:
-                        case 0x80070103:
-                            cookiesText = lpszCookieData.ToString();
-                            return errorNo;
-                        case 0x8007007A:
-                            //バッファーサイズ拡張。無限ループが怖いので一応必ずサイズが増えるようにしておく
-                            cookieSize += 512;
-                            lpszCookieData.Capacity = cookieSize;
-                            continue;
-                        default:
-                            cookiesText = null;
-                            return errorNo;
-                    }
+                    case 0x8007007A: //バッファー不足
+                        if (i >= 10)
+                        {
+                            Trace.Fail(
+                                "SnkLib.App.CookieGetter error",
+                                "GetCookiesFromIE()でエラーが発生しました。取得するCookieのサイズが想定サイズを超えています。");
+                            return hResult;
+                        }
+                        cookieSize += 512;
+                        lpszCookieData.Capacity = cookieSize;
+                        continue;
+                    case 0x00000000: //S_OK
+                    case 0x80070103: //データ無し
+                        cookiesText = lpszCookieData.ToString();
+                        return hResult;
+                    default:
+                        cookiesText = null;
+                        return hResult;
                 }
             }
-            while (true);
         }
         /// <summary>
         /// IEのバージョンを取得します。
