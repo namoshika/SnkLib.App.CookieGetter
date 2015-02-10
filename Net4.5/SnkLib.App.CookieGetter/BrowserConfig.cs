@@ -99,29 +99,42 @@ namespace SunokoLibrary.Application
                 return;
             }
             //読み込み
-            var restoredValues = new Dictionary<string, string>();
             reader.ReadStartElement();
-            while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
+            for (var i = 0; i < 5 && reader.NodeType != System.Xml.XmlNodeType.EndElement; )
             {
                 var name = reader.Name;
                 reader.Read();
                 var value = reader.Value;
                 reader.Read();
                 reader.ReadEndElement();
-                restoredValues.Add(name, value);
+
+                //プロパティ5つ分。for文のiはこれらのプロパティ全てを読み込んだら
+                //ループを抜けるためにカウンタとして用いられている。
+                switch (name)
+                {
+                    case "IsCustomized":
+                        IsCustomized = value == true.ToString();
+                        i++;
+                        break;
+                    case "BrowserName":
+                        BrowserName = value;
+                        i++;
+                        break;
+                    case "ProfileName":
+                        ProfileName = value;
+                        i++;
+                        break;
+                    case "CookiePath":
+                        CookiePath = value;
+                        i++;
+                        break;
+                    case "EngineId":
+                        EngineId = value;
+                        i++;
+                        break;
+                }
             }
             reader.ReadEndElement();
-
-            //値を展開
-            foreach (var pair in restoredValues)
-                switch (pair.Key)
-                {
-                    case "IsCustomized": IsCustomized = pair.Value == true.ToString(); break;
-                    case "BrowserName": BrowserName = pair.Value; break;
-                    case "ProfileName": ProfileName = pair.Value; break;
-                    case "CookiePath": CookiePath = pair.Value; break;
-                    case "EngineId": EngineId = pair.Value; break;
-                }
         }
         void IXmlSerializable.WriteXml(System.Xml.XmlWriter writer)
         {
