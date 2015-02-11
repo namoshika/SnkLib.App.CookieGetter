@@ -44,24 +44,27 @@ namespace SunokoLibrary.Application
     /// <summary>
     /// Cookie取得結果を扱うクラスです。
     /// </summary>
-    public class CookieImportResult
+    public struct CookieImportResult
     {
 #pragma warning disable 1591
         public CookieImportResult(CookieCollection cookies, CookieImportState status)
         {
-            Cookies = cookies;
-            Status = status;
+            _cookies = cookies;
+            _status = status;
         }
 #pragma warning restore 1591
+
+        CookieCollection _cookies;
+        CookieImportState _status;
 
         /// <summary>
         /// ブラウザから取得されたCookieを取得します。
         /// </summary>
-        public CookieCollection Cookies { get; private set; }
+        public CookieCollection Cookies { get { return _cookies; } }
         /// <summary>
         /// 処理の成功不成功の状態を取得します。
         /// </summary>
-        public CookieImportState Status { get; private set; }
+        public CookieImportState Status { get { return _status; } }
         /// <summary>
         /// 引数として指定したCookieContainerにブラウザから取得したCookieを追加します。
         /// </summary>
