@@ -18,13 +18,13 @@ namespace SunokoLibrary.Application.Browsers
         /// </summary>
         /// <param name="searchTarget">検索する対象の名前</param>
         /// <param name="targetType">対象の種類</param>
-        public SmartImporterFactory(string searchTarget, PathType targetType)
+        public SmartImporterFactory(string searchTarget, CookiePathType targetType)
         {
             _searchTarget = searchTarget;
             _targetType = targetType;
         }
         string _searchTarget;
-        PathType _targetType;
+        CookiePathType _targetType;
 
 #pragma warning disable 1591
         public override IEnumerable<ICookieImporter> GetCookieImporters()
@@ -83,7 +83,7 @@ namespace SunokoLibrary.Application.Browsers
 #pragma warning restore 1591
 
         bool ExistsTarget(string targetPath)
-        { return _targetType == PathType.File ? File.Exists(targetPath) : Directory.Exists(targetPath); }
+        { return _targetType == CookiePathType.File ? File.Exists(targetPath) : Directory.Exists(targetPath); }
 
         static SmartImporterFactory()
         {
@@ -100,7 +100,7 @@ namespace SunokoLibrary.Application.Browsers
     public class SmartBlinkBrowserManager : SmartImporterFactory
     {
 #pragma warning disable 1591
-        public SmartBlinkBrowserManager() : base("User Data", PathType.Directory) { }
+        public SmartBlinkBrowserManager() : base("User Data", CookiePathType.Directory) { }
         public override ICookieImporter GetCookieImporter(BrowserConfig config)
         { return new BlinkCookieImporter(config, 2); }
         protected override ICookieImporterFactory Generate(string appDataPath, string userDataPath, string engineId)
@@ -120,7 +120,7 @@ namespace SunokoLibrary.Application.Browsers
     public class SmartGeckoBrowserManager : SmartImporterFactory
     {
 #pragma warning disable 1591
-        public SmartGeckoBrowserManager() : base("profiles.ini", PathType.File) { }
+        public SmartGeckoBrowserManager() : base("profiles.ini", CookiePathType.File) { }
         public override ICookieImporter GetCookieImporter(BrowserConfig config)
         { return new GeckoCookieImporter(config, 2); }
         protected override ICookieImporterFactory Generate(string appDataPath, string userDataPath, string engineId)

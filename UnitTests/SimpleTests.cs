@@ -92,11 +92,11 @@ namespace UnitTest
 
             //使用不可なImporterの確認
             foreach (var item in (await CookieGetters.Default.GetInstancesAsync(false)).Where(importer => !importer.IsAvailable))
-                await CheckImporters(item, ImportState.Unavailable, false, false);
+                await CheckImporters(item, CookieImportState.Unavailable, false, false);
 
             //使用可能なImporterの確認
             foreach (var item in (await CookieGetters.Default.GetInstancesAsync(true)))
-                await CheckImporters(item, ImportState.Success, true, false);
+                await CheckImporters(item, CookieImportState.Success, true, false);
 
             LogWriter.WriteLine();
         }
@@ -110,7 +110,7 @@ namespace UnitTest
             {
                 var browserName = System.IO.Path.GetFileNameWithoutExtension(filePath);
                 var importer = new BlinkCookieImporter(new BrowserConfig(browserName, "Default", filePath, typeof(BlinkImporterFactory).FullName, false), 2);
-                await CheckImporters(importer, ImportState.Success, true, true);
+                await CheckImporters(importer, CookieImportState.Success, true, true);
             }
             LogWriter.WriteLine();
         }
@@ -124,12 +124,12 @@ namespace UnitTest
             //Cookiesが存在する場合
             var importer = new BlinkCookieImporter(
                 new BrowserConfig("BlinkBrowser_blinkCookies.sqlite3", "BlinkProfile", @".\TestDatas\blinkCookies.sqlite3", null, false), 2);
-            await CheckImporters(importer, ImportState.Success, true, true);
+            await CheckImporters(importer, CookieImportState.Success, true, true);
 
             //Cookiesが存在しない場合
             importer = new BlinkCookieImporter(
                 new BrowserConfig("BlinkBrowser_empty", "BlinkProfile", string.Empty, null, false), 2);
-            await CheckImporters(importer, ImportState.Unavailable, false, false);
+            await CheckImporters(importer, CookieImportState.Unavailable, false, false);
 
             LogWriter.WriteLine();
         }
@@ -151,7 +151,7 @@ namespace UnitTest
                 .Select(item => item.ImportedObj);
         }
 
-        static async Task CheckImporters(ICookieImporter importer, ImportState expectedState, bool expectedIsAvailable, bool checkUserSession)
+        static async Task CheckImporters(ICookieImporter importer, CookieImportState expectedState, bool expectedIsAvailable, bool checkUserSession)
         {
             var cookies = new CookieContainer();
             var url = new Uri("http://nicovideo.jp/");
@@ -182,14 +182,14 @@ namespace UnitTest
                     string.Format("{0}からIsAvailableがfalse状態でCookieを取得する事は出来ませんが、取得されてしまっています。", importer.Config.BrowserName));
             }
         }
-        static async Task<string> GetUserName(ImportResult importObj)
+        static async Task<string> GetUserName(CookieImportResult importObj)
         {
             try
             {
                 var url = new Uri("http://www.nicovideo.jp/my/channel");
                 var container = new CookieContainer();
                 var client = new HttpClient(new HttpClientHandler() { CookieContainer = container });
-                if (importObj.AddTo(container) != ImportState.Success)
+                if (importObj.AddTo(container) != CookieImportState.Success)
                     return null;
 
                 var res = await client.GetStringAsync(url);

@@ -65,7 +65,7 @@ namespace SunokoLibrary.Windows.Forms
                     var container = new CookieContainer();
                     var client = new HttpClient(new HttpClientHandler() { CookieContainer = container });
                     var result = await cookieImporter.GetCookiesAsync(url);
-                    if (result.AddTo(container) != ImportState.Success)
+                    if (result.AddTo(container) != CookieImportState.Success)
                         return null;
 
                     var res = await client.GetStringAsync(url);

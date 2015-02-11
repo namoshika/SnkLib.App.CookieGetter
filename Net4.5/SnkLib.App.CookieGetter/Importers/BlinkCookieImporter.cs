@@ -23,10 +23,10 @@ namespace SunokoLibrary.Application.Browsers
 
         public override ICookieImporter Generate(BrowserConfig config)
         { return new BlinkCookieImporter(config, PrimaryLevel); }
-        protected override ImportResult ProtectedGetCookies(Uri targetUrl)
+        protected override CookieImportResult ProtectedGetCookies(Uri targetUrl)
         {
             if (IsAvailable == false)
-                return new ImportResult(null,ImportState.Unavailable);
+                return new CookieImportResult(null,CookieImportState.Unavailable);
             try
             {
                 var formatVersionRec = LookupEntry(Config.CookiePath, SELECT_QUERY_VERSION);
@@ -34,7 +34,7 @@ namespace SunokoLibrary.Application.Browsers
                 if (formatVersionRec.Count == 0
                     || formatVersionRec[0].Length == 0
                     || int.TryParse((string)formatVersionRec[0][0], out cookieFormatVersion) == false)
-                    return new ImportResult(null,ImportState.ConvertError);
+                    return new CookieImportResult(null,CookieImportState.ConvertError);
 
                 string query;
                 query = cookieFormatVersion < 7 ? SELECT_QUERY : SELECT_QUERY_V7;
@@ -42,12 +42,12 @@ namespace SunokoLibrary.Application.Browsers
                 var cookies = new CookieCollection();
                 foreach (var item in LookupCookies(Config.CookiePath, query))
                     cookies.Add(item);
-                return new ImportResult(cookies, ImportState.Success);
+                return new CookieImportResult(cookies, CookieImportState.Success);
             }
             catch (CookieImportException ex)
             {
                 TraceFail(this, "取得に失敗しました。", ex.ToString());
-                return new ImportResult(null, ex.Result);
+                return new CookieImportResult(null, ex.Result);
             }
         }
         protected override Cookie DataToCookie(object[] data)
@@ -55,13 +55,13 @@ namespace SunokoLibrary.Application.Browsers
             long formatVersion;
             if (data.Length < 6 || data[0] is long == false)
                 throw new CookieImportException(
-                    "CookieFormatVersionの取得に失敗。レコードからCookieオブジェクトへの変換に失敗しました。", ImportState.ConvertError);
+                    "CookieFormatVersionの取得に失敗。レコードからCookieオブジェクトへの変換に失敗しました。", CookieImportState.ConvertError);
             formatVersion = (long)data[0];
             if (formatVersion < 7
                 ? data.Skip(1).Take(4).Where(rec => rec is string == false).Any() || data[5] is long == false
                 : data[1] is byte[] == false || data.Skip(2).Take(3).Where(rec => rec is string == false).Any() || data[5] is long == false)
                 throw new CookieImportException(
-                    "未知の項目をレコードから発見。レコードからCookieオブジェクトへの変換に失敗しました。", ImportState.ConvertError);
+                    "未知の項目をレコードから発見。レコードからCookieオブジェクトへの変換に失敗しました。", CookieImportState.ConvertError);
 
             var expiresDt = (ulong)(long)data[5];
             var baseObj = new Cookie()
@@ -80,11 +80,11 @@ namespace SunokoLibrary.Application.Browsers
                 var cipher = data[1] as byte[];
                 if (cipher == null || cipher.Length == 0)
                     throw new CookieImportException(
-                        "Cookieファイルから暗号化データを取得できませんでした。", ImportState.ConvertError);
+                        "Cookieファイルから暗号化データを取得できませんでした。", CookieImportState.ConvertError);
                 var plain = Win32Api.DecryptProtectedData(cipher);
                 if (plain == null)
                     throw new CookieImportException(
-                        "Cookieの暗号化データを復号化できませんでした。", ImportState.ConvertError);
+                        "Cookieの暗号化データを復号化できませんでした。", CookieImportState.ConvertError);
                 baseObj.Value = Encoding.UTF8.GetString(plain);
             }
             else

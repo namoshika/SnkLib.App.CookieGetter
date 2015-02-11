@@ -25,7 +25,7 @@ namespace SunokoLibrary.Application.Browsers
         /// 並べ替え時に用いられる数値。
         /// OSブラウザ: 0、有名ブラウザ: 1、派生ブラウザ: 2
         /// </param>
-        public CookieImporterBase(BrowserConfig config, PathType cookiePathType, int primaryLevel)
+        public CookieImporterBase(BrowserConfig config, CookiePathType cookiePathType, int primaryLevel)
         {
             if (config == null)
                 throw new ArgumentNullException("引数configがnullです。");
@@ -37,7 +37,7 @@ namespace SunokoLibrary.Application.Browsers
 #pragma warning disable 1591
 
         public BrowserConfig Config { get; private set; }
-        public PathType CookiePathType { get; private set; }
+        public CookiePathType CookiePathType { get; private set; }
         public int PrimaryLevel { get; private set; }
         public virtual bool IsAvailable
         {
@@ -47,7 +47,7 @@ namespace SunokoLibrary.Application.Browsers
                     ? false : System.IO.File.Exists(Config.CookiePath);
             }
         }
-        public Task<ImportResult> GetCookiesAsync(Uri targetUrl)
+        public Task<CookieImportResult> GetCookiesAsync(Uri targetUrl)
         {
             //同期コンテキストが確実にUIスレッド以外になるようにする。
             //awaitのある処理をUIスレッドでTask.Wait()した場合、デッドロックが発生する事がある。
@@ -63,7 +63,7 @@ namespace SunokoLibrary.Application.Browsers
         /// </summary>
         /// <param name="targetUrl">Cookieが送信されるURL</param>
         /// <returns>処理結果の状態</returns>
-        protected abstract ImportResult ProtectedGetCookies(Uri targetUrl);
+        protected abstract CookieImportResult ProtectedGetCookies(Uri targetUrl);
         /// <summary>
         /// 失敗した処理の情報を出力します。
         /// </summary>

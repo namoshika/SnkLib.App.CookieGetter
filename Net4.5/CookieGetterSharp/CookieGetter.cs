@@ -29,8 +29,8 @@ namespace Hal.CookieGetterSharp
                 var res = Importer.GetCookiesAsync(url).Result;
                 switch (res.Status)
                 {
-                    case ImportState.Success:
-                    case ImportState.Unavailable:
+                    case CookieImportState.Success:
+                    case CookieImportState.Unavailable:
                         return res.Cookies;
                     default:
                         throw new CookieImportException("Cookie取得に失敗しました。", res.Status);

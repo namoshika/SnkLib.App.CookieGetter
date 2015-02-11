@@ -34,12 +34,12 @@ namespace Sample
                     if (currentGetter != null)
                     {
                         var result = await currentGetter.GetCookiesAsync(TargetUrl);
-                        var cookie = result.Status == ImportState.Success ? result.Cookies["user_session"] : null;
+                        var cookie = result.Status == CookieImportState.Success ? result.Cookies["user_session"] : null;
                         //UI更新
                         txtCookiePath.Text = currentGetter.Config.CookiePath;
                         btnOpenCookieFileDialog.Enabled = true;
                         txtUserSession.Text = cookie != null ? cookie.Value : null;
-                        txtUserSession.Enabled = result.Status == ImportState.Success;
+                        txtUserSession.Enabled = result.Status == CookieImportState.Success;
                         Properties.Settings.Default.SelectedBrowserConfig = currentGetter.Config;
                         Properties.Settings.Default.Save();
                     }

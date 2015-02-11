@@ -20,29 +20,29 @@ namespace SunokoLibrary.Application.Browsers
 
         public override ICookieImporter Generate(BrowserConfig config)
         { return new GeckoCookieImporter(config, PrimaryLevel); }
-        protected override ImportResult ProtectedGetCookies(Uri targetUrl)
+        protected override CookieImportResult ProtectedGetCookies(Uri targetUrl)
         {
             if (IsAvailable == false)
-                return new ImportResult(null, ImportState.Unavailable);
+                return new CookieImportResult(null, CookieImportState.Unavailable);
             try
             {
                 var cookies = new CookieCollection();
                 var query = string.Format("{0} {1} ORDER BY expiry", SELECT_QUERY, MakeWhere(targetUrl));
                 foreach (var item in LookupCookies(Config.CookiePath, query))
                     cookies.Add(item);
-                return new ImportResult(cookies, ImportState.Success);
+                return new CookieImportResult(cookies, CookieImportState.Success);
             }
             catch (CookieImportException ex)
             {
                 TraceFail(this, "取得に失敗しました。", ex.ToString());
-                return new ImportResult(null, ex.Result);
+                return new CookieImportResult(null, ex.Result);
             }
         }
         protected override Cookie DataToCookie(object[] data)
         {
             if (data.Length < 5 || data.Take(4).Where(rec => rec is string == false).Any() || data[4] is long == false)
                 throw new CookieImportException(
-                    "レコードからCookieオブジェクトへの変換に失敗しました。", ImportState.ConvertError);
+                    "レコードからCookieオブジェクトへの変換に失敗しました。", CookieImportState.ConvertError);
             if (string.IsNullOrEmpty((string)data[0]) || string.IsNullOrEmpty((string)data[1]))
                 return null;
 

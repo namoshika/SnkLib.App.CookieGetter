@@ -19,7 +19,7 @@ namespace SunokoLibrary.Application.Browsers
         //クラス命名センスとしてwininet.dllのFindNextUrlCacheEntryの文脈を用いる。
         //純粋にapi上で片付ける方法が不明なのでwininetのapi自体は使っていない。
         public IEFindCacheCookieImporter(BrowserConfig config, int primaryLevel)
-            : base(config, PathType.Directory, primaryLevel) { }
+            : base(config, CookiePathType.Directory, primaryLevel) { }
         public override bool IsAvailable
         {
             get
@@ -30,10 +30,10 @@ namespace SunokoLibrary.Application.Browsers
         }
         public override ICookieImporter Generate(BrowserConfig config)
         { return new IEFindCacheCookieImporter(config, PrimaryLevel); }
-        protected override ImportResult ProtectedGetCookies(Uri targetUrl)
+        protected override CookieImportResult ProtectedGetCookies(Uri targetUrl)
         {
             if (IsAvailable == false)
-                return new ImportResult(null, ImportState.Unavailable);
+                return new CookieImportResult(null, CookieImportState.Unavailable);
 
             List<Cookie> cookieList;
             try
@@ -48,12 +48,12 @@ namespace SunokoLibrary.Application.Browsers
             catch (CookieImportException ex)
             {
                 TraceFail(this, "Cookie読み込みに失敗。", ex.ToString());
-                return new ImportResult(null, ex.Result);
+                return new CookieImportResult(null, ex.Result);
             }
             catch (IOException ex)
             {
                 TraceFail(this, "Cookie読み込みに失敗。", ex.ToString());
-                return new ImportResult(null, ImportState.AccessError);
+                return new CookieImportResult(null, CookieImportState.AccessError);
             }
 
             //Cookieを有効期限で昇順に並び替えて、Expiresが最新のもので上書きされるようにする
@@ -66,7 +66,7 @@ namespace SunokoLibrary.Application.Browsers
             var cookies = new CookieCollection();
             foreach (var cookie in cookieList)
                 cookies.Add(cookie);
-            return new ImportResult(cookies, ImportState.Success);
+            return new CookieImportResult(cookies, CookieImportState.Success);
         }
 
 #pragma warning restore 1591
@@ -100,13 +100,13 @@ namespace SunokoLibrary.Application.Browsers
                     // 有効期限を取得する
                     long uexp, lexp;
                     if (long.TryParse(lines[5], out uexp) == false || long.TryParse(lines[4], out lexp) == false)
-                        throw new CookieImportException("キャッシュCookieの解析に失敗しました。", ImportState.ConvertError);
+                        throw new CookieImportException("キャッシュCookieの解析に失敗しました。", CookieImportState.ConvertError);
                     var ticks = ((long)uexp << 32) + lexp;
                     cookie.Expires = DateTime.FromFileTimeUtc(ticks);
                     cookies.Add(cookie);
                 }
                 else
-                    throw new CookieImportException("キャッシュCookieの解析に失敗しました。", ImportState.ConvertError);
+                    throw new CookieImportException("キャッシュCookieの解析に失敗しました。", CookieImportState.ConvertError);
             }
             return cookies;
         }
@@ -147,7 +147,7 @@ namespace SunokoLibrary.Application.Browsers
             catch (OutOfMemoryException) { throw; }
             catch (IOException e) { ex = e; }
             catch (System.Security.SecurityException e) { ex = e; }
-            throw new CookieImportException("キャッシュCookieの読み込みに失敗。", ImportState.AccessError, ex);
+            throw new CookieImportException("キャッシュCookieの読み込みに失敗。", CookieImportState.AccessError, ex);
         }
     }
 }

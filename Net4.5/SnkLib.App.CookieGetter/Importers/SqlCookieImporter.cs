@@ -16,7 +16,7 @@ namespace SunokoLibrary.Application.Browsers
     {
 #pragma warning disable 1591
 
-        public SqlCookieImporter(BrowserConfig config, int primaryLevel) : base(config, PathType.File, primaryLevel) { }
+        public SqlCookieImporter(BrowserConfig config, int primaryLevel) : base(config, CookiePathType.File, primaryLevel) { }
 
 #pragma warning restore 1591
 
@@ -101,12 +101,12 @@ namespace SunokoLibrary.Application.Browsers
             catch (IOException ex)
             {
                 throw new CookieImportException(
-                  "Cookieを取得中、一時ファイルの生成に失敗しました。", ImportState.AccessError, ex);
+                  "Cookieを取得中、一時ファイルの生成に失敗しました。", CookieImportState.AccessError, ex);
             }
             catch (SQLiteException ex)
             {
                 throw new CookieImportException(
-                  "Cookieを取得中、Sqliteアクセスでエラーが発生しました。", ImportState.ConvertError, ex);
+                  "Cookieを取得中、Sqliteアクセスでエラーが発生しました。", CookieImportState.ConvertError, ex);
             }
             finally
             {

@@ -21,7 +21,7 @@ namespace SunokoLibrary.Application
         /// <summary>
         /// Cookie保存の形態を取得します。
         /// </summary>
-        PathType CookiePathType { get; }
+        CookiePathType CookiePathType { get; }
         /// <summary>
         /// 利用可能かどうかを取得します。
         /// </summary>
@@ -35,7 +35,7 @@ namespace SunokoLibrary.Application
         /// </summary>
         /// <param name="targetUrl">通信先のURL</param>
         /// <returns>処理の成功不成功</returns>
-        Task<ImportResult> GetCookiesAsync(Uri targetUrl);
+        Task<CookieImportResult> GetCookiesAsync(Uri targetUrl);
         /// <summary>
         /// 自身と設定の異なるICookieImporterを生成します。
         /// </summary>
@@ -44,10 +44,10 @@ namespace SunokoLibrary.Application
     /// <summary>
     /// Cookie取得結果を扱うクラスです。
     /// </summary>
-    public class ImportResult
+    public class CookieImportResult
     {
 #pragma warning disable 1591
-        public ImportResult(CookieCollection cookies, ImportState status)
+        public CookieImportResult(CookieCollection cookies, CookieImportState status)
         {
             Cookies = cookies;
             Status = status;
@@ -61,15 +61,15 @@ namespace SunokoLibrary.Application
         /// <summary>
         /// 処理の成功不成功の状態を取得します。
         /// </summary>
-        public ImportState Status { get; private set; }
+        public CookieImportState Status { get; private set; }
         /// <summary>
         /// 引数として指定したCookieContainerにブラウザから取得したCookieを追加します。
         /// </summary>
         /// <param name="targetContainer">追加先のコンテナ</param>
         /// <returns>インスタンスが保持するStatusをそのまま返します。</returns>
-        public ImportState AddTo(CookieContainer targetContainer)
+        public CookieImportState AddTo(CookieContainer targetContainer)
         {
-            if (Status == ImportState.Success)
+            if (Status == CookieImportState.Success)
                 targetContainer.Add(Cookies);
             return Status;
         }
@@ -77,7 +77,7 @@ namespace SunokoLibrary.Application
     /// <summary>
     /// パス指定対象の種類を定義します。
     /// </summary>
-    public enum PathType
+    public enum CookiePathType
     {
         /// <summary>ファイル</summary>
         File,
@@ -87,7 +87,7 @@ namespace SunokoLibrary.Application
     /// <summary>
     /// Cookie取得の実行結果を定義します。
     /// </summary>
-    public enum ImportState
+    public enum CookieImportState
     {
         /// <summary>処理が正常終了状態にあります。</summary>
         Success,
@@ -150,18 +150,18 @@ namespace SunokoLibrary.Application
         /// <summary>例外を生成します。</summary>
         /// <param name="message">エラーの捕捉</param>
         /// <param name="result">エラーの種類</param>
-        public CookieImportException(string message, ImportState result)
+        public CookieImportException(string message, CookieImportState result)
             : base(message) { Result = result; }
         /// <summary>例外を再スローさせるための例外を生成します。</summary>
         /// <param name="message">エラーの捕捉</param>
         /// <param name="result">エラーの種類</param>
         /// <param name="inner">内部例外</param>
-        public CookieImportException(string message, ImportState result, Exception inner)
+        public CookieImportException(string message, CookieImportState result, Exception inner)
             : base(message, inner) { Result = result; }
 
         /// <summary>
         /// 例外要因の大まかな種類
         /// </summary>
-        public ImportState Result { get; private set; }
+        public CookieImportState Result { get; private set; }
     }
 }

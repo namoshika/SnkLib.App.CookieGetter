@@ -57,7 +57,7 @@ namespace SunokoLibrary.Windows.Forms
             DialogResult res;
             switch (currentImporter.CookiePathType)
             {
-                case PathType.Directory:
+                case CookiePathType.Directory:
                     if (System.IO.Directory.Exists(currentCookiePath))
                         openFolderDialog.SelectedPath = currentImporter.Config.CookiePath;
                     if ((res = openFolderDialog.ShowDialog()) == DialogResult.OK)
@@ -66,7 +66,7 @@ namespace SunokoLibrary.Windows.Forms
                         newConfig = currentImporter.Config.GenerateCopy(cookiePath: currentCookiePath);
                     }
                     break;
-                case PathType.File:
+                case CookiePathType.File:
                     if (System.IO.File.Exists(currentCookiePath))
                     {
                         openFileDialog.InitialDirectory = System.IO.Path.GetDirectoryName(currentCookiePath);

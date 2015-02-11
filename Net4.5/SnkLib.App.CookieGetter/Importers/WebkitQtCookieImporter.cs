@@ -13,36 +13,36 @@ namespace SunokoLibrary.Application.Browsers
     {
 #pragma warning disable 1591
 
-        public WebkitQtCookieImporter(BrowserConfig config, int primaryLevel) : base(config, PathType.File, primaryLevel) { }
+        public WebkitQtCookieImporter(BrowserConfig config, int primaryLevel) : base(config, CookiePathType.File, primaryLevel) { }
         public override ICookieImporter Generate(BrowserConfig config)
         { return new WebkitQtCookieImporter(config, PrimaryLevel); }
-        protected override ImportResult ProtectedGetCookies(Uri targetUrl)
+        protected override CookieImportResult ProtectedGetCookies(Uri targetUrl)
         {
             if (IsAvailable == false)
-                return new ImportResult(null, ImportState.Unavailable);
+                return new CookieImportResult(null, CookieImportState.Unavailable);
             try
             {
                 var cookies = new CookieCollection();
-                var res = ImportState.ConvertError;
+                var res = CookieImportState.ConvertError;
                 using (var sr = new System.IO.StreamReader(Config.CookiePath))
                     while (!sr.EndOfStream)
                     {
                         var line = sr.ReadLine();
                         if (line.StartsWith("cookies="))
                             cookies.Add(ParseCookieSettings(line));
-                        res = ImportState.Success;
+                        res = CookieImportState.Success;
                     }
-                return new ImportResult(cookies, res);
+                return new CookieImportResult(cookies, res);
             }
             catch (System.IO.IOException ex)
             {
                 TraceFail(this, "読み込みでエラーが発生しました。", ex.ToString());
-                return new ImportResult(null,ImportState.AccessError);
+                return new CookieImportResult(null,CookieImportState.AccessError);
             }
             catch (Exception ex)
             {
                 TraceFail(this, "読み込みでエラーが発生しました。", ex.ToString());
-                return new ImportResult(null, ImportState.ConvertError);
+                return new CookieImportResult(null, CookieImportState.ConvertError);
             }
         }
 
