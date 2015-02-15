@@ -28,7 +28,7 @@ namespace SunokoLibrary.Application.Browsers
             {
                 var cookies = new CookieCollection();
                 var query = string.Format("{0} {1} ORDER BY expiry", SELECT_QUERY, MakeWhere(targetUrl));
-                foreach (var item in LookupCookies(Config.CookiePath, query))
+                foreach (var item in LookupCookies(Config.CookiePath, query, DataToCookie))
                     cookies.Add(item);
                 return new CookieImportResult(cookies, CookieImportState.Success);
             }
@@ -38,7 +38,7 @@ namespace SunokoLibrary.Application.Browsers
                 return new CookieImportResult(null, ex.Result);
             }
         }
-        protected override Cookie DataToCookie(object[] data)
+        protected Cookie DataToCookie(object[] data)
         {
             if (data.Length < 5 || data.Take(4).Where(rec => rec is string == false).Any() || data[4] is long == false)
                 throw new CookieImportException(

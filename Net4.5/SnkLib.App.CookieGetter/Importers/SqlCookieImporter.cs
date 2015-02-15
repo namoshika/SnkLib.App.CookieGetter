@@ -25,19 +25,14 @@ namespace SunokoLibrary.Application.Browsers
         /// </summary>
         /// <param name="path">参照先DBファイル</param>
         /// <param name="query">実行するクエリ</param>
+        /// <param name="dataConverter">レコードからCookieへ変換するメソッド</param>
         /// <returns>取得されたCookies</returns>
         /// <exception cref="CookieImportException" />
-        protected IEnumerable<Cookie> LookupCookies(string path, string query)
+        protected static IEnumerable<Cookie> LookupCookies(string path, string query, Func<object[], Cookie> dataConverter)
         {
             return LookupEntry(path, query)
-                .Select(record => DataToCookie(record)).Where(cookie => cookie != null);
+                .Select(record => dataConverter(record)).Where(cookie => cookie != null);
         }
-        /// <summary>
-        /// SQLから取得したデータをCookieに変換します。
-        /// </summary>
-        /// <param name="data">指定されたQueryで取得した１行分のデータ</param>
-        /// <exception cref="CookieImportException">未知の形式のレコードを入力された。</exception>
-        protected abstract Cookie DataToCookie(object[] data);
         /// <summary>
         /// DBに対してエントリ照会を行います。
         /// </summary>
