@@ -109,9 +109,6 @@
       <Link>Settings.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="..\..\Net4.5\Sample\Sample\MainWindow.resx">
-      <Link>MainWindow.resx</Link>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

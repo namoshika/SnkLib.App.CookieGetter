@@ -110,10 +110,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
-    <EmbeddedResource Include="MainWindow.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>MainWindow.cs</DependentUpon>
-    </EmbeddedResource>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>

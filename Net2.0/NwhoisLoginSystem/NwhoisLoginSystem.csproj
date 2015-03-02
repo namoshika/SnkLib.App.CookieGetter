@@ -103,9 +103,6 @@
       <Link>Utility.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="..\..\Net4.5\Sample\NwhoisLoginSystem\Form1.resx">
-      <Link>Form1.resx</Link>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
