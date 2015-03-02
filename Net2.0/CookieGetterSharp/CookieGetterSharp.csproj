@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F976C4B7-6936-41F9-8386-E2031343CFEE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Hal.CookieGetterSharp</RootNamespace>
+    <AssemblyName>CookieGetterSharp</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>10b78b23</NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET20</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;NET20</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="LinqBridge">
+      <HintPath>..\..\packages\LinqBridge.1.3.0\lib\net20\LinqBridge.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite, Version=1.0.95.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\System.Data.SQLite.Core.1.0.95.0\lib\net20\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Net4.5\CookieGetterSharp\ComboBoxBrowser.cs">
+      <Link>ComboBoxBrowser.cs</Link>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="..\..\Net4.5\CookieGetterSharp\CookieGetter.cs">
+      <Link>CookieGetter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\CookieGetterSharp\CookieStatus.cs">
+      <Link>CookieStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\CookieGetterSharp\Exceptions.cs">
+      <Link>Exceptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\CookieGetterSharp\Factories\PaleMoonImporterFactory.cs">
+      <Link>Factories\PaleMoonImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\CookieGetterSharp\Factories\SeaMonkeyImporterFactory.cs">
+      <Link>Factories\SeaMonkeyImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\CookieGetterSharp\Interfaces.cs">
+      <Link>Interfaces.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\CookieGetterSharp\Utility.cs">
+      <Link>Utility.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\BrowserConfig.cs">
+      <Link>Core\BrowserConfig.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\CookieGetters.cs">
+      <Link>Core\CookieGetters.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\factories\BlinkImporterFactory.cs">
+      <Link>Core\Factories\BlinkImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\factories\ChromeImporterFactory.cs">
+      <Link>Core\Factories\ChromeImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\factories\ChromiumImporterFactory.cs">
+      <Link>Core\Factories\ChromiumImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\factories\ComplexImporterFactory.cs">
+      <Link>Core\Factories\ComplexImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\factories\FirefoxImporterFactory.cs">
+      <Link>Core\Factories\FirefoxImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\factories\GeckoImporterFactory.cs">
+      <Link>Core\Factories\GeckoImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\factories\IEImporterFactory.cs">
+      <Link>Core\Factories\IEImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\factories\ImporterFactoryBase.cs">
+      <Link>Core\Factories\ImporterFactoryBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\factories\LunascapeImporterFactory.cs">
+      <Link>Core\Factories\LunascapeImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\factories\MaxthonImporterFactory.cs">
+      <Link>Core\Factories\MaxthonImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\factories\OperaWebkitImporterFactory.cs">
+      <Link>Core\Factories\OperaWebkitImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\factories\SleipnirImporterFactory.cs">
+      <Link>Core\Factories\SleipnirImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\SmartImporterFactory.cs">
+      <Link>Core\Factories\SmartImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\factories\TungstenImporterFactory.cs">
+      <Link>Core\Factories\TungstenImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\factories\WebkitQtImporterFactory.cs">
+      <Link>Core\Factories\WebkitQtImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\importers\BlinkCookieImporter.cs">
+      <Link>Core\Importers\BlinkCookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\importers\CookieImporterBase.cs">
+      <Link>Core\Importers\CookieImporterBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\importers\GeckoCookieImporter.cs">
+      <Link>Core\Importers\GeckoCookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\importers\IECookieImporter.cs">
+      <Link>Core\Importers\IECookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\importers\IEFindCacheCookieImporter.cs">
+      <Link>Core\Importers\IEFindCacheCookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\importers\IEPMCookieImporter.cs">
+      <Link>Core\Importers\IEPMCookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\importers\SqlCookieImporter.cs">
+      <Link>Core\Importers\SqlCookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\importers\WebkitQtCookieImporter.cs">
+      <Link>Core\Importers\WebkitQtCookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\Interfaces.cs">
+      <Link>Core\Interfaces.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\Utility.cs">
+      <Link>Core\Utility.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Core\Substitutes\System.IO.Directory.cs" />
+    <Compile Include="Core\Substitutes\System.IO.Path.cs" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\..\packages\System.Data.SQLite.Core.1.0.95.0\build\net20\System.Data.SQLite.Core.targets" Condition="Exists('..\..\packages\System.Data.SQLite.Core.1.0.95.0\build\net20\System.Data.SQLite.Core.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>このプロジェクトは、このコンピューターにはない NuGet パッケージを参照しています。これらをダウンロードするには、NuGet パッケージの復元を有効にしてください。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。不足しているファイルは {0} です。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\System.Data.SQLite.Core.1.0.95.0\build\net20\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\System.Data.SQLite.Core.1.0.95.0\build\net20\System.Data.SQLite.Core.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

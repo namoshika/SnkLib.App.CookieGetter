@@ -94,11 +94,11 @@ namespace SunokoLibrary.Application.Browsers
                     Enumerable.Repeat(Enumerable.Empty<string>(), 1),
                     (tmp, val) => tmp.Concat(Enumerable.Repeat(Enumerable.Repeat(val, 1).Concat(tmp.Last()), 1)))
                 .Skip(2)
-                .Select(levels => string.Join(".", levels))
+                .Select(levels => string.Join(".", levels.ToArray()))
                 .SelectMany(domain => new[] { domain, "." + domain });
             //全てのドメインをOR文で結ぶ
             var query = string.Format(" WHERE ({0})", string.Join(
-                " OR ", domains.Select(domain => string.Format("host_key = \"{0}\"", domain))));
+                " OR ", domains.Select(domain => string.Format("host_key = \"{0}\"", domain)).ToArray()));
             return query;
         }
 

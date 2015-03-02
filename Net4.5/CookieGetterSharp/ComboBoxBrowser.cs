@@ -501,6 +501,28 @@ namespace Hal.CookieGetterSharp
 
         private string GetUserName(ICookieGetter cookieGetter)
         {
+#if NET20
+            try
+            {
+                var container = new CookieContainer();
+                var cookie = cookieGetter.GetCookie(new Uri(VerifyUrl), CookieKey);
+                string res = null;
+
+                if (cookie != null)
+                {
+                    container.Add(cookie);
+                    res = Utility.GetResponseText(VerifyUrl, container, VerifyTimeout);
+                }
+                if (!string.IsNullOrEmpty(res))
+                {
+                    var namem = Regex.Match(res, VerifyRegex, RegexOptions.Singleline);
+                    if (namem.Success)
+                        return namem.Groups[1].Value;
+                }
+            }
+            catch { }
+            return null;
+#else
             try
             {
                 System.Net.CookieContainer container = new CookieContainer();
@@ -527,6 +549,7 @@ namespace Hal.CookieGetterSharp
             }
             catch { }
             return null;
+#endif
         }
 
         #endregion

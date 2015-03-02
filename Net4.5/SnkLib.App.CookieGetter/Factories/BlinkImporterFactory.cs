@@ -77,7 +77,7 @@ namespace SunokoLibrary.Application.Browsers
                     .Where(path => Path.GetFileName(path).StartsWith(_profileFolderStarts, StringComparison.OrdinalIgnoreCase))
                     .Select(path => Path.Combine(path, _cookieFileName))
                     .Where(path => File.Exists(path))
-                    .Select(path => new BlinkCookieImporter(new BrowserConfig(
+                    .Select(path => (ICookieImporter)new BlinkCookieImporter(new BrowserConfig(
                         _name, Path.GetFileName(Path.GetDirectoryName(path)), path, EngineIds[0], false), _primaryLevel));
                 return paths;
             }

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+#if !NET20
 using System.Threading.Tasks;
+#endif
 
 namespace Hal.CookieGetterSharp
 {
@@ -26,7 +28,11 @@ namespace Hal.CookieGetterSharp
         {
             try
             {
+#if NET20
+                var res = Importer.GetCookies(url);
+#else
                 var res = Importer.GetCookiesAsync(url).Result;
+#endif
                 switch (res.Status)
                 {
                     case CookieImportState.Success:
@@ -60,6 +66,22 @@ namespace Hal.CookieGetterSharp
 
             //コア部分にはBrowserTypeが無いため、ブラウザ名とBrowserTypeの対応関係を
             //定義してBrowserType値の生成に使うする。
+#if NET20
+            _browserTypeDict = new Dictionary<string, BrowserType>() {
+                {"IE Normal",  BrowserType.IE},
+                {"IE Protected",  BrowserType.IESafemode},
+                {"Firefox",  BrowserType.Firefox3},
+                {"PaleMoon", BrowserType.PaleMoon},
+                {"GoogleChrome",  BrowserType.GoogleChrome3},
+                {"Lunascape Gecko",  BrowserType.Lunascape6Gecko},
+                {"Lunascape Webkit",  BrowserType.Lunascape6Webkit},
+                {"Chromium",  BrowserType.Chromium},
+            };
+            _equivalentTypeDict = new Dictionary<BrowserType, BrowserType>() {
+                { BrowserType.IEComponent, BrowserType.IE },
+                { BrowserType.Lunascape5Gecko, BrowserType.Lunascape6Gecko },
+            };
+#else
             _browserTypeDict = new Dictionary<string, BrowserType>() {
                 {"IE Normal",  BrowserType.IE},
                 {"IE Protected",  BrowserType.IESafemode},
@@ -76,26 +98,40 @@ namespace Hal.CookieGetterSharp
                 {"Lunascape Webkit",  BrowserType.LunascapeWebkit},
                 {"Sleipnir3 Gecko",  BrowserType.Sleipnir3Gecko},
                 {"Sleipnir3 Wekit",  BrowserType.Sleipnir3Webkit},
-                {"Sleipnir4 Blink",  BrowserType.Sleipnir4Blink},
                 {"Sleipnir5 Blink",  BrowserType.Sleipnir5Blink},
                 {"Chromium",  BrowserType.Chromium},
                 {"Maxthon webkit",  BrowserType.Maxthon},
                 {"TungstenBlink",  BrowserType.TungstenBlink},
             };
+            _equivalentTypeDict = new Dictionary<BrowserType, BrowserType>() {
+                { BrowserType.IEComponent, BrowserType.IE },
+                { BrowserType.Sleipnir4Blink, BrowserType.Sleipnir5Blink },
+            };
+#endif
         }
         public static Queue<Exception> Exceptions = new Queue<Exception>();
         static int _browserTypeLen = Enum.GetNames(typeof(BrowserType)).Length;
         static Dictionary<string, BrowserType> _browserTypeDict;
+        static Dictionary<BrowserType, BrowserType> _equivalentTypeDict;
 
         public static ICookieGetter[] CreateInstances(bool availableOnly)
         {
+#if NET20
+            var getters = CookieGetters.Default
+                .GetInstances(availableOnly)
+                .Select(importer => new CookieGetter(importer))
+                .ToArray();
+#else
             var getters = CookieGetters.Default.GetInstancesAsync(availableOnly)
                 .ContinueWith(tsk => tsk.Result.Select(importer => new CookieGetter(importer)))
                 .Result.ToArray();
+#endif
             return getters;
         }
         public static ICookieGetter CreateInstance(BrowserType type)
         {
+            if (_equivalentTypeDict.ContainsKey(type))
+                type = _equivalentTypeDict[type];
             return CreateInstances(false)
                 .Where(getters => getters.Status.BrowserType == type)
                 .FirstOrDefault();

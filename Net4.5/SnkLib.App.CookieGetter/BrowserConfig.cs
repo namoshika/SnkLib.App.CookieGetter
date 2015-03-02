@@ -207,7 +207,8 @@ namespace SunokoLibrary.Application
                             { "EngineId", config.EngineId },
                         }
                         .Select(pair =>
-                            string.Format("{0}:{1}:{2}", pair.Key, (pair.Value ?? string.Empty).Length, pair.Value)));
+                            string.Format("{0}:{1}:{2}", pair.Key, (pair.Value ?? string.Empty).Length, pair.Value))
+                        .ToArray());
                     return res;
                 }
                 return base.ConvertTo(context, culture, value, destinationType);

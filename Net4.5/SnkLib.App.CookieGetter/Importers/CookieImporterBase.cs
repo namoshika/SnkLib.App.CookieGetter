@@ -4,14 +4,16 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
+#if !NET20
 using System.Threading.Tasks;
+#endif
 
 namespace SunokoLibrary.Application.Browsers
 {
     /// <summary>
     /// ICookieImporterの実装の作成を支援する基盤クラスです。
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("{Config.BrowserName,nq}({Config.ProfileName,nq}): {Config.CookiePath,nq}")]
+    [DebuggerDisplay("{Config.BrowserName,nq}({Config.ProfileName,nq}): {Config.CookiePath,nq}")]
     public abstract class CookieImporterBase : ICookieImporter
     {
         /// <summary>
@@ -47,6 +49,17 @@ namespace SunokoLibrary.Application.Browsers
                     ? false : System.IO.File.Exists(Config.CookiePath);
             }
         }
+        public abstract ICookieImporter Generate(BrowserConfig config);
+        #region // GetCookiesAsync(Uri)
+#if NET20
+        public CookieImportResult GetCookies(Uri targetUrl)
+        {
+            //同期コンテキストが確実にUIスレッド以外になるようにする。
+            //awaitのある処理をUIスレッドでTask.Wait()した場合、デッドロックが発生する事がある。
+            //その対策としてここで別スレッドから呼び出す事を保証する。
+            return ProtectedGetCookies(targetUrl);
+        }
+#else
         public Task<CookieImportResult> GetCookiesAsync(Uri targetUrl)
         {
             //同期コンテキストが確実にUIスレッド以外になるようにする。
@@ -54,7 +67,8 @@ namespace SunokoLibrary.Application.Browsers
             //その対策としてここで別スレッドから呼び出す事を保証する。
             return Task.Factory.StartNew(() => ProtectedGetCookies(targetUrl));
         }
-        public abstract ICookieImporter Generate(BrowserConfig config);
+#endif
+        #endregion
 
 #pragma warning restore 1591
 

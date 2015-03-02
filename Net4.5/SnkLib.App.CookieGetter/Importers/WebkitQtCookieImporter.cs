@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+#if !NET20
 using System.Threading.Tasks;
+#endif
 
 namespace SunokoLibrary.Application.Browsers
 {

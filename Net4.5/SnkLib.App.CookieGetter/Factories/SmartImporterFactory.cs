@@ -30,49 +30,9 @@ namespace SunokoLibrary.Application.Browsers
         {
             var browsers = AppDataFolders
                 .SelectMany(appDataPath =>
-                {
-                    /* 中身を探索し、ユーザデータを探す。
-                     * ガイドライン的にフォルダは以下の構造になっていると予想される。
-                     * > (%APPDATA%|%LOCALAPPDATA%)\(ProductName\){1,3}User Data\(ProfileName)\Cookies etc..
-                     * > 参考文献: http://d.hatena.ne.jp/torutk/20110604/p1
-                     * 
-                     * そのため、探索は製品フォルダから2階層下まで見る。
-                     * ユーザデータを発見したらその中身は探索しない。しかし、同一ベンダ、同一製品で複数の
-                     * 系統というのは存在しうるため、兄弟フォルダなどの探索は継続する。
-                     */
-
-                    //製品フォルダを列挙
-                    IEnumerable<string> tmp;
-                    try { tmp = Directory.EnumerateDirectories(appDataPath); }
-                    catch (UnauthorizedAccessException)
-                    { return Enumerable.Empty<Tuple<string, string>>(); }
-                    catch (System.Security.SecurityException)
-                    { return Enumerable.Empty<Tuple<string, string>>(); }
-                    catch (IOException)
-                    { return Enumerable.Empty<Tuple<string, string>>(); }
-                    //中身を2階層まで探索
-                    for (var i = 0; i < 2; i++)
-                        tmp = tmp.SelectMany(childPath =>
-                        {
-                            try
-                            {
-                                return
-                                    Path.GetFileName(childPath) == _searchTarget ? new string[] { childPath } :
-                                    ExistsTarget(Path.Combine(childPath, _searchTarget)) ? new string[] { Path.Combine(childPath, _searchTarget) } :
-                                    Directory.EnumerateDirectories(childPath);
-                            }
-                            catch (UnauthorizedAccessException)
-                            { return Enumerable.Empty<string>(); }
-                            catch (System.Security.SecurityException)
-                            { return Enumerable.Empty<string>(); }
-                            catch (IOException)
-                            { return Enumerable.Empty<string>(); }
-                        });
-                    return tmp
-                        .Where(path => Path.GetFileName(path) == _searchTarget)
-                        .Select(path => Tuple.Create(appDataPath, path));
-                })
-                .Select(inf => Generate(inf.Item1, inf.Item2, EngineIds[0]))
+                    FindTargets(appDataPath, _searchTarget, _targetType)
+                        .Select(entryPath => new { AppDataPath = appDataPath, EntryPath = entryPath }))
+                .Select(inf => Generate(inf.AppDataPath, inf.EntryPath, EngineIds[0]))
                 .Where(factory => factory != null);
 
             return browsers.SelectMany(item => item.GetCookieImporters());
@@ -81,15 +41,56 @@ namespace SunokoLibrary.Application.Browsers
         protected abstract ICookieImporterFactory Generate(string appDataPath, string userDataPath, string engineId);
 #pragma warning restore 1591
 
-        bool ExistsTarget(string targetPath)
-        { return _targetType == CookiePathType.File ? File.Exists(targetPath) : Directory.Exists(targetPath); }
-
         static SmartImporterFactory()
         {
             AppDataFolders = new[] {
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
             };
+        }
+        static IEnumerable<string> FindTargets(string dirPath, string targetName, CookiePathType fileType)
+        {
+            /* 中身を探索し、ユーザデータを探す。
+             * ガイドライン的にフォルダは以下の構造になっていると予想される。
+             * > (%APPDATA%|%LOCALAPPDATA%)\(ProductName\){1,3}User Data\(ProfileName)\Cookies etc..
+             * > 参考文献: http://d.hatena.ne.jp/torutk/20110604/p1
+             * 
+             * そのため、探索は製品フォルダから2階層下まで見る。
+             * ユーザデータを発見したらその中身は探索しない。しかし、同一ベンダ、同一製品で複数の
+             * 系統というのは存在しうるため、兄弟フォルダなどの探索は継続する。
+             */
+            var searchingPaths = new Stack<string>(new[] { dirPath });
+            var searchingLevels = new Stack<int>(new[] { 0 });
+            while (searchingPaths.Count > 0)
+            {
+                var itemLevel = searchingLevels.Pop();
+                var itemLongPath = searchingPaths.Pop();
+                var itemShrtPath = itemLongPath.Substring(dirPath.Length);
+                var targetFilePath = Path.Combine(itemLongPath, targetName);
+
+                if (fileType == CookiePathType.File ? File.Exists(targetFilePath) : Directory.Exists(targetFilePath))
+                {
+                    yield return targetFilePath;
+                    continue;
+                }
+                //中身を2階層まで探索
+                //"AppData\Vender\Product\Edition"で4つ分になる。
+                if (itemLevel > 3)
+                    continue;
+
+                //製品フォルダを列挙
+                IEnumerable<string> tmp;
+                try { tmp = Directory.EnumerateDirectories(itemLongPath); }
+                catch (UnauthorizedAccessException) { continue; }
+                catch (System.Security.SecurityException) { continue; }
+                catch (IOException) { continue; }
+
+                foreach (var item in tmp)
+                {
+                    searchingPaths.Push(item);
+                    searchingLevels.Push(itemLevel + 1);
+                }
+            }
         }
         readonly static string[] AppDataFolders;
     }

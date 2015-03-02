@@ -210,7 +210,7 @@ namespace SunokoLibrary.Application
             try
             {
                 using (var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Internet Explorer"))
-                    return Version.Parse((string)key.GetValue("svcVersion") ?? (string)key.GetValue("Version"));
+                    return new Version((string)key.GetValue("svcVersion") ?? (string)key.GetValue("Version"));
             }
             catch { return null; }
         }

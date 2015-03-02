@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.ServiceModel;
 using System.Runtime.InteropServices;
 using System.Text;
+#if !NET20
+using System.ServiceModel;
+#endif
 
 namespace SunokoLibrary.Application.Browsers
 {
@@ -36,12 +38,16 @@ namespace SunokoLibrary.Application.Browsers
                 // * IE11<=x on x86,x64     使用可能
                 var ieVersion = Win32Api.GetIEVersion();
                 string cookiesText;
+#if NET20
+                cookiesText = InternalGetCookiesWinApi(targetUrl, null);
+#else
                 if (ieVersion.Major >= 11 || ieVersion.Major >= 8 && Environment.Is64BitProcess == false)
                     cookiesText = InternalGetCookiesWinApi(targetUrl, null);
                 else if (ieVersion.Major >= 8)
                     cookiesText = InternalGetCookiesWinApiOnProxy(targetUrl, null);
                 else
                     throw new NotImplementedException(); 
+#endif
 
                 if (cookiesText != null)
                 {
@@ -72,6 +78,9 @@ namespace SunokoLibrary.Application.Browsers
         }
         internal static string InternalGetCookiesWinApiOnProxy(Uri url, string key)
         {
+#if NET20
+            throw new NotImplementedException();
+#else
             var processId = Process.GetCurrentProcess().Id.ToString();
             var endpointUrl = new Uri(string.Format("net.pipe://localhost/SnkLib.App.CookieGetter.x86Proxy/{0}/Service/", processId));
             string lpszCookieData = null;
@@ -109,6 +118,7 @@ namespace SunokoLibrary.Application.Browsers
                 }
                 finally { proxyFactory.Abort(); }
             return lpszCookieData;
+#endif
         }
     }
 }
