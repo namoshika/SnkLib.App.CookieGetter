@@ -5,7 +5,7 @@
 
 本家と同水準でIE, Chrome, Firefox, Lunascape, Maxthon, Sleipnir, Tungsten などに対応しています。加えてKinzaなどの本家が未対応の派生ブラウザへの包括的な対応と設定保存周りの使い勝手の改善が行われています。
 
-また、既存のアプリのCookieGetterSharpをNET4.5\CookieGetterSharpにある互換ライブラリと差し替える事でこのライブラリの強化機能を得る使い方も出来ます(.NET4.5以上)。互換ライブラリはReleasesにSnkLib.App.CookieGetter.Sharpとしてビルド済みのものが配布されています。
+また、これをベースとした互換ライブラリと既存のアプリのCookieGetterSharpを差し替える事でこのライブラリの強化機能を得る使い方も出来ます(.NET2.0以上)。互換ライブラリはReleasesにSnkLib.App.CookieGetter.Sharpとしてビルド済みのものが配布されています。
 
 ## ライセンス
 以下のライセンス下にあります。  
@@ -27,6 +27,10 @@
 また、プロジェクトは以下の方針下にあります。  
 各プロジェクトはフレームワークのバージョン毎にフォルダを分けられています。
 
+* NET2.0
+  * NwhoisLoginSystem: 本家に付いてるデモアプリ。
+  * CookieGetterSharp:   
+    本家との互換ライブラリ。本家が対応していないブラウザへの対応などを既存のアプリに提供する。
 * NET4.0
   * SnkLib.App.CookieGetter: 本体。
   * SnkLib.App.CookieGetter.Forms: ブラウザ選択UIなどの部品。
