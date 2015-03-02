@@ -30,8 +30,9 @@ namespace Hal.CookieGetterSharp
                 switch (res.Status)
                 {
                     case CookieImportState.Success:
-                    case CookieImportState.Unavailable:
                         return res.Cookies;
+                    case CookieImportState.Unavailable:
+                        return new CookieCollection();
                     default:
                         throw new CookieImportException("Cookie取得に失敗しました。", res.Status);
                 }
