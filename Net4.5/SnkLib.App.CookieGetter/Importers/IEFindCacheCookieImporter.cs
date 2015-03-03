@@ -14,7 +14,6 @@ namespace SunokoLibrary.Application.Browsers
     public class IEFindCacheCookieImporter : CookieImporterBase
     {
 #pragma warning disable 1591
-
         //クラス命名センスとしてwininet.dllのFindNextUrlCacheEntryの文脈を用いる。
         //純粋にapi上で片付ける方法が不明なのでwininetのapi自体は使っていない。
         public IEFindCacheCookieImporter(BrowserConfig config, int primaryLevel)
@@ -67,7 +66,6 @@ namespace SunokoLibrary.Application.Browsers
                 cookies.Add(cookie);
             return new CookieImportResult(cookies, CookieImportState.Success);
         }
-
 #pragma warning restore 1591
 
         /// <summary>

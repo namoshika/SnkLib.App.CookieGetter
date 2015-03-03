@@ -11,7 +11,6 @@ namespace SunokoLibrary.Application.Browsers
     public abstract class ImporterFactoryBase : ICookieImporterFactory
     {
 #pragma warning disable 1591
-
         public ImporterFactoryBase(IEnumerable<string> engineIds = null)
         {
             EngineIds = (engineIds ?? Enumerable.Empty<string>())
@@ -21,7 +20,6 @@ namespace SunokoLibrary.Application.Browsers
 
         public abstract IEnumerable<ICookieImporter> GetCookieImporters();
         public abstract ICookieImporter GetCookieImporter(BrowserConfig config);
-
 #pragma warning restore 1591
     }
 }

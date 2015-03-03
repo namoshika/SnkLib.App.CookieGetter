@@ -11,7 +11,6 @@ namespace SunokoLibrary.Application.Browsers
     public class IEImporterFactory : ImporterFactoryBase
     {
 #pragma warning disable 1591
-
         public IEImporterFactory()
         { EngineIds = new[] { ENGINE_ID_NORMAL_IE, ENGINE_ID_PROTECTED_IE, ENGINE_ID_ENHANCED_PROTECTED_IE }; }
         public override IEnumerable<ICookieImporter> GetCookieImporters()
@@ -37,7 +36,6 @@ namespace SunokoLibrary.Application.Browsers
                     throw new ArgumentException("引数configのEngineIdを使えるImporterが見つかりませんでした。");
             }
         }
-
 #pragma warning restore 1591
 
         /// <summary>

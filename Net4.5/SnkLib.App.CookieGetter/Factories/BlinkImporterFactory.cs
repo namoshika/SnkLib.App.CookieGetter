@@ -38,7 +38,6 @@ namespace SunokoLibrary.Application.Browsers
         }
 
 #pragma warning disable 1591
-
         int _primaryLevel;
         string _name;
         string _dataFolder;
@@ -50,7 +49,6 @@ namespace SunokoLibrary.Application.Browsers
         { return GetDefaultProfiles().Concat(GetProfiles()); }
         public override ICookieImporter GetCookieImporter(BrowserConfig config)
         { return new BlinkCookieImporter(config, 2); }
-
 #pragma warning restore 1591
 
         /// <summary>

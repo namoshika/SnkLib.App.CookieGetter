@@ -14,9 +14,7 @@ namespace SunokoLibrary.Application.Browsers
     public abstract class SqlCookieImporter : CookieImporterBase
     {
 #pragma warning disable 1591
-
         public SqlCookieImporter(BrowserConfig config, int primaryLevel) : base(config, CookiePathType.File, primaryLevel) { }
-
 #pragma warning restore 1591
 
         /// <summary>

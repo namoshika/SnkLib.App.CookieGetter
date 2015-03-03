@@ -41,7 +41,6 @@ namespace SunokoLibrary.Application.Browsers
         string _cookieFileName;
 
 #pragma warning disable 1591
-
         public override IEnumerable<ICookieImporter> GetCookieImporters()
         {
             var importers = UserProfile.GetProfiles(_dataFolder, _iniFileName)
@@ -54,7 +53,6 @@ namespace SunokoLibrary.Application.Browsers
         }
         public override ICookieImporter GetCookieImporter(BrowserConfig config)
         { return new GeckoCookieImporter(config, 2); }
-
 #pragma warning restore 1591
 
         /// <summary>

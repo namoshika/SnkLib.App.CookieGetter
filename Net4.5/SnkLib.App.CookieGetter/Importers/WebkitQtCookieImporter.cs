@@ -14,7 +14,6 @@ namespace SunokoLibrary.Application.Browsers
     public class WebkitQtCookieImporter : CookieImporterBase
     {
 #pragma warning disable 1591
-
         public WebkitQtCookieImporter(BrowserConfig config, int primaryLevel) : base(config, CookiePathType.File, primaryLevel) { }
         public override ICookieImporter Generate(BrowserConfig config)
         { return new WebkitQtCookieImporter(config, PrimaryLevel); }
@@ -47,7 +46,6 @@ namespace SunokoLibrary.Application.Browsers
                 return new CookieImportResult(null, CookieImportState.ConvertError);
             }
         }
-
 #pragma warning restore 1591
 
         CookieCollection ParseCookieSettings(string line)

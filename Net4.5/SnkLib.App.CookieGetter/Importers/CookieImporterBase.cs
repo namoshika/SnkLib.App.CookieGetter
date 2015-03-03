@@ -37,7 +37,6 @@ namespace SunokoLibrary.Application.Browsers
         }
 
 #pragma warning disable 1591
-
         public BrowserConfig Config { get; private set; }
         public CookiePathType CookiePathType { get; private set; }
         public int PrimaryLevel { get; private set; }
@@ -69,7 +68,6 @@ namespace SunokoLibrary.Application.Browsers
         }
 #endif
         #endregion
-
 #pragma warning restore 1591
 
         /// <summary>

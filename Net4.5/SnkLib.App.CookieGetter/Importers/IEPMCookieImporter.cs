@@ -17,7 +17,6 @@ namespace SunokoLibrary.Application.Browsers
     public class IEPMCookieImporter : IECookieImporter
     {
 #pragma warning disable 1591
-
         public IEPMCookieImporter(BrowserConfig config, int primaryLevel) : base(config, primaryLevel) { }
 
         public override bool IsAvailable { get { return Win32Api.GetIEVersion().Major >= 8; } }
@@ -65,7 +64,6 @@ namespace SunokoLibrary.Application.Browsers
                 return new CookieImportResult(null, ex.Result);
             }
         }
-
 #pragma warning restore 1591
 
         internal static string InternalGetCookiesWinApi(Uri url, string key)
