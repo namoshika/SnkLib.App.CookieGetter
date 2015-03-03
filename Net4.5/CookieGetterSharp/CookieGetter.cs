@@ -63,6 +63,7 @@ namespace Hal.CookieGetterSharp
             //対応させていないブラウザ、派生ブラウザとして省かれているブラウザを対応させる
             CookieGetters.ImporterFactories.Enqueue(new PaleMoonImporterFactory());
             CookieGetters.ImporterFactories.Enqueue(new SeaMonkeyImporterFactory());
+            _getters = new CookieGetters(CookieGetters.ImporterFactories);
 
             //コア部分にはBrowserTypeが無いため、ブラウザ名とBrowserTypeの対応関係を
             //定義してBrowserType値の生成に使うする。
@@ -113,16 +114,17 @@ namespace Hal.CookieGetterSharp
         static int _browserTypeLen = Enum.GetNames(typeof(BrowserType)).Length;
         static Dictionary<string, BrowserType> _browserTypeDict;
         static Dictionary<BrowserType, BrowserType> _equivalentTypeDict;
+        static ICookieImporterManager _getters;
 
         public static ICookieGetter[] CreateInstances(bool availableOnly)
         {
 #if NET20
-            var getters = CookieGetters.Default
+            var getters = _getters
                 .GetInstances(availableOnly)
                 .Select(importer => new CookieGetter(importer))
                 .ToArray();
 #else
-            var getters = CookieGetters.Default.GetInstancesAsync(availableOnly)
+            var getters = _getters.GetInstancesAsync(availableOnly)
                 .ContinueWith(tsk => tsk.Result.Select(importer => new CookieGetter(importer)))
                 .Result.ToArray();
 #endif
@@ -132,9 +134,10 @@ namespace Hal.CookieGetterSharp
         {
             if (_equivalentTypeDict.ContainsKey(type))
                 type = _equivalentTypeDict[type];
-            return CreateInstances(false)
+            var res = CreateInstances(false)
                 .Where(getters => getters.Status.BrowserType == type)
                 .FirstOrDefault();
+            return res;
         }
         public static ICookieGetter CreateInstance(CookieStatus status)
         {
