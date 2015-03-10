@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Text;
+#if !NET20
+using Newtonsoft.Json.Linq;
+#endif
 
 namespace SunokoLibrary.Application.Browsers
 {
@@ -20,10 +23,12 @@ namespace SunokoLibrary.Application.Browsers
         /// <param name="cookieFileName">Cookieファイルの名前</param>
         /// <param name="defaultFolder">デフォルトのプロファイルフォルダの名前</param>
         /// <param name="profileFolderStarts">デフォルト以外のプロファイルフォルダの名前のプレフィックス</param>
+        /// <param name="stateFileName">ブラウザの設定ファイルの名前</param>
         /// <param name="engineId">エンジン識別子</param>
         public BlinkImporterFactory(
             string name, string dataFolder, int primaryLevel = 2, string cookieFileName = "Cookies",
-            string defaultFolder = "Default", string profileFolderStarts = "Profile", string engineId = null)
+            string defaultFolder = "Default", string profileFolderStarts = "Profile",
+            string stateFileName = "Local State", string engineId = null)
             : base(engineId != null ? new[] { engineId } : null)
         {
             if (string.IsNullOrEmpty(name))
@@ -32,6 +37,7 @@ namespace SunokoLibrary.Application.Browsers
             _name = name;
             _dataFolder = dataFolder != null ? Utility.ReplacePathSymbols(dataFolder) : null;
             _primaryLevel = primaryLevel;
+            _stateFileName = stateFileName;
             _cookieFileName = cookieFileName;
             _defaultFolderName = defaultFolder;
             _profileFolderStarts = profileFolderStarts;
@@ -41,6 +47,7 @@ namespace SunokoLibrary.Application.Browsers
         int _primaryLevel;
         string _name;
         string _dataFolder;
+        string _stateFileName;
         string _cookieFileName;
         string _defaultFolderName;
         string _profileFolderStarts;
@@ -68,18 +75,44 @@ namespace SunokoLibrary.Application.Browsers
         /// </summary>
         IEnumerable<ICookieImporter> GetProfiles()
         {
-            var paths = Enumerable.Empty<ICookieImporter>();
-            if (Directory.Exists(_dataFolder))
-            {
-                paths = Directory.EnumerateDirectories(_dataFolder)
-                    .Where(path => Path.GetFileName(path).StartsWith(_profileFolderStarts, StringComparison.OrdinalIgnoreCase))
-                    .Select(path => Path.Combine(path, _cookieFileName))
-                    .Where(path => File.Exists(path))
-                    .Select(path => (ICookieImporter)new BlinkCookieImporter(new BrowserConfig(
-                        _name, Path.GetFileName(Path.GetDirectoryName(path)), path, EngineIds[0], false), _primaryLevel));
-                return paths;
-            }
+#if NET20
+            if (!Directory.Exists(_dataFolder))
+                return Enumerable.Empty<ICookieImporter>();
+
+            var paths = Directory.EnumerateDirectories(_dataFolder)
+                .Where(path => Path.GetFileName(path).StartsWith(_profileFolderStarts, StringComparison.OrdinalIgnoreCase))
+                .Select(path => Path.Combine(path, _cookieFileName))
+                .Where(path => File.Exists(path))
+                .Select(path => (ICookieImporter)new BlinkCookieImporter(new BrowserConfig(
+                    _name, Path.GetFileName(Path.GetDirectoryName(path)), path, EngineIds[0], false), _primaryLevel));
             return paths;
+#else
+            if (!Directory.Exists(_dataFolder))
+                return Enumerable.Empty<ICookieImporter>();
+
+            string stateTxt;
+            try { stateTxt = File.ReadAllText(Path.Combine(_dataFolder, _stateFileName)); }
+            catch (IOException) { return Enumerable.Empty<ICookieImporter>(); }
+
+            var stateJson = (JObject)JToken.Parse(stateTxt);
+            var paths = stateJson
+                .Cast<JProperty>()
+                .Where(item => item.Name == "profile").Take(1).SelectMany(item => item.Value)
+                .Cast<JProperty>()
+                .Where(item => item.Name == "info_cache").Take(1).SelectMany(item => item.Value)
+                .Cast<JProperty>()
+                .Where(item => item.Name != "Default")
+                .Select(item =>
+                    new
+                    {
+                        ProfName = (string)item.Value["name"],
+                        CookiePath = Path.Combine(_dataFolder, item.Name, _cookieFileName)
+                    })
+                .Where(item => File.Exists(item.CookiePath))
+                .Select(item => (ICookieImporter)new BlinkCookieImporter(new BrowserConfig(
+                    _name, item.ProfName, item.CookiePath, EngineIds[0], false), _primaryLevel));
+            return paths;
+#endif
         }
     }
 }

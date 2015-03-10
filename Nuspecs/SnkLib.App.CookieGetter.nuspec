@@ -2,7 +2,7 @@
 <package>
     <metadata>
         <id>SnkLib.App.CookieGetter</id>
-        <version>2.0.1.0</version>
+        <version>2.1.0.0</version>
         <title>SnkLib.App.CookieGetter</title>
         <authors>namoshika</authors>
         <owners>namoshika</owners>
@@ -18,12 +18,14 @@
         </references>
         <dependencies>
             <group targetFramework="net45">
+                <dependency id="Newtonsoft.Json" version="6.0.8" />
                 <dependency id="System.Data.SQLite.Core" version="1.0.94.0" />
             </group>
             <group targetFramework="net40">
-                <dependency id="System.Data.SQLite.Core" version="1.0.94.0" />
                 <dependency id="Microsoft.Bcl.Async" version="1.0.168" />
                 <dependency id="Microsoft.Bcl.Build" version="1.0.14" />
+                <dependency id="Newtonsoft.Json" version="6.0.8" />
+                <dependency id="System.Data.SQLite.Core" version="1.0.94.0" />
             </group>
         </dependencies>
     </metadata>
