@@ -30,7 +30,16 @@ namespace Hal.CookieGetterSharp
         { get { return _isStandalone ? _isAvailable : GetValue(() => _owner.Importer.IsAvailable); } }
         public string Name
         {
-            get { return _isStandalone ? _name : GetValue(() => _owner.Importer.Config.BrowserName); }
+            get
+            {
+                if (_isStandalone)
+                    return _name;
+
+                var browName = GetValue(() => _owner.Importer.Config.BrowserName);
+                var profName = GetValue(() => _owner.Importer.Config.ProfileName);
+                return profName == "Default" || string.IsNullOrEmpty(profName)
+                    ? browName : string.Join(" ", new[] { browName, profName });
+            }
             internal set
             {
                 if (_isStandalone)
