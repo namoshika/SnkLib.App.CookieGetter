@@ -17,11 +17,11 @@ namespace SunokoLibrary.Application.Browsers
     public class IEPMCookieImporter : IECookieImporter
     {
 #pragma warning disable 1591
-        public IEPMCookieImporter(BrowserConfig config, int primaryLevel) : base(config, primaryLevel) { }
+        public IEPMCookieImporter(CookieSourceInfo info, int primaryLevel) : base(info, primaryLevel) { }
 
         public override bool IsAvailable { get { return Win32Api.GetIEVersion().Major >= 8; } }
-        public override ICookieImporter Generate(BrowserConfig config)
-        { return new IEPMCookieImporter(config, PrimaryLevel); }
+        public override ICookieImporter Generate(CookieSourceInfo newInfo)
+        { return new IEPMCookieImporter(newInfo, PrimaryLevel); }
         protected override CookieImportResult ProtectedGetCookies(Uri targetUrl)
         {
             if (IsAvailable == false)

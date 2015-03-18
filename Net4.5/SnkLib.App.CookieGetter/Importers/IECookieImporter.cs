@@ -15,10 +15,10 @@ namespace SunokoLibrary.Application.Browsers
     {
 #pragma warning disable 1591
 
-        public IECookieImporter(BrowserConfig config, int primaryLevel) : base(config, CookiePathType.Directory, primaryLevel) { }
+        public IECookieImporter(CookieSourceInfo info, int primaryLevel) : base(info, CookiePathType.Directory, primaryLevel) { }
         public override bool IsAvailable { get { return true; } }
-        public override ICookieImporter Generate(BrowserConfig config)
-        { return new IECookieImporter(config, PrimaryLevel); }
+        public override ICookieImporter Generate(CookieSourceInfo newInfo)
+        { return new IECookieImporter(newInfo, PrimaryLevel); }
         protected override CookieImportResult ProtectedGetCookies(Uri targetUrl)
         {
             string cookiesText;

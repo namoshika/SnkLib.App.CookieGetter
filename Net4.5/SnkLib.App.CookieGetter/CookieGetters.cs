@@ -49,7 +49,7 @@ namespace SunokoLibrary.Application
         {
             return _factoryList
                 .SelectMany(item => item.GetCookieImporters())
-                .GroupBy(item => item.Config)
+                .GroupBy(item => item.SourceInfo)
                 .Select(grp => grp.First())
                 .Where(item => item.IsAvailable || !availableOnly).ToArray();
         }
@@ -58,7 +58,7 @@ namespace SunokoLibrary.Application
         {
             return Task.Factory.StartNew(() => _factoryList
                 .SelectMany(item => item.GetCookieImporters())
-                .GroupBy(item => item.Config)
+                .GroupBy(item => item.SourceInfo)
                 .Select(grp => grp.First())
                 .Where(item => item.IsAvailable || !availableOnly).ToArray());
         }
@@ -67,27 +67,27 @@ namespace SunokoLibrary.Application
 
         /// <summary>
         /// 設定値を指定したICookieImporterを取得します。アプリ終了時に直前まで使用していた
-        /// ICookieImporterのConfigを設定として保存すれば、起動時にConfigをこのメソッドに
+        /// ICookieImporterのSourceInfoを設定として保存すれば、起動時にSourceInfoをこのメソッドに
         /// 渡す事で適切なICookieImporterを再取得する事ができます。
         /// </summary>
-        /// <param name="targetConfig">再取得対象のブラウザの構成情報</param>
+        /// <param name="targetInfo">再取得対象のブラウザの構成情報</param>
         /// <param name="allowDefault">取得不可の場合に既定のCookieImporterを返すかを指定できます。</param>
-        #region // GetInstanceAsync(BrowserConfig, bool)
+        #region // GetInstanceAsync(CookieSourceInfo, bool)
 #if NET20
-        public ICookieImporter GetInstance(BrowserConfig targetConfig = null, bool allowDefault = true)
+        public ICookieImporter GetInstance(CookieSourceInfo targetInfo = null, bool allowDefault = true)
         {
             var foundImporter = null as ICookieImporter;
             var importerList = GetInstances(false);
 
-            if (targetConfig != null)
+            if (targetInfo != null)
             {
-                //引数targetConfigと同一のImporterを探す。
+                //引数targetInfoと同一のImporterを探す。
                 //あればそのまま使う。なければ登録されたジェネレータから新たに生成する。
-                foundImporter = importerList.FirstOrDefault(item => item.Config == targetConfig);
+                foundImporter = importerList.FirstOrDefault(item => item.SourceInfo == targetInfo);
                 ICookieImporterFactory foundFactory;
-                if (foundImporter == null && _factoryDict.TryGetValue(targetConfig.EngineId, out foundFactory))
+                if (foundImporter == null && _factoryDict.TryGetValue(targetInfo.EngineId, out foundFactory))
                 {
-                    foundImporter = foundFactory.GetCookieImporter(targetConfig);
+                    foundImporter = foundFactory.GetCookieImporter(targetInfo);
                     foundImporter = foundImporter.IsAvailable ? foundImporter : null;
                 }
             }
@@ -97,20 +97,20 @@ namespace SunokoLibrary.Application
             return foundImporter;
         }
 #else
-        public async Task<ICookieImporter> GetInstanceAsync(BrowserConfig targetConfig = null, bool allowDefault = true)
+        public async Task<ICookieImporter> GetInstanceAsync(CookieSourceInfo targetInfo = null, bool allowDefault = true)
         {
             var foundImporter = null as ICookieImporter;
             var importerList = await GetInstancesAsync(false);
 
-            if (targetConfig != null)
+            if (targetInfo != null)
             {
-                //引数targetConfigと同一のImporterを探す。
+                //引数targetInfoと同一のImporterを探す。
                 //あればそのまま使う。なければ登録されたジェネレータから新たに生成する。
-                foundImporter = importerList.FirstOrDefault(item => item.Config == targetConfig);
+                foundImporter = importerList.FirstOrDefault(item => item.SourceInfo == targetInfo);
                 ICookieImporterFactory foundFactory;
-                if (foundImporter == null && _factoryDict.TryGetValue(targetConfig.EngineId, out foundFactory))
+                if (foundImporter == null && _factoryDict.TryGetValue(targetInfo.EngineId, out foundFactory))
                 {
-                    foundImporter = foundFactory.GetCookieImporter(targetConfig);
+                    foundImporter = foundFactory.GetCookieImporter(targetInfo);
                     foundImporter = foundImporter.IsAvailable ? foundImporter : null;
                 }
             }

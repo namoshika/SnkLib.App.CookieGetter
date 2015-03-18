@@ -85,14 +85,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\SnkLib.App.CookieGetter\BrowserConfig.cs">
-      <Link>Core\BrowserConfig.cs</Link>
-    </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\BrowserSelector.cs">
-      <Link>Core\BrowserSelector.cs</Link>
-    </Compile>
     <Compile Include="..\SnkLib.App.CookieGetter\CookieGetters.cs">
       <Link>Core\CookieGetters.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\CookieSourceInfo.cs">
+      <Link>Core\CookieSourceInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\CookieSourceSelector.cs">
+      <Link>Core\CookieSourceSelector.cs</Link>
     </Compile>
     <Compile Include="..\SnkLib.App.CookieGetter\Factories\BlinkImporterFactory.cs">
       <Link>Core\Factories\BlinkImporterFactory.cs</Link>

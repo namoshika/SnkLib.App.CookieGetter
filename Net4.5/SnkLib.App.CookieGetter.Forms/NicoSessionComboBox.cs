@@ -20,11 +20,11 @@ namespace SunokoLibrary.Windows.Forms
         protected override void InitLayout()
         {
             base.InitLayout();
-            Initialize(new BrowserSelector(CookieGetters.Default, importer => new NicoAccountSelectorItem(importer)));
+            Initialize(new CookieSourceSelector(CookieGetters.Default, importer => new NicoAccountSelectorItem(importer)));
         }
 #pragma warning restore 1591
 
-        class NicoAccountSelectorItem : BrowserItem
+        class NicoAccountSelectorItem : CookieSourceItem
         {
             public NicoAccountSelectorItem(ICookieImporter importer) : base(importer) { }
             string _accountName, _displayText;
@@ -49,9 +49,9 @@ namespace SunokoLibrary.Windows.Forms
             public async override void Initialize()
             {
                 var baseText = string.Format("{0}{1}{2}",
-                    Importer.Config.IsCustomized ? "カスタム設定 " : string.Empty,
-                    Importer.Config.BrowserName,
-                    Importer.Config.ProfileName.ToLowerInvariant() == "default" ? string.Empty : string.Format(" {0}", Importer.Config.ProfileName));
+                    Importer.SourceInfo.IsCustomized ? "カスタム設定 " : string.Empty,
+                    Importer.SourceInfo.BrowserName,
+                    Importer.SourceInfo.ProfileName.ToLowerInvariant() == "default" ? string.Empty : string.Format(" {0}", Importer.SourceInfo.ProfileName));
                 DisplayText = string.Format("{0} (loading...)", baseText);
                 AccountName = await GetUserName(Importer);
                 DisplayText = string.IsNullOrEmpty(AccountName) == false

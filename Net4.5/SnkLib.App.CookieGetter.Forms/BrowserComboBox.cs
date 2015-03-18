@@ -22,12 +22,12 @@ namespace SunokoLibrary.Windows.Forms
         /// ブラウザ選択のViewModelを取得、設定します。
         /// </summary>
         [Browsable(false), DefaultValue(null)]
-        public BrowserSelector Selector { get; private set; }
+        public CookieSourceSelector Selector { get; private set; }
 
         /// <summary>
         /// 指定したViewModelでコントロールを初期化します。
         /// </summary>
-        public void Initialize(BrowserSelector viewModel)
+        public void Initialize(CookieSourceSelector viewModel)
         {
             if (DesignMode)
                 return;
@@ -52,18 +52,18 @@ namespace SunokoLibrary.Windows.Forms
         public async Task ShowCookieDialogAsync()
         {
             var currentImporter = Selector.SelectedImporter;
-            var currentCookiePath = currentImporter.Config.CookiePath;
-            BrowserConfig newConfig = null;
+            var currentCookiePath = currentImporter.SourceInfo.CookiePath;
+            CookieSourceInfo newInfo = null;
             DialogResult res;
             switch (currentImporter.CookiePathType)
             {
                 case CookiePathType.Directory:
                     if (System.IO.Directory.Exists(currentCookiePath))
-                        openFolderDialog.SelectedPath = currentImporter.Config.CookiePath;
+                        openFolderDialog.SelectedPath = currentImporter.SourceInfo.CookiePath;
                     if ((res = openFolderDialog.ShowDialog()) == DialogResult.OK)
                     {
                         currentCookiePath = openFolderDialog.SelectedPath;
-                        newConfig = currentImporter.Config.GenerateCopy(cookiePath: currentCookiePath);
+                        newInfo = currentImporter.SourceInfo.GenerateCopy(cookiePath: currentCookiePath);
                     }
                     break;
                 case CookiePathType.File:
@@ -75,14 +75,14 @@ namespace SunokoLibrary.Windows.Forms
                     if ((res = openFileDialog.ShowDialog()) == DialogResult.OK)
                     {
                         currentCookiePath = openFileDialog.FileName;
-                        newConfig = currentImporter.Config.GenerateCopy(cookiePath: currentCookiePath);
+                        newInfo = currentImporter.SourceInfo.GenerateCopy(cookiePath: currentCookiePath);
                     }
                     break;
                 default:
                     return;
             }
             if (res == System.Windows.Forms.DialogResult.OK)
-                await Selector.SetConfigAsync(newConfig);
+                await Selector.SetInfoAsync(newInfo);
         }
 
 #pragma warning disable 1591
@@ -124,7 +124,7 @@ namespace SunokoLibrary.Windows.Forms
                 case NotifyCollectionChangedAction.Add:
                     for (var i = 0; i < e.NewItems.Count; i++)
                     {
-                        var item = (BrowserItem)e.NewItems[i];
+                        var item = (CookieSourceItem)e.NewItems[i];
                         Items.Insert(e.NewStartingIndex + i, item.DisplayText ?? string.Empty);
                         item.PropertyChanged += _selector_item_PropertyChanged;
                     }
@@ -132,14 +132,14 @@ namespace SunokoLibrary.Windows.Forms
                 case NotifyCollectionChangedAction.Remove:
                     for (var i = 0; i < e.OldItems.Count; i++)
                     {
-                        var item = (BrowserItem)e.OldItems[i];
+                        var item = (CookieSourceItem)e.OldItems[i];
                         item.PropertyChanged -= _selector_item_PropertyChanged;
                         Items.RemoveAt(e.OldStartingIndex + i);
                     }
                     break;
                 case NotifyCollectionChangedAction.Replace:
-                    var oldItem = (BrowserItem)e.OldItems[0];
-                    var newItem = (BrowserItem)e.NewItems[0];
+                    var oldItem = (CookieSourceItem)e.OldItems[0];
+                    var newItem = (CookieSourceItem)e.NewItems[0];
                     oldItem.PropertyChanged -= _selector_item_PropertyChanged;
                     newItem.PropertyChanged += _selector_item_PropertyChanged;
                     Items[e.NewStartingIndex] = newItem.DisplayText ?? string.Empty;
@@ -156,7 +156,7 @@ namespace SunokoLibrary.Windows.Forms
             switch(e.PropertyName)
             {
                 case "DisplayText":
-                    var item = (BrowserItem)sender;
+                    var item = (CookieSourceItem)sender;
                     var idx = Selector.Items.IndexOf(item);
                     Items[idx] = item.DisplayText;
                     break;

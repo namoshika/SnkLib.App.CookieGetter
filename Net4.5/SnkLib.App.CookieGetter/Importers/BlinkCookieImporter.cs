@@ -15,20 +15,20 @@ namespace SunokoLibrary.Application.Browsers
     {
 #pragma warning disable 1591
 
-        public BlinkCookieImporter(BrowserConfig config, int primaryLevel) : base(config, primaryLevel) { }
+        public BlinkCookieImporter(CookieSourceInfo info, int primaryLevel) : base(info, primaryLevel) { }
         const string SELECT_QUERY_VERSION = "SELECT value FROM meta WHERE key='version';";
         const string SELECT_QUERY = "SELECT value, name, host_key, path, expires_utc FROM cookies";
         const string SELECT_QUERY_V7 = "SELECT encrypted_value, name, host_key, path, expires_utc FROM cookies";
 
-        public override ICookieImporter Generate(BrowserConfig config)
-        { return new BlinkCookieImporter(config, PrimaryLevel); }
+        public override ICookieImporter Generate(CookieSourceInfo newInfo)
+        { return new BlinkCookieImporter(newInfo, PrimaryLevel); }
         protected override CookieImportResult ProtectedGetCookies(Uri targetUrl)
         {
             if (IsAvailable == false)
                 return new CookieImportResult(null,CookieImportState.Unavailable);
             try
             {
-                var formatVersionRec = LookupEntry(Config.CookiePath, SELECT_QUERY_VERSION);
+                var formatVersionRec = LookupEntry(SourceInfo.CookiePath, SELECT_QUERY_VERSION);
                 int formatVersion;
                 if (formatVersionRec.Count == 0
                     || formatVersionRec[0].Length == 0
@@ -39,7 +39,7 @@ namespace SunokoLibrary.Application.Browsers
                 query = formatVersion < 7 ? SELECT_QUERY : SELECT_QUERY_V7;
                 query = string.Format("{0} {1} ORDER BY creation_utc DESC", query, MakeWhere(targetUrl));
                 var cookies = new CookieCollection();
-                foreach (var item in LookupCookies(Config.CookiePath, query, rec => DataToCookie(rec, formatVersion)))
+                foreach (var item in LookupCookies(SourceInfo.CookiePath, query, rec => DataToCookie(rec, formatVersion)))
                     cookies.Add(item);
                 return new CookieImportResult(cookies, CookieImportState.Success);
             }

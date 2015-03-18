@@ -28,11 +28,11 @@ namespace SunokoLibrary.Application.Browsers
             public override IEnumerable<ICookieImporter> GetCookieImporters()
             {
                 var path = SearchCookieDirectory();
-                var config = new BrowserConfig("Lunascape Gecko", "Default", path, EngineIds[0], false);
-                return new ICookieImporter[] { new GeckoCookieImporter(config, 2) };
+                var info = new CookieSourceInfo("Lunascape Gecko", "Default", path, EngineIds[0], false);
+                return new ICookieImporter[] { new GeckoCookieImporter(info, 2) };
             }
-            public override ICookieImporter GetCookieImporter(BrowserConfig config)
-            { return new GeckoCookieImporter(config, 2); }
+            public override ICookieImporter GetCookieImporter(CookieSourceInfo sourceInfo)
+            { return new GeckoCookieImporter(sourceInfo, 2); }
             /// <summary>
             /// Lunascape6のプラグインフォルダからFirefoxのCookieが保存されているパスを検索します。
             /// </summary>
@@ -61,11 +61,11 @@ namespace SunokoLibrary.Application.Browsers
             public override IEnumerable<ICookieImporter> GetCookieImporters()
             {
                 var path = SearchCookieDirectory();
-                var config = new BrowserConfig("Lunascape Webkit", "Default", path, EngineIds[0], false);
-                return new ICookieImporter[] { new WebkitQtCookieImporter(config, 2) };
+                var info = new CookieSourceInfo("Lunascape Webkit", "Default", path, EngineIds[0], false);
+                return new ICookieImporter[] { new WebkitQtCookieImporter(info, 2) };
             }
-            public override ICookieImporter GetCookieImporter(BrowserConfig config)
-            { return new WebkitQtCookieImporter(config, 2); }
+            public override ICookieImporter GetCookieImporter(CookieSourceInfo sourceInfo)
+            { return new WebkitQtCookieImporter(sourceInfo, 2); }
             /// <summary>
             /// Lunascape6のプラグインフォルダからFirefoxのCookieが保存されているパスを検索する
             /// </summary>

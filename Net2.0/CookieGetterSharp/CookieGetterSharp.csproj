@@ -71,11 +71,11 @@
     <Compile Include="..\..\Net4.5\CookieGetterSharp\Utility.cs">
       <Link>Utility.cs</Link>
     </Compile>
-    <Compile Include="..\..\net4.5\snklib.app.cookiegetter\BrowserConfig.cs">
-      <Link>Core\BrowserConfig.cs</Link>
-    </Compile>
     <Compile Include="..\..\net4.5\snklib.app.cookiegetter\CookieGetters.cs">
       <Link>Core\CookieGetters.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\SnkLib.App.CookieGetter\CookieSourceInfo.cs">
+      <Link>Core\CookieSourceInfo.cs</Link>
     </Compile>
     <Compile Include="..\..\net4.5\snklib.app.cookiegetter\factories\BlinkImporterFactory.cs">
       <Link>Core\Factories\BlinkImporterFactory.cs</Link>

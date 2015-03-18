@@ -17,11 +17,11 @@ namespace SunokoLibrary.Application.Browsers
             if (!System.IO.File.Exists(path))
                 path = null;
 
-            var config = new BrowserConfig(name, "Default", path, EngineIds[0], false);
-            return new ICookieImporter[] { new BlinkCookieImporter(config, 2) };
+            var info = new CookieSourceInfo(name, "Default", path, EngineIds[0], false);
+            return new ICookieImporter[] { new BlinkCookieImporter(info, 2) };
         }
-        public override ICookieImporter GetCookieImporter(BrowserConfig config)
-        { return new BlinkCookieImporter(config, 2); }
+        public override ICookieImporter GetCookieImporter(CookieSourceInfo sourceInfo)
+        { return new BlinkCookieImporter(sourceInfo, 2); }
 #pragma warning restore 1591
 
         const string COOKIEPATH = "%APPDATA%\\Maxthon3\\Users\\guest\\Cookie\\Cookie.dat";

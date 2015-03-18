@@ -14,11 +14,11 @@ namespace SunokoLibrary.Application.Browsers
     {
 #pragma warning disable 1591
 
-        public GeckoCookieImporter(BrowserConfig config, int primaryLevel) : base(config, primaryLevel) { }
+        public GeckoCookieImporter(CookieSourceInfo info, int primaryLevel) : base(info, primaryLevel) { }
         const string SELECT_QUERY = "SELECT value, name, host, path, expiry FROM moz_cookies";
 
-        public override ICookieImporter Generate(BrowserConfig config)
-        { return new GeckoCookieImporter(config, PrimaryLevel); }
+        public override ICookieImporter Generate(CookieSourceInfo newInfo)
+        { return new GeckoCookieImporter(newInfo, PrimaryLevel); }
         protected override CookieImportResult ProtectedGetCookies(Uri targetUrl)
         {
             if (IsAvailable == false)
@@ -27,7 +27,7 @@ namespace SunokoLibrary.Application.Browsers
             {
                 var cookies = new CookieCollection();
                 var query = string.Format("{0} {1} ORDER BY expiry", SELECT_QUERY, MakeWhere(targetUrl));
-                foreach (var item in LookupCookies(Config.CookiePath, query, DataToCookie))
+                foreach (var item in LookupCookies(SourceInfo.CookiePath, query, DataToCookie))
                     cookies.Add(item);
                 return new CookieImportResult(cookies, CookieImportState.Success);
             }

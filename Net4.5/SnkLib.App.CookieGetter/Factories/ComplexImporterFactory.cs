@@ -27,12 +27,12 @@ namespace SunokoLibrary.Application.Browsers
                 .ToArray());
             return importers;
         }
-        public ICookieImporter GetCookieImporter(BrowserConfig config)
+        public ICookieImporter GetCookieImporter(CookieSourceInfo sourceInfo)
         {
             ICookieImporterFactory manager;
-            if (!_pnirBrowserManagers.TryGetValue(config.EngineId, out manager))
-                throw new ArgumentException("引数configのEngineIdsに対応していません。");
-            return manager.GetCookieImporter(config);
+            if (!_pnirBrowserManagers.TryGetValue(sourceInfo.EngineId, out manager))
+                throw new ArgumentException("引数infoのEngineIdsに対応していません。");
+            return manager.GetCookieImporter(sourceInfo);
         }
 
 #pragma warning restore 1591

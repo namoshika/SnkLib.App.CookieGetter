@@ -37,7 +37,7 @@ namespace SunokoLibrary.Application.Browsers
 
             return browsers.SelectMany(item => item.GetCookieImporters());
         }
-        public abstract override ICookieImporter GetCookieImporter(BrowserConfig config);
+        public abstract override ICookieImporter GetCookieImporter(CookieSourceInfo sourceInfo);
         protected abstract ICookieImporterFactory Generate(string appDataPath, string userDataPath, string engineId);
 #pragma warning restore 1591
 
@@ -101,8 +101,8 @@ namespace SunokoLibrary.Application.Browsers
     {
 #pragma warning disable 1591
         public SmartBlinkBrowserManager() : base("User Data", CookiePathType.Directory) { }
-        public override ICookieImporter GetCookieImporter(BrowserConfig config)
-        { return new BlinkCookieImporter(config, 2); }
+        public override ICookieImporter GetCookieImporter(CookieSourceInfo sourceInfo)
+        { return new BlinkCookieImporter(sourceInfo, 2); }
         protected override ICookieImporterFactory Generate(string appDataPath, string userDataPath, string engineId)
         {
             var appName = Path.GetDirectoryName(userDataPath
@@ -121,8 +121,8 @@ namespace SunokoLibrary.Application.Browsers
     {
 #pragma warning disable 1591
         public SmartGeckoBrowserManager() : base("profiles.ini", CookiePathType.File) { }
-        public override ICookieImporter GetCookieImporter(BrowserConfig config)
-        { return new GeckoCookieImporter(config, 2); }
+        public override ICookieImporter GetCookieImporter(CookieSourceInfo sourceInfo)
+        { return new GeckoCookieImporter(sourceInfo, 2); }
         protected override ICookieImporterFactory Generate(string appDataPath, string userDataPath, string engineId)
         {
             var appName = Path.GetDirectoryName(userDataPath

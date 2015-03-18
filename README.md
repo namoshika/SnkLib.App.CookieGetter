@@ -78,11 +78,11 @@ Properties.Settings.Default.ProfileName = cookieGetter.Config.ProfileName;
 Properties.Settings.Default.CookiePath = cookieGetter.Config.CookiePath;
 Properties.Settings.Default.Save();
 //直接的に構成を保存することもできます。
-Properties.Settings.Default.SelectedBrowserConfig = cookieGetter.Config
+Properties.Settings.Default.SelectedGetterInfo = cookieGetter.SourceInfo
 
 //任意のBrowserConfigから適切なGetterを取得します。
 //適切なものが見つからない場合は適当なのを見繕うなど、次回起動時の設定の
 //復元が楽になるように作っています。
 var currentGetter = await CookieGetters.GetInstanceAsync(
-  Properties.Settings.Default.SelectedBrowserConfig);
+  Properties.Settings.Default.SelectedGetterInfo);
 ```

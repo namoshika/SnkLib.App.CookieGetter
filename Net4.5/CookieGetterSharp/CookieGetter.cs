@@ -18,7 +18,7 @@ namespace Hal.CookieGetterSharp
         internal CookieGetter(ICookieImporter importer)
         {
             Importer = importer;
-            Status = new CookieStatus(this, ConvertBrowserType(importer.Config.BrowserName));
+            Status = new CookieStatus(this, ConvertBrowserType(importer.SourceInfo.BrowserName));
         }
         internal ICookieImporter Importer { get; set; }
         public CookieStatus Status { get; private set; }

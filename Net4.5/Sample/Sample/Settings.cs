@@ -5,10 +5,10 @@ namespace Sample.Properties
     internal sealed partial class Settings
     {
         [UserScopedSetting, SettingsSerializeAs(SettingsSerializeAs.String)]
-        public SunokoLibrary.Application.BrowserConfig SelectedBrowserConfig
+        public SunokoLibrary.Application.CookieSourceInfo SelectedSourceInfo
         {
-            get { return (SunokoLibrary.Application.BrowserConfig)this["SelectedBrowserConfig"]; }
-            set { this["SelectedBrowserConfig"] = value; }
+            get { return (SunokoLibrary.Application.CookieSourceInfo)this["SelectedSourceInfo"]; }
+            set { this["SelectedSourceInfo"] = value; }
         }
     }
 }

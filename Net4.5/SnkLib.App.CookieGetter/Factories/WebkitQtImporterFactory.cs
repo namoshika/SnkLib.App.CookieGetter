@@ -13,8 +13,8 @@ namespace SunokoLibrary.Application.Browsers
 #pragma warning disable 1591
         public override IEnumerable<ICookieImporter> GetCookieImporters()
         { return Enumerable.Empty<ICookieImporter>(); }
-        public override ICookieImporter GetCookieImporter(BrowserConfig config)
-        { return new WebkitQtCookieImporter(config, 2); }
+        public override ICookieImporter GetCookieImporter(CookieSourceInfo sourceInfo)
+        { return new WebkitQtCookieImporter(sourceInfo, 2); }
 #pragma warning restore 1591
     }
 }

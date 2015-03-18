@@ -16,18 +16,18 @@ namespace SunokoLibrary.Application.Browsers
 #pragma warning disable 1591
         //クラス命名センスとしてwininet.dllのFindNextUrlCacheEntryの文脈を用いる。
         //純粋にapi上で片付ける方法が不明なのでwininetのapi自体は使っていない。
-        public IEFindCacheCookieImporter(BrowserConfig config, int primaryLevel)
-            : base(config, CookiePathType.Directory, primaryLevel) { }
+        public IEFindCacheCookieImporter(CookieSourceInfo info, int primaryLevel)
+            : base(info, CookiePathType.Directory, primaryLevel) { }
         public override bool IsAvailable
         {
             get
             {
-                return string.IsNullOrEmpty(Config.CookiePath)
-                    ? false : System.IO.Directory.Exists(Config.CookiePath);
+                return string.IsNullOrEmpty(SourceInfo.CookiePath)
+                    ? false : System.IO.Directory.Exists(SourceInfo.CookiePath);
             }
         }
-        public override ICookieImporter Generate(BrowserConfig config)
-        { return new IEFindCacheCookieImporter(config, PrimaryLevel); }
+        public override ICookieImporter Generate(CookieSourceInfo newInfo)
+        { return new IEFindCacheCookieImporter(newInfo, PrimaryLevel); }
         protected override CookieImportResult ProtectedGetCookies(Uri targetUrl)
         {
             if (IsAvailable == false)
@@ -37,7 +37,7 @@ namespace SunokoLibrary.Application.Browsers
             try
             {
                 //関係のあるファイルだけ調べることによってパフォーマンスを向上させる
-                cookieList = Directory.EnumerateFiles(Config.CookiePath, "*.txt")
+                cookieList = Directory.EnumerateFiles(SourceInfo.CookiePath, "*.txt")
                     .Select(filePath => ReadAllTextIfHasSendableCookie(filePath, targetUrl))
                     .Where(data => string.IsNullOrEmpty(data) == false)
                     .SelectMany(data => ParseCookies(data))

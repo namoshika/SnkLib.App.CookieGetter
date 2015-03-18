@@ -54,8 +54,8 @@ namespace SunokoLibrary.Application.Browsers
 
         public override IEnumerable<ICookieImporter> GetCookieImporters()
         { return GetDefaultProfiles().Concat(GetProfiles()); }
-        public override ICookieImporter GetCookieImporter(BrowserConfig config)
-        { return new BlinkCookieImporter(config, 2); }
+        public override ICookieImporter GetCookieImporter(CookieSourceInfo sourceInfo)
+        { return new BlinkCookieImporter(sourceInfo, 2); }
 #pragma warning restore 1591
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace SunokoLibrary.Application.Browsers
             string path = null;
             if (_dataFolder != null)
                 path = Path.Combine(_dataFolder, _defaultFolderName, _cookieFileName);
-            var conf = new BrowserConfig(_name, _defaultFolderName, path, EngineIds[0], false);
+            var conf = new CookieSourceInfo(_name, _defaultFolderName, path, EngineIds[0], false);
             return new ICookieImporter[] { new BlinkCookieImporter(conf, _primaryLevel) };
         }
         /// <summary>
@@ -83,7 +83,7 @@ namespace SunokoLibrary.Application.Browsers
                 .Where(path => Path.GetFileName(path).StartsWith(_profileFolderStarts, StringComparison.OrdinalIgnoreCase))
                 .Select(path => Path.Combine(path, _cookieFileName))
                 .Where(path => File.Exists(path))
-                .Select(path => (ICookieImporter)new BlinkCookieImporter(new BrowserConfig(
+                .Select(path => (ICookieImporter)new BlinkCookieImporter(new CookieSourceInfo(
                     _name, Path.GetFileName(Path.GetDirectoryName(path)), path, EngineIds[0], false), _primaryLevel));
             return paths;
 #else
@@ -109,7 +109,7 @@ namespace SunokoLibrary.Application.Browsers
                         CookiePath = Path.Combine(_dataFolder, item.Name, _cookieFileName)
                     })
                 .Where(item => File.Exists(item.CookiePath))
-                .Select(item => (ICookieImporter)new BlinkCookieImporter(new BrowserConfig(
+                .Select(item => (ICookieImporter)new BlinkCookieImporter(new CookieSourceInfo(
                     _name, item.ProfName, item.CookiePath, EngineIds[0], false), _primaryLevel));
             return paths;
 #endif

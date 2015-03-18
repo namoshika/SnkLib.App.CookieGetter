@@ -12,9 +12,9 @@ namespace SunokoLibrary.Application
     /// <summary>
     /// Cookie取得用の項目を保持します。
     /// </summary>
-    [TypeConverter(typeof(BrowserConfigConverter))]
+    [TypeConverter(typeof(InfoConverter))]
     [DebuggerDisplay("{BrowserName,nq}({ProfileName,nq}): {CookiePath,nq}")]
-    public class BrowserConfig : IXmlSerializable
+    public class CookieSourceInfo : IXmlSerializable
     {
         /// <summary>
         /// 対象のブラウザの構成情報を指定してインスタンスを生成します。
@@ -24,7 +24,7 @@ namespace SunokoLibrary.Application
         /// <param name="cookiePath">Cookieファイルパス</param>
         /// <param name="engineId">ブラウザのエンジン識別子</param>
         /// <param name="isCustomized">ユーザ定義による設定かどうか</param>
-        public BrowserConfig(string browserName, string profileName, string cookiePath, string engineId, bool isCustomized)
+        public CookieSourceInfo(string browserName, string profileName, string cookiePath, string engineId, bool isCustomized)
         {
             BrowserName = browserName;
             ProfileName = profileName;
@@ -36,7 +36,7 @@ namespace SunokoLibrary.Application
         /// シリアル化用。使用しないでください。
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public BrowserConfig() { }
+        public CookieSourceInfo() { }
 
         /// <summary>
         /// ユーザーによるカスタム設定かを取得します。
@@ -61,15 +61,15 @@ namespace SunokoLibrary.Application
         /// <summary>
         /// 引数で指定された値で上書きしたコピーを生成します。
         /// </summary>
-        public BrowserConfig GenerateCopy(string name = null, string profileName = null, string cookiePath = null)
-        { return new BrowserConfig(name ?? BrowserName, profileName ?? ProfileName, cookiePath ?? CookiePath, EngineId, true); }
+        public CookieSourceInfo GenerateCopy(string name = null, string profileName = null, string cookiePath = null)
+        { return new CookieSourceInfo(name ?? BrowserName, profileName ?? ProfileName, cookiePath ?? CookiePath, EngineId, true); }
 
 #pragma warning disable 1591
         public override int GetHashCode()
         { return CookiePath == null ? 0 : CookiePath.GetHashCode(); }
         public override bool Equals(object obj)
         {
-            var target = obj as BrowserConfig;
+            var target = obj as CookieSourceInfo;
             if ((object)target == null)
                 return false;
 
@@ -78,7 +78,7 @@ namespace SunokoLibrary.Application
             return CookiePath == target.CookiePath &&
                 (!string.IsNullOrEmpty(CookiePath) || BrowserName == target.BrowserName && ProfileName == target.ProfileName);
         }
-        public static bool operator ==(BrowserConfig valueA, BrowserConfig valueB)
+        public static bool operator ==(CookieSourceInfo valueA, CookieSourceInfo valueB)
         {
             if(object.ReferenceEquals(valueA, valueB))
                 return true;
@@ -86,7 +86,7 @@ namespace SunokoLibrary.Application
                 return false;
             return valueA.Equals(valueB);
         }
-        public static bool operator !=(BrowserConfig valueA, BrowserConfig valueB)
+        public static bool operator !=(CookieSourceInfo valueA, CookieSourceInfo valueB)
         { return !(valueA == valueB); }
 
         System.Xml.Schema.XmlSchema IXmlSerializable.GetSchema() { return null; }
@@ -154,13 +154,13 @@ namespace SunokoLibrary.Application
         }
 #pragma warning restore 1591
 
-        class BrowserConfigConverter : TypeConverter
+        class InfoConverter : TypeConverter
         {
             public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
             { return sourceType == typeof(string); }
             public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
             {
-                const string BOM = "0123456789_BCC";
+                const string BOM = "0123456789_IC";
                 var text = value as string;
                 if (text == null || text.StartsWith(BOM) == false)
                     return base.ConvertFrom(context, culture, value);
@@ -190,21 +190,21 @@ namespace SunokoLibrary.Application
                         case "CookiePath": cookiePath = pair.Value; break;
                         case "EngineId": engineId = pair.Value; break;
                     }
-                var config = new BrowserConfig(browserName, profileName, cookiePath, engineId, isCustom);
-                return config;
+                var info = new CookieSourceInfo(browserName, profileName, cookiePath, engineId, isCustom);
+                return info;
             }
             public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
             {
                 if (destinationType == typeof(string))
                 {
-                    var config = value as BrowserConfig;
-                    var res = "0123456789_BCC" + string.Join(string.Empty, new Dictionary<string, string>()
+                    var info = value as CookieSourceInfo;
+                    var res = "0123456789_IC" + string.Join(string.Empty, new Dictionary<string, string>()
                         {
-                            { "IsCustomized", config.IsCustomized ? true.ToString() : false.ToString() },
-                            { "BrowserName", config.BrowserName },
-                            { "ProfileName", config.ProfileName },
-                            { "CookiePath", config.CookiePath },
-                            { "EngineId", config.EngineId },
+                            { "IsCustomized", info.IsCustomized ? true.ToString() : false.ToString() },
+                            { "BrowserName", info.BrowserName },
+                            { "ProfileName", info.ProfileName },
+                            { "CookiePath", info.CookiePath },
+                            { "EngineId", info.EngineId },
                         }
                         .Select(pair =>
                             string.Format("{0}:{1}:{2}", pair.Key, (pair.Value ?? string.Empty).Length, pair.Value))

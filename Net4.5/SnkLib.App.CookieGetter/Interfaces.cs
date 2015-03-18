@@ -19,7 +19,7 @@ namespace SunokoLibrary.Application
         /// <summary>
         /// Cookieを取得するブラウザに関する情報を取得します。
         /// </summary>
-        BrowserConfig Config { get; }
+        CookieSourceInfo SourceInfo { get; }
         /// <summary>
         /// Cookie保存の形態を取得します。
         /// </summary>
@@ -35,7 +35,7 @@ namespace SunokoLibrary.Application
         /// <summary>
         /// 自身と設定の異なるICookieImporterを生成します。
         /// </summary>
-        ICookieImporter Generate(BrowserConfig config);
+        ICookieImporter Generate(CookieSourceInfo newInfo);
         /// <summary>
         /// 指定されたURLとの通信に使えるCookieを返します。
         /// </summary>
@@ -126,9 +126,9 @@ namespace SunokoLibrary.Application
         /// <summary>
         /// 指定されたブラウザ構成情報からICookieImporterを取得します。
         /// </summary>
-        /// <param name="config">元となるブラウザ構成情報。</param>
+        /// <param name="sourceInfo">元となるブラウザ構成情報。</param>
         /// <returns>引数で指定されたブラウザを参照するインスタンス。</returns>
-        ICookieImporter GetCookieImporter(BrowserConfig config);
+        ICookieImporter GetCookieImporter(CookieSourceInfo sourceInfo);
     }
     /// <summary>
     /// 使用可能なICookieImporterの管理を行う機能を定義します。
@@ -149,16 +149,16 @@ namespace SunokoLibrary.Application
 
         /// <summary>
         /// 設定値を指定したICookieImporterを取得します。アプリ終了時に直前まで使用していた
-        /// ICookieImporterのConfigを設定として保存すれば、起動時にConfigをこのメソッドに
+        /// ICookieImporterのSourceInfoを設定として保存すれば、起動時にSourceInfoをこのメソッドに
         /// 渡す事で適切なICookieImporterを再生成してくれる。
         /// </summary>
-        /// <param name="targetConfig">再取得対象のブラウザの構成情報</param>
+        /// <param name="targetSourceInfo">再取得対象のブラウザの構成情報</param>
         /// <param name="allowDefault">取得不可の場合に既定のCookieImporterを返すかを指定できます。</param>
-        #region // GetInstanceAsync(BrowserConfig, bool)
+        #region // GetInstanceAsync(CookieSourceInfo, bool)
 #if NET20
-        ICookieImporter GetInstance(BrowserConfig targetConfig, bool allowDefault);
+        ICookieImporter GetInstance(CookieSourceInfo targetSourceInfo, bool allowDefault);
 #else
-        Task<ICookieImporter> GetInstanceAsync(BrowserConfig targetConfig, bool allowDefault);
+        Task<ICookieImporter> GetInstanceAsync(CookieSourceInfo targetSourceInfo, bool allowDefault);
 #endif
         #endregion
     }

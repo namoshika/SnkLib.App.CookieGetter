@@ -19,7 +19,7 @@ namespace SunokoLibrary.Application.Browsers
         public string[] EngineIds { get; protected set; }
 
         public abstract IEnumerable<ICookieImporter> GetCookieImporters();
-        public abstract ICookieImporter GetCookieImporter(BrowserConfig config);
+        public abstract ICookieImporter GetCookieImporter(CookieSourceInfo sourceInfo);
 #pragma warning restore 1591
     }
 }

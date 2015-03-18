@@ -13,27 +13,27 @@ namespace SunokoLibrary.Windows.ViewModels
     /// <summary>
     /// ブラウザ選択UI用ViewModel。CookieImportersとUIの間を取り持ち、UI側の状態遷移を保持します。
     /// </summary>
-    public class BrowserSelector : INotifyPropertyChanged
+    public class CookieSourceSelector : INotifyPropertyChanged
     {
         /// <summary>
         /// 指定されたManagerからの項目を使用するインスタンスを生成します。
         /// </summary>
         /// <param name="importerManager">使用するManager</param>
         /// <param name="itemGenerator">取得されたICookieImporterからブラウザ項目のViewModelを生成するメソッド</param>
-        public BrowserSelector(ICookieImporterManager importerManager, Func<ICookieImporter, BrowserItem> itemGenerator)
+        public CookieSourceSelector(ICookieImporterManager importerManager, Func<ICookieImporter, CookieSourceItem> itemGenerator)
         {
             _importerManager = importerManager;
             _itemGenerator = itemGenerator;
             _selectedIndex = -1;
             _isAllBrowserMode = false;
-            Items = new ObservableCollection<BrowserItem>();
+            Items = new ObservableCollection<CookieSourceItem>();
         }
         System.Threading.SemaphoreSlim _updateSem = new System.Threading.SemaphoreSlim(1);
         object _updaterSyn = new object();
         bool _isUpdating, _isAllBrowserMode, _addedCustom;
         int _selectedIndex;
         ICookieImporterManager _importerManager;
-        Func<ICookieImporter, BrowserItem> _itemGenerator;
+        Func<ICookieImporter, CookieSourceItem> _itemGenerator;
 
         /// <summary>
         /// メンバの内容の更新中であるかを取得します。
@@ -94,20 +94,20 @@ namespace SunokoLibrary.Windows.ViewModels
         /// <summary>
         /// 使用可能なブラウザを取得します。
         /// </summary>
-        public ObservableCollection<BrowserItem> Items { get; private set; }
+        public ObservableCollection<CookieSourceItem> Items { get; private set; }
         /// <summary>
         /// Itemsを更新します。
         /// </summary>
         public async Task UpdateAsync()
         {
             ICookieImporter currentImporter = null;
-            BrowserConfig currentConfig = null;
+            CookieSourceInfo currentInfo = null;
             try
             {
                 //設定復元用に選択中のブラウザを取得。
                 await _updateSem.WaitAsync();
                 currentImporter = SelectedImporter;
-                currentConfig = currentImporter != null ? currentImporter.Config : null;
+                currentInfo = currentImporter != null ? currentImporter.SourceInfo : null;
                 SelectedIndex = -1;
 
                 IsUpdating = true;
@@ -125,7 +125,7 @@ namespace SunokoLibrary.Windows.ViewModels
                             catch (Exception e)
                             {
                                 throw new CookieImportException(
-                                    string.Format("{0}の生成に失敗しました。", typeof(BrowserItem).Name), CookieImportState.UnknownError, e);
+                                    string.Format("{0}の生成に失敗しました。", typeof(CookieSourceItem).Name), CookieImportState.UnknownError, e);
                             }
                         });
 
@@ -139,8 +139,8 @@ namespace SunokoLibrary.Windows.ViewModels
                         Items.Add(item);
                 }
                 //更新前に選択していた項目を再選択させる
-                if (currentConfig != null)
-                    await PrivateSetConfigAsync(currentConfig);
+                if (currentInfo != null)
+                    await PrivateSetInfoAsync(currentInfo);
             }
             catch (CookieImportException e)
             {
@@ -158,14 +158,14 @@ namespace SunokoLibrary.Windows.ViewModels
         /// <summary>
         /// 任意のブラウザ構成を設定します。カスタム設定の構成も設定可能です。
         /// </summary>
-        /// <param name="config">ブラウザの構成設定</param>
-        public async Task SetConfigAsync(BrowserConfig config)
+        /// <param name="info">ブラウザの構成設定</param>
+        public async Task SetInfoAsync(CookieSourceInfo info)
         {
             try
             {
                 await _updateSem.WaitAsync();
                 IsUpdating = true;
-                await PrivateSetConfigAsync(config);
+                await PrivateSetInfoAsync(info);
             }
             catch (CookieImportException e)
             { System.Diagnostics.Trace.TraceInformation("選択中のブラウザの設定カスタマイズに失敗。", e); }
@@ -175,18 +175,18 @@ namespace SunokoLibrary.Windows.ViewModels
                 _updateSem.Release();
             }
         }
-        async Task PrivateSetConfigAsync(BrowserConfig config)
+        async Task PrivateSetInfoAsync(CookieSourceInfo info)
         {
-            //引数configが使えるImporterを取得する。無い場合は適当なのを見繕う
-            var importer = await _importerManager.GetInstanceAsync(config, true);
+            //引数infoが使えるImporterを取得する。無い場合は適当なのを見繕う
+            var importer = await _importerManager.GetInstanceAsync(info, true);
             lock (_updaterSyn)
             {
                 //取得したImporterのItems内での場所を検索する。
                 //idxがどのItemsも指定していない場合はカスタム設定を生成
-                var idx = Items.Select(item => item.Importer.Config).TakeWhile(conf => conf != importer.Config).Count();
+                var idx = Items.Select(item => item.Importer.SourceInfo).TakeWhile(conf => conf != importer.SourceInfo).Count();
                 if (idx == Items.Count)
                 {
-                    BrowserItem customItem;
+                    CookieSourceItem customItem;
                     try
                     {
                         customItem = _itemGenerator(importer);
@@ -195,7 +195,7 @@ namespace SunokoLibrary.Windows.ViewModels
                     catch (Exception e)
                     {
                         throw new CookieImportException(
-                            string.Format("{0}の生成に失敗しました。", typeof(BrowserItem).Name), CookieImportState.UnknownError, e);
+                            string.Format("{0}の生成に失敗しました。", typeof(CookieSourceItem).Name), CookieImportState.UnknownError, e);
                     }
                     if (_addedCustom)
                         Items[Items.Count - 1] = customItem;
@@ -234,10 +234,10 @@ namespace SunokoLibrary.Windows.ViewModels
                     return x.PrimaryLevel - y.PrimaryLevel;
                 else
                 {
-                    var xIdx = x.Config.BrowserName.IndexOf(' ');
-                    var yIdx = y.Config.BrowserName.IndexOf(' ');
-                    var xName = xIdx >= 0 ? x.Config.BrowserName.Substring(0, xIdx) : x.Config.BrowserName;
-                    var yName = yIdx >= 0 ? y.Config.BrowserName.Substring(0, yIdx) : y.Config.BrowserName;
+                    var xIdx = x.SourceInfo.BrowserName.IndexOf(' ');
+                    var yIdx = y.SourceInfo.BrowserName.IndexOf(' ');
+                    var xName = xIdx >= 0 ? x.SourceInfo.BrowserName.Substring(0, xIdx) : x.SourceInfo.BrowserName;
+                    var yName = yIdx >= 0 ? y.SourceInfo.BrowserName.Substring(0, yIdx) : y.SourceInfo.BrowserName;
                     return string.Compare(xName, yName);
                 }
             }
@@ -246,18 +246,18 @@ namespace SunokoLibrary.Windows.ViewModels
     /// <summary>
     /// ブラウザ選択UIにおける各ブラウザ項目用ViewModel。可視化対象のICookieImporterを持ち、UI上での項目表示を保持します。
     /// </summary>
-    public abstract class BrowserItem : INotifyPropertyChanged
+    public abstract class CookieSourceItem : INotifyPropertyChanged
     {
         /// <summary>
         /// 指定されたICookieImporterからインスタンスを生成します。
         /// </summary>
         /// <param name="importer">対象のブラウザ</param>
-        public BrowserItem(ICookieImporter importer)
+        public CookieSourceItem(ICookieImporter importer)
         {
             Importer = importer;
-            BrowserName = importer.Config.BrowserName;
-            ProfileName = importer.Config.ProfileName;
-            IsCustomized = importer.Config.IsCustomized;
+            BrowserName = importer.SourceInfo.BrowserName;
+            ProfileName = importer.SourceInfo.ProfileName;
+            IsCustomized = importer.SourceInfo.IsCustomized;
         }
         bool _isCustomized;
         string _browserName, _profileName;

@@ -35,8 +35,8 @@ namespace Hal.CookieGetterSharp
                 if (_isStandalone)
                     return _name;
 
-                var browName = GetValue(() => _owner.Importer.Config.BrowserName);
-                var profName = GetValue(() => _owner.Importer.Config.ProfileName);
+                var browName = GetValue(() => _owner.Importer.SourceInfo.BrowserName);
+                var profName = GetValue(() => _owner.Importer.SourceInfo.ProfileName);
                 return profName == "Default" || string.IsNullOrEmpty(profName)
                     ? browName : string.Join(" ", new[] { browName, profName });
             }
@@ -50,7 +50,7 @@ namespace Hal.CookieGetterSharp
         }
         public string CookiePath
         {
-            get { return _isStandalone ? _cookiePath : GetValue(() => _owner.Importer.Config.CookiePath); }
+            get { return _isStandalone ? _cookiePath : GetValue(() => _owner.Importer.SourceInfo.CookiePath); }
             set
             {
                 if (_isStandalone)
@@ -76,7 +76,7 @@ namespace Hal.CookieGetterSharp
             try
             {
                 _owner.Importer = _owner.Importer.Generate(
-                    _owner.Importer.Config.GenerateCopy(name, profileName, cookiePath));
+                    _owner.Importer.SourceInfo.GenerateCopy(name, profileName, cookiePath));
             }
             catch (CookieImportException e)
             { throw new CookieGetterException(e); }

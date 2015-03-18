@@ -14,9 +14,9 @@ namespace SunokoLibrary.Application.Browsers
     public class WebkitQtCookieImporter : CookieImporterBase
     {
 #pragma warning disable 1591
-        public WebkitQtCookieImporter(BrowserConfig config, int primaryLevel) : base(config, CookiePathType.File, primaryLevel) { }
-        public override ICookieImporter Generate(BrowserConfig config)
-        { return new WebkitQtCookieImporter(config, PrimaryLevel); }
+        public WebkitQtCookieImporter(CookieSourceInfo info, int primaryLevel) : base(info, CookiePathType.File, primaryLevel) { }
+        public override ICookieImporter Generate(CookieSourceInfo newInfo)
+        { return new WebkitQtCookieImporter(newInfo, PrimaryLevel); }
         protected override CookieImportResult ProtectedGetCookies(Uri targetUrl)
         {
             if (IsAvailable == false)
@@ -25,7 +25,7 @@ namespace SunokoLibrary.Application.Browsers
             {
                 var cookies = new CookieCollection();
                 var res = CookieImportState.ConvertError;
-                using (var sr = new System.IO.StreamReader(Config.CookiePath))
+                using (var sr = new System.IO.StreamReader(SourceInfo.CookiePath))
                     while (!sr.EndOfStream)
                     {
                         var line = sr.ReadLine();

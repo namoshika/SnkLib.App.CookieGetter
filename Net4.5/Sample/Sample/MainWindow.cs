@@ -20,7 +20,7 @@ namespace Sample
         {
             InitializeComponent();
             nicoSessionComboBox1.Selector.PropertyChanged += Selector_PropertyChanged;
-            var tsk = nicoSessionComboBox1.Selector.SetConfigAsync(Properties.Settings.Default.SelectedBrowserConfig);
+            var tsk = nicoSessionComboBox1.Selector.SetInfoAsync(Properties.Settings.Default.SelectedSourceInfo);
         }
         static readonly Uri TargetUrl = new Uri("http://live.nicovideo.jp/");
 
@@ -36,11 +36,11 @@ namespace Sample
                         var result = await currentGetter.GetCookiesAsync(TargetUrl);
                         var cookie = result.Status == CookieImportState.Success ? result.Cookies["user_session"] : null;
                         //UI更新
-                        txtCookiePath.Text = currentGetter.Config.CookiePath;
+                        txtCookiePath.Text = currentGetter.SourceInfo.CookiePath;
                         btnOpenCookieFileDialog.Enabled = true;
                         txtUserSession.Text = cookie != null ? cookie.Value : null;
                         txtUserSession.Enabled = result.Status == CookieImportState.Success;
-                        Properties.Settings.Default.SelectedBrowserConfig = currentGetter.Config;
+                        Properties.Settings.Default.SelectedSourceInfo = currentGetter.SourceInfo;
                         Properties.Settings.Default.Save();
                     }
                     else

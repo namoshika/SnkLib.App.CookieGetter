@@ -44,15 +44,15 @@ namespace SunokoLibrary.Application.Browsers
         public override IEnumerable<ICookieImporter> GetCookieImporters()
         {
             var importers = UserProfile.GetProfiles(_dataFolder, _iniFileName)
-                .Select(prof => new BrowserConfig(_name, prof.Name, Path.Combine(prof.Path, _cookieFileName), EngineIds[0], false))
+                .Select(prof => new CookieSourceInfo(_name, prof.Name, Path.Combine(prof.Path, _cookieFileName), EngineIds[0], false))
                 .Select(inf => (ICookieImporter)new GeckoCookieImporter(inf, _primaryLevel))
                 .ToArray();
             importers = importers.Length == 0
-                ? new ICookieImporter[] { new GeckoCookieImporter(new BrowserConfig(_name, "Default", null, EngineIds[0], false), _primaryLevel) } : importers;
+                ? new ICookieImporter[] { new GeckoCookieImporter(new CookieSourceInfo(_name, "Default", null, EngineIds[0], false), _primaryLevel) } : importers;
             return importers;
         }
-        public override ICookieImporter GetCookieImporter(BrowserConfig config)
-        { return new GeckoCookieImporter(config, 2); }
+        public override ICookieImporter GetCookieImporter(CookieSourceInfo sourceInfo)
+        { return new GeckoCookieImporter(sourceInfo, 2); }
 #pragma warning restore 1591
 
         /// <summary>
