@@ -58,7 +58,7 @@
 using SunokoLibrary.Application;
 
 //対応ブラウザからのCookieGetterリストの取得をします。
-var importableBrowsers = await CookieGetters.GetInstancesAsync(true);
+var importableBrowsers = await CookieGetters.Default.GetInstancesAsync(true);
 
 //Cookieの取得は以下のようにします。
 //引数として指定されたCookieContainerに取得結果を追加していく設計です。
@@ -83,6 +83,6 @@ Properties.Settings.Default.SelectedGetterInfo = cookieGetter.SourceInfo
 //任意のBrowserConfigから適切なGetterを取得します。
 //適切なものが見つからない場合は適当なのを見繕うなど、次回起動時の設定の
 //復元が楽になるように作っています。
-var currentGetter = await CookieGetters.GetInstanceAsync(
+var currentGetter = await CookieGetters.Default.GetInstanceAsync(
   Properties.Settings.Default.SelectedGetterInfo);
 ```
