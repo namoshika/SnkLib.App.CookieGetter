@@ -43,34 +43,42 @@ namespace SunokoLibrary.Application
         public static byte[] CryptProtectedData(byte[] unencryptedData)
         {
             //リソース確保
-            Win32Api.DATA_BLOB input;
-            input.pbData = Marshal.AllocHGlobal(unencryptedData.Length);
-            input.cbData = (uint)unencryptedData.Length;
-            Marshal.Copy(unencryptedData, 0, input.pbData, unencryptedData.Length);
+            var input = new Win32Api.DATA_BLOB();
             var output = new Win32Api.DATA_BLOB();
-            var dammy = new Win32Api.DATA_BLOB();
+            try
+            {
+                input.pbData = Marshal.AllocHGlobal(unencryptedData.Length);
+                input.cbData = (uint)unencryptedData.Length;
+                Marshal.Copy(unencryptedData, 0, input.pbData, unencryptedData.Length);
 
-            //復号化
-            bool isSucc;
-            isSucc = Win32Api.CryptProtectData(ref input, null, ref dammy, IntPtr.Zero, IntPtr.Zero, 0, ref output);
-            Trace.Assert(isSucc, "SnkLib.App.CookieGetter: error",
-                "CryptProtectedData()でエラーが発生しました。データ暗号化で予期せぬ失敗が発生しています。");
-            if (isSucc == false)
+                //復号化
+                var dammy = new Win32Api.DATA_BLOB();
+                var isSucc = Win32Api.CryptProtectData(ref input, null, ref dammy, IntPtr.Zero, IntPtr.Zero, 0, ref output);
+                Trace.Assert(isSucc,
+                    "SnkLib.App.CookieGetter: error",
+                    "CryptProtectedData()でエラーが発生しました。データ暗号化で予期せぬ失敗が発生しています。");
+                if (isSucc == false)
+                    return null;
+
+                //リソース解放
+                var cryptedBytes = new byte[output.cbData];
+                Marshal.Copy(output.pbData, cryptedBytes, 0, (int)output.cbData);
+                return cryptedBytes;
+            }
+            catch (DllNotFoundException e)
+            {
+                Trace.Fail(
+                    "SnkLib.App.CookieGetter: error",
+                    "CryptProtectedData()でエラーが発生しました。Win32API呼び出しで対象のdllが存在しませんでした。\r\n" + e.ToString());
                 return null;
-
-            //リソース解放
-            var decryptedBytes = new byte[output.cbData];
-            Marshal.Copy(output.pbData, decryptedBytes, 0, (int)output.cbData);
-            //output解放
-            isSucc = Win32Api.LocalFree(output.pbData) == IntPtr.Zero;
-            Trace.Assert(isSucc, "SnkLib.App.CookieGetter: error",
-                "CryptProtectedData()でエラーが発生しました。データ暗号化後のoutputリソース解放で予期せぬ失敗が発生しています。");
-            //input解放
-            isSucc = Win32Api.LocalFree(input.pbData) == IntPtr.Zero;
-            Trace.Assert(isSucc, "SnkLib.App.CookieGetter: error",
-                "CryptProtectedData()でエラーが発生しました。データ暗号化後のoutputリソース解放で予期せぬ失敗が発生しています。");
-
-            return decryptedBytes;
+            }
+            finally
+            {
+                if (input.pbData != null)
+                    Marshal.FreeHGlobal(input.pbData);
+                if (output.pbData != null)
+                    Marshal.FreeHGlobal(output.pbData);
+            }
         }
         /// <summary>
         /// CryptUnprotectDataで暗号化されたデータを復号化します。
@@ -80,34 +88,41 @@ namespace SunokoLibrary.Application
         public static byte[] DecryptProtectedData(byte[] encryptedData)
         {
             //リソース確保
-            Win32Api.DATA_BLOB input;
-            input.pbData = Marshal.AllocHGlobal(encryptedData.Length);
-            input.cbData = (uint)encryptedData.Length;
-            Marshal.Copy(encryptedData, 0, input.pbData, encryptedData.Length);
-            var output = new Win32Api.DATA_BLOB();
-            var dammy = new Win32Api.DATA_BLOB();
+            var input = new DATA_BLOB();
+            var output = new DATA_BLOB();
+            try
+            {
+                input.pbData = Marshal.AllocHGlobal(encryptedData.Length);
+                input.cbData = (uint)encryptedData.Length;
+                Marshal.Copy(encryptedData, 0, input.pbData, encryptedData.Length);
 
-            //復号化
-            bool isSucc;
-            isSucc = Win32Api.CryptUnprotectData(ref input, null, ref dammy, IntPtr.Zero, IntPtr.Zero, 0, ref output);
-            Trace.Assert(isSucc, "SnkLib.App.CookieGetter: error",
-                "DecryptProtectedData()でエラーが発生しました。データ復号化で予期せぬ失敗が発生しています。");
-            if (isSucc == false)
+                //復号化
+                var dammy = new DATA_BLOB();
+                var isSucc = Win32Api.CryptUnprotectData(ref input, null, ref dammy, IntPtr.Zero, IntPtr.Zero, 0, ref output);
+                Trace.Assert(isSucc,
+                    "SnkLib.App.CookieGetter: error",
+                    "DecryptProtectedData()でエラーが発生しました。データ復号化で予期せぬ失敗が発生しています。");
+                if (isSucc == false)
+                    return null;
+
+                var decryptedBytes = new byte[output.cbData];
+                Marshal.Copy(output.pbData, decryptedBytes, 0, (int)output.cbData);
+                return decryptedBytes;
+            }
+            catch (DllNotFoundException e)
+            {
+                Trace.Fail(
+                    "SnkLib.App.CookieGetter: error",
+                    "DecryptProtectedData()でエラーが発生しました。Win32API呼び出しで対象のdllが存在しませんでした。\r\n" + e.ToString());
                 return null;
-
-            //リソース解放
-            var decryptedBytes = new byte[output.cbData];
-            Marshal.Copy(output.pbData, decryptedBytes, 0, (int)output.cbData);
-            //output解放
-            isSucc = Win32Api.LocalFree(output.pbData) == IntPtr.Zero;
-            Trace.Assert(isSucc, "SnkLib.App.CookieGetter: error",
-                "DecryptProtectedData()でエラーが発生しました。データ復号化後のoutputリソース解放で予期せぬ失敗が発生しています。");
-            //input解放
-            isSucc = Win32Api.LocalFree(input.pbData) == IntPtr.Zero;
-            Trace.Assert(isSucc, "SnkLib.App.CookieGetter: error",
-                "DecryptProtectedData()でエラーが発生しました。データ復号化後のinputリソース解放で予期せぬ失敗が発生しています。");
-
-            return decryptedBytes;
+            }
+            finally
+            {
+                if (input.pbData != null)
+                    Marshal.FreeHGlobal(input.pbData);
+                if (output.pbData != null)
+                    Marshal.FreeHGlobal(output.pbData);
+            }
         }
         /// <summary>
         /// 保護モードIEからCookieを取得します。
@@ -126,8 +141,20 @@ namespace SunokoLibrary.Application
             cookiesText = null;
             for (int i = 0; ; i++)
             {
-                var hResult = IEGetProtectedModeCookie(
+                int hResult;
+                try
+                {
+                    hResult = IEGetProtectedModeCookie(
                     targetUrl.OriginalString, valueKey, lpszCookieData, ref cookieSize, paramsFlag);
+                }
+                catch (DllNotFoundException e)
+                {
+                    cookiesText = null;
+                    Trace.Fail(
+                        "SnkLib.App.CookieGetter: error",
+                        "GetCookiesFromProtectedModeIE()でエラーが発生しました。Win32API呼び出しで対象のdllが存在しませんでした。\r\n" + e.ToString());
+                    return int.MaxValue;
+                }
                 switch ((uint)hResult)
                 {
                     case 0x8007007A://バッファー不足
@@ -171,10 +198,21 @@ namespace SunokoLibrary.Application
             for (int i = 0; ; i++)
             {
                 bool bResult;
-                if (bResult = Win32Api.InternetGetCookieEx(targetUrl.OriginalString, valueKey, lpszCookieData, ref cookieSize, paramsFlag, IntPtr.Zero))
+                try
                 {
-                    cookiesText = lpszCookieData.ToString();
-                    return 0x00000000;
+                    if (bResult = Win32Api.InternetGetCookieEx(targetUrl.OriginalString, valueKey, lpszCookieData, ref cookieSize, paramsFlag, IntPtr.Zero))
+                    {
+                        cookiesText = lpszCookieData.ToString();
+                        return 0x00000000;
+                    }
+                }
+                catch (DllNotFoundException e)
+                {
+                    cookiesText = null;
+                    Trace.Fail(
+                        "SnkLib.App.CookieGetter: error",
+                        "GetCookiesFromIE()でエラーが発生しました。Win32API呼び出しで対象のdllが存在しませんでした。\r\n" + e.ToString());
+                    return int.MaxValue;
                 }
                 //Errorが出ていた時
                 var hResult = Marshal.GetHRForLastWin32Error();
@@ -212,7 +250,13 @@ namespace SunokoLibrary.Application
                 using (var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Internet Explorer"))
                     return new Version((string)key.GetValue("svcVersion") ?? (string)key.GetValue("Version"));
             }
-            catch { return null; }
+            catch (Exception e)
+            {
+                Trace.Fail(
+                    "SnkLib.App.CookieGetter: error",
+                    "GetIEVersion()でエラーが発生しました。Win32API呼び出しで対象のdllが存在しませんでした。\r\n" + e.ToString());
+                return null;
+            }
         }
 
         [DllImport("Wininet", CharSet = CharSet.Unicode, SetLastError = true)]

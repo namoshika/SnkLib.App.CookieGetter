@@ -19,7 +19,14 @@ namespace SunokoLibrary.Application.Browsers
 #pragma warning disable 1591
         public IEPMCookieImporter(CookieSourceInfo info, int primaryLevel) : base(info, primaryLevel) { }
 
-        public override bool IsAvailable { get { return Win32Api.GetIEVersion().Major >= 8; } }
+        public override bool IsAvailable
+        {
+            get
+            {
+                var res = Win32Api.GetIEVersion();
+                return res != null ? res.Major >= 8 : false;
+            }
+        }
         public override ICookieImporter Generate(CookieSourceInfo newInfo)
         { return new IEPMCookieImporter(newInfo, PrimaryLevel); }
         protected override CookieImportResult ProtectedGetCookies(Uri targetUrl)
@@ -35,19 +42,20 @@ namespace SunokoLibrary.Application.Browsers
                 // * IE8<=x<IE11 on x86     使用可能
                 // * IE8<=x<IE11 on x64     使用不可
                 // * IE11<=x on x86,x64     使用可能
-                var ieVersion = Win32Api.GetIEVersion();
                 string cookiesText;
+                var ieVersion = Win32Api.GetIEVersion();
+                if(ieVersion == null)
+                    return new CookieImportResult(null, CookieImportState.AccessError);
 #if NET20
                 cookiesText = InternalGetCookiesWinApi(targetUrl, null);
 #else
                 if (ieVersion.Major >= 11 || ieVersion.Major >= 8 && Environment.Is64BitProcess == false)
                     cookiesText = InternalGetCookiesWinApi(targetUrl, null);
-                else if (ieVersion.Major >= 8)
+                else if (ieVersion.Major >= 8 && Environment.OSVersion.Platform == PlatformID.Win32NT)
                     cookiesText = InternalGetCookiesWinApiOnProxy(targetUrl, null);
                 else
-                    throw new NotImplementedException(); 
+                    cookiesText = null;
 #endif
-
                 if (cookiesText != null)
                 {
                     var cookies = new CookieCollection();
