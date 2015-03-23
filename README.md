@@ -73,11 +73,6 @@ cookies.Add(result.Cookies);
 var cookie = result.Cookies["user_session"];
 
 //次回起動時用の構成を保存します。
-Properties.Settings.Default.BrowserName = cookieGetter.Config.BrowserName;
-Properties.Settings.Default.ProfileName = cookieGetter.Config.ProfileName;
-Properties.Settings.Default.CookiePath = cookieGetter.Config.CookiePath;
-Properties.Settings.Default.Save();
-//直接的に構成を保存することもできます。
 Properties.Settings.Default.SelectedGetterInfo = cookieGetter.SourceInfo
 
 //任意のBrowserConfigから適切なGetterを取得します。
@@ -85,4 +80,7 @@ Properties.Settings.Default.SelectedGetterInfo = cookieGetter.SourceInfo
 //復元が楽になるように作っています。
 var currentGetter = await CookieGetters.Default.GetInstanceAsync(
   Properties.Settings.Default.SelectedGetterInfo);
+
+//ブラウザを指定してGetterを取得することもできます。
+var chromeGetter = CookieGetters.Browsers.Chrome;
 ```

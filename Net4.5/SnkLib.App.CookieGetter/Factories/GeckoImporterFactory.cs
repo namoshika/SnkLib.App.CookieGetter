@@ -76,18 +76,13 @@ namespace SunokoLibrary.Application.Browsers
                 if (File.Exists(profileListPath) == false)
                     return results.ToArray();
 
-                UserProfile prof = null;
                 using (var sr = new StreamReader(profileListPath))
                     while (!sr.EndOfStream)
                     {
                         var line = sr.ReadLine();
                         if (line.StartsWith("[Profile"))
                         {
-                            prof = new UserProfile();
-                            results.Add(prof);
-                        }
-                        if (prof != null)
-                        {
+                            var prof = new UserProfile();
                             var pair = ParseKeyValuePair(line);
                             switch (pair.Key)
                             {
@@ -106,6 +101,10 @@ namespace SunokoLibrary.Application.Browsers
                                     prof.IsDefault = pair.Value == "1";
                                     break;
                             }
+                            if (prof.IsDefault)
+                                results.Insert(0, prof);
+                            else
+                                results.Add(prof);
                         }
                     }
                 return results.ToArray();

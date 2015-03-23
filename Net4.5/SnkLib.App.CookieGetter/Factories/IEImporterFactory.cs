@@ -43,29 +43,41 @@ namespace SunokoLibrary.Application.Browsers
         /// </summary>
         public ICookieImporter GetIECookieImporter()
         {
-            var cookieFolder = Environment.GetFolderPath(Environment.SpecialFolder.Cookies);
-            return new IECookieImporter(new CookieSourceInfo(
-                "IE Normal", "Default", cookieFolder, ENGINE_ID_NORMAL_IE, false), 0);
+            if (_ieImporter == null)
+            {
+                var cookieFolder = Environment.GetFolderPath(Environment.SpecialFolder.Cookies);
+                _ieImporter = new IECookieImporter(new CookieSourceInfo(
+                    "IE Normal", "Default", cookieFolder, ENGINE_ID_NORMAL_IE, false), 0);
+            }
+            return _ieImporter;
         }
         /// <summary>
         /// 保護モードのIEからCookieを取得するICookieImporterを取得します。
         /// </summary>
         public ICookieImporter GetIEPMCookieImporter()
         {
-            var cookieFolder = System.IO.Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.Cookies), "low");
-            return new IEPMCookieImporter(new CookieSourceInfo(
-                "IE Protected", "Default", cookieFolder, ENGINE_ID_PROTECTED_IE, false), 0);
+            if (_iePMImporter == null)
+            {
+                var cookieFolder = System.IO.Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.Cookies), "low");
+                _iePMImporter = new IEPMCookieImporter(new CookieSourceInfo(
+                    "IE Protected", "Default", cookieFolder, ENGINE_ID_PROTECTED_IE, false), 0);
+            }
+            return _iePMImporter;
         }
         /// <summary>
         /// 拡張保護モードのIEからCookieを取得するICookieImporterを取得します。
         /// </summary>
         public ICookieImporter GetIEEPMCookieImporter()
         {
-            var cookieFolder = Utility.ReplacePathSymbols(
-                @"%LOCALAPPDATA%\Packages\windows_ie_ac_001\AC\INetCookies");
-            return new IEFindCacheCookieImporter(new CookieSourceInfo(
-                "IE Enhanced Protected", "Default", cookieFolder, ENGINE_ID_ENHANCED_PROTECTED_IE, false), 0);
+            if (_ieEPMImporter == null)
+            {
+                var cookieFolder = Utility.ReplacePathSymbols(
+                    @"%LOCALAPPDATA%\Packages\windows_ie_ac_001\AC\INetCookies");
+                _ieEPMImporter = new IEFindCacheCookieImporter(new CookieSourceInfo(
+                    "IE Enhanced Protected", "Default", cookieFolder, ENGINE_ID_ENHANCED_PROTECTED_IE, false), 0);
+            }
+            return _ieEPMImporter;
         }
 
         internal const string ENGINE_ID_NORMAL_IE =
@@ -74,5 +86,8 @@ namespace SunokoLibrary.Application.Browsers
             "SunokoLibrary.Application.Browsers.IEBrowserManager.ProtectedIE";
         internal const string ENGINE_ID_ENHANCED_PROTECTED_IE =
             "SunokoLibrary.Application.Browsers.IEBrowserManager.EnhancedProtectedIE";
+        static ICookieImporter _ieImporter;
+        static ICookieImporter _iePMImporter;
+        static ICookieImporter _ieEPMImporter;
     }
 }

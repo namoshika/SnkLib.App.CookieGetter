@@ -125,9 +125,7 @@ namespace SunokoLibrary.Application
         static CookieGetters()
         {
             _importerFactories = new ICookieImporterFactory[] {
-                new IEImporterFactory(),
-                new FirefoxImporterFactory(),
-                new ChromeImporterFactory(),
+                _ieFactory, _ffFactory, _chFactory,
                 new OperaWebkitImporterFactory(),
                 new ChromiumImporterFactory(),
                 new LunascapeImporterFactory(),
@@ -140,6 +138,11 @@ namespace SunokoLibrary.Application
             Default = CookieGetters.Create();
         }
         static ICookieImporterFactory[] _importerFactories;
+        static IEImporterFactory _ieFactory = new IEImporterFactory();
+        static ChromeImporterFactory _chFactory = new ChromeImporterFactory();
+        static FirefoxImporterFactory _ffFactory = new FirefoxImporterFactory();
+        static ICookieImporter _chImporter;
+        static ICookieImporter _ffImporter;
 
         /// <summary>
         /// 既定のCookieGettersを取得します。
@@ -156,6 +159,51 @@ namespace SunokoLibrary.Application
                 ? factories != null ? _importerFactories.Concat(factories) : _importerFactories
                 : factories != null ? factories : Enumerable.Empty<ICookieImporterFactory>();
             return new CookieGetters(res);
+        }
+        /// <summary>
+        /// ブラウザの既定ICookieImporterを提供します。
+        /// </summary>
+        public static class Browsers
+        {
+            /// <summary>
+            /// 通常モードのIEのICookieImporterを取得します。
+            /// </summary>
+            public static ICookieImporter IENormal
+            { get { return _ieFactory.GetIECookieImporter(); } }
+            /// <summary>
+            /// 保護モードのIEのICookieImporterを取得します。
+            /// </summary>
+            public static ICookieImporter IEProtected
+            { get { return _ieFactory.GetIEPMCookieImporter(); } }
+            /// <summary>
+            /// 拡張保護モードのIEのICookieImporterを取得します。
+            /// </summary>
+            public static ICookieImporter IEEnhancedProtected
+            { get { return _ieFactory.GetIEEPMCookieImporter(); } }
+            /// <summary>
+            /// FirefoxのICookieImporterを取得します。
+            /// </summary>
+            public static ICookieImporter Firefox
+            {
+                get
+                {
+                    if (_ffImporter == null)
+                        _ffImporter = _ffFactory.GetCookieImporters().FirstOrDefault();
+                    return _ffImporter;
+                }
+            }
+            /// <summary>
+            /// ChromeのICookieImporterを取得します。
+            /// </summary>
+            public static ICookieImporter Chrome
+            {
+                get
+                {
+                    if (_chImporter == null)
+                        _chImporter = _chFactory.GetCookieImporters().FirstOrDefault();
+                    return _chImporter;
+                }
+            }
         }
     }
 }
