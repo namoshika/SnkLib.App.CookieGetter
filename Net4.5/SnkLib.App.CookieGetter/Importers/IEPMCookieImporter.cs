@@ -68,7 +68,7 @@ namespace SunokoLibrary.Application.Browsers
             }
             catch (CookieImportException ex)
             {
-                TraceFail(this, "Cookie読み込みに失敗。", ex.ToString());
+                TraceError(this, "Cookie読み込みに失敗。", ex.ToString());
                 return new CookieImportResult(null, ex.Result);
             }
         }
@@ -78,8 +78,6 @@ namespace SunokoLibrary.Application.Browsers
         {
             string lpszCookieData;
             var hResult = Win32Api.GetCookiesFromProtectedModeIE(out lpszCookieData, url, key);
-            Trace.Assert(lpszCookieData != null, "SnkLib.App.CookieGetter: error",
-                string.Format("Win32Api.GetCookiesFromProtectedModeIE()の戻り値がnullでした。保護モードIEからのCookie取得で予期せぬ失敗が発生しています。 error code:{0}", hResult));
             return lpszCookieData;
         }
         internal static string InternalGetCookiesWinApiOnProxy(Uri url, string key)
@@ -100,8 +98,6 @@ namespace SunokoLibrary.Application.Browsers
                     proxyFactory = new ChannelFactory<IProxyService>(new NetNamedPipeBinding(), endpointUrl.AbsoluteUri);
                     var proxy = proxyFactory.CreateChannel();
                     var hResult = proxy.GetCookiesFromProtectedModeIE(out lpszCookieData, url, key);
-                    Trace.Assert(lpszCookieData != null, "SnkLib.App.CookieGetter: error",
-                        string.Format("proxy.GetCookiesFromProtectedModeIE()の戻り値がnullでした。proxyを介した保護モードIEからのCookie取得で予期せぬ失敗が発生しています。 error code:{0}", hResult));
                     break;
                 }
                 catch (CommunicationException)

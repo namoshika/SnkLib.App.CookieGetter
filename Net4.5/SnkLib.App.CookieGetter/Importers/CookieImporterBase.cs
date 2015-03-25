@@ -82,7 +82,7 @@ namespace SunokoLibrary.Application.Browsers
         /// <param name="target">失敗した処理が行われた対象</param>
         /// <param name="message">失敗した処理の名前</param>
         /// <param name="detailMessage">詳細な状況説明文</param>
-        protected static void TraceFail(ICookieImporter target, string message, string detailMessage)
-        { Trace.Fail(string.Format("{0}のCookieの{1}", target.SourceInfo.BrowserName, message), detailMessage); }
+        protected static void TraceError(ICookieImporter target, string message, string detailMessage)
+        { Trace.TraceError(string.Format("SnkLib.App.CookieGetter.dll:\r\n{0}のCookieの{1}", target.SourceInfo.BrowserName, message), detailMessage); }
     }
 }

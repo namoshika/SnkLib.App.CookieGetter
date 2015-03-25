@@ -67,9 +67,9 @@ namespace SunokoLibrary.Application
             }
             catch (DllNotFoundException e)
             {
-                Trace.Fail(
-                    "SnkLib.App.CookieGetter: error",
-                    "CryptProtectedData()でエラーが発生しました。Win32API呼び出しで対象のdllが存在しませんでした。\r\n" + e.ToString());
+                Trace.TraceError("SnkLib.App.CookieGetter.dll:\r\n"
+                    + "CryptProtectedData()でエラーが発生しました。Win32API呼び出しで対象のdllが存在しませんでした。\r\n"
+                    + e.ToString());
                 return null;
             }
             finally
@@ -111,9 +111,9 @@ namespace SunokoLibrary.Application
             }
             catch (DllNotFoundException e)
             {
-                Trace.Fail(
-                    "SnkLib.App.CookieGetter: error",
-                    "DecryptProtectedData()でエラーが発生しました。Win32API呼び出しで対象のdllが存在しませんでした。\r\n" + e.ToString());
+                Trace.TraceError("SnkLib.App.CookieGetter.dll:\r\n"
+                    + "DecryptProtectedData()でエラーが発生しました。Win32API呼び出しで対象のdllが存在しませんでした。\r\n"
+                    + e.ToString());
                 return null;
             }
             finally
@@ -150,9 +150,9 @@ namespace SunokoLibrary.Application
                 catch (DllNotFoundException e)
                 {
                     cookiesText = null;
-                    Trace.Fail(
-                        "SnkLib.App.CookieGetter: error",
-                        "GetCookiesFromProtectedModeIE()でエラーが発生しました。Win32API呼び出しで対象のdllが存在しませんでした。\r\n" + e.ToString());
+                    Trace.TraceError("SnkLib.App.CookieGetter.dll:\r\n"
+                        + "GetCookiesFromProtectedModeIE()でエラーが発生しました。Win32API呼び出しで対象のdllが存在しませんでした。\r\n"
+                        + e.ToString());
                     return int.MaxValue;
                 }
                 switch ((uint)hResult)
@@ -160,9 +160,8 @@ namespace SunokoLibrary.Application
                     case 0x8007007A://バッファー不足
                         if (i >= 10)
                         {
-                            Trace.Fail(
-                                "SnkLib.App.CookieGetter error",
-                                "GetCookiesFromProtectedModeIE()でエラーが発生しました。取得するCookieのサイズが想定サイズを超えています。");
+                            Trace.TraceError("SnkLib.App.CookieGetter.dll:\r\n"
+                                + "GetCookiesFromProtectedModeIE()でエラーが発生しました。取得するCookieのサイズが想定サイズを超えています。");
                             return hResult;
                         }
                         cookieSize = cookieSize + 256;
@@ -175,6 +174,8 @@ namespace SunokoLibrary.Application
                         return hResult;
                     default:
                         cookiesText = null;
+                        Trace.TraceError("SnkLib.App.CookieGetter.dll:\r\n"
+                            + "GetCookiesFromProtectedModeIE()でエラーが発生しました。Win32APIの実行結果が未知の状態を示しています。");
                         return hResult;
                 }
             }
@@ -209,9 +210,9 @@ namespace SunokoLibrary.Application
                 catch (DllNotFoundException e)
                 {
                     cookiesText = null;
-                    Trace.Fail(
-                        "SnkLib.App.CookieGetter: error",
-                        "GetCookiesFromIE()でエラーが発生しました。Win32API呼び出しで対象のdllが存在しませんでした。\r\n" + e.ToString());
+                    Trace.TraceError("SnkLib.App.CookieGetter.dll\r\n"
+                        + "GetCookiesFromIE()でエラーが発生しました。Win32API呼び出しで対象のdllが存在しませんでした。\r\n"
+                        + e.ToString());
                     return int.MaxValue;
                 }
                 //Errorが出ていた時
@@ -221,9 +222,8 @@ namespace SunokoLibrary.Application
                     case 0x8007007A: //バッファー不足
                         if (i >= 10)
                         {
-                            Trace.Fail(
-                                "SnkLib.App.CookieGetter error",
-                                "GetCookiesFromIE()でエラーが発生しました。取得するCookieのサイズが想定サイズを超えています。");
+                            Trace.TraceError("SnkLib.App.CookieGetter.dll:\r\n"
+                                + "GetCookiesFromIE()でエラーが発生しました。取得するCookieのサイズが想定サイズを超えています。");
                             return hResult;
                         }
                         cookieSize += 512;
@@ -235,6 +235,8 @@ namespace SunokoLibrary.Application
                         return hResult;
                     default:
                         cookiesText = null;
+                        Trace.TraceError("SnkLib.App.CookieGetter.dll:\r\n"
+                            + "GetCookiesFromProtectedModeIE()でエラーが発生しました。Win32APIの実行結果が未知の状態を示しています。");
                         return hResult;
                 }
             }
@@ -252,9 +254,9 @@ namespace SunokoLibrary.Application
             }
             catch (Exception e)
             {
-                Trace.Fail(
-                    "SnkLib.App.CookieGetter: error",
-                    "GetIEVersion()でエラーが発生しました。Win32API呼び出しで対象のdllが存在しませんでした。\r\n" + e.ToString());
+                Trace.TraceError("SnkLib.App.CookieGetter.dll:\r\n"
+                    + "GetIEVersion()でエラーが発生しました。Win32API呼び出しで対象のdllが存在しませんでした。\r\n"
+                    + e.ToString());
                 return null;
             }
         }

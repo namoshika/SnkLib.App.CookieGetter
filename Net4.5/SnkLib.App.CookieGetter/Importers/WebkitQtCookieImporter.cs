@@ -37,12 +37,12 @@ namespace SunokoLibrary.Application.Browsers
             }
             catch (System.IO.IOException ex)
             {
-                TraceFail(this, "読み込みでエラーが発生しました。", ex.ToString());
+                TraceError(this, "読み込みでエラーが発生しました。", ex.ToString());
                 return new CookieImportResult(null,CookieImportState.AccessError);
             }
             catch (Exception ex)
             {
-                TraceFail(this, "読み込みでエラーが発生しました。", ex.ToString());
+                TraceError(this, "読み込みでエラーが発生しました。", ex.ToString());
                 return new CookieImportResult(null, CookieImportState.ConvertError);
             }
         }

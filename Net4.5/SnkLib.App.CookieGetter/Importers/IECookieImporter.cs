@@ -23,9 +23,6 @@ namespace SunokoLibrary.Application.Browsers
         {
             string cookiesText;
             var hResult = Win32Api.GetCookiesFromIE(out cookiesText, targetUrl, null);
-
-            Trace.Assert(cookiesText != null, "SnkLib.App.CookieGetter: error",
-                "Win32Api.GetCookiesFromIE()の戻り値がnullでした。ノーマルIEからのCookie取得で予期せぬ失敗が発生しています。");
             if (cookiesText == null)
                 return new CookieImportResult(null, CookieImportState.AccessError);
             try
@@ -37,7 +34,7 @@ namespace SunokoLibrary.Application.Browsers
             }
             catch (CookieImportException ex)
             {
-                TraceFail(this, "Cookie読み込みに失敗。", ex.ToString());
+                TraceError(this, "Cookie読み込みに失敗。", ex.ToString());
                 return new CookieImportResult(null, ex.Result);
             }
         }
@@ -56,14 +53,14 @@ namespace SunokoLibrary.Application.Browsers
                 var chunks = data.ToString().Split('=');
                 if (2 > chunks.Length)
                 {
-                    TraceFail(this, "IE Cookie解析に失敗。", string.Format("cookieHeader: {0}\r\nurl: {1}", cookieHeader, url));
+                    TraceError(this, "IE Cookie解析に失敗。", string.Format("cookieHeader: {0}\r\nurl: {1}", cookieHeader, url));
                     throw new CookieImportException("IE Cookieの解析に失敗。", CookieImportState.ConvertError);
                 }
                 var name = chunks[0].Trim();
                 var value = chunks[1].Trim();
                 if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(value))
                 {
-                    TraceFail(this, "IE Cookieの解析に失敗。", string.Format("cookieHeader: {0}\r\nurl: {1}", cookieHeader, url));
+                    TraceError(this, "IE Cookieの解析に失敗。", string.Format("cookieHeader: {0}\r\nurl: {1}", cookieHeader, url));
                     throw new CookieImportException("IE Cookieの解析に失敗。", CookieImportState.ConvertError);
                 }
 

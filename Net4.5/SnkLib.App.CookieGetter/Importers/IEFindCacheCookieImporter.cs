@@ -45,12 +45,12 @@ namespace SunokoLibrary.Application.Browsers
             }
             catch (CookieImportException ex)
             {
-                TraceFail(this, "Cookie読み込みに失敗。", ex.ToString());
+                TraceError(this, "Cookie読み込みに失敗。", ex.ToString());
                 return new CookieImportResult(null, ex.Result);
             }
             catch (IOException ex)
             {
-                TraceFail(this, "Cookie読み込みに失敗。", ex.ToString());
+                TraceError(this, "Cookie読み込みに失敗。", ex.ToString());
                 return new CookieImportResult(null, CookieImportState.AccessError);
             }
 

@@ -48,20 +48,22 @@ namespace ApiChecker
                     string lpszCookieData;
                     var hResult = Win32Api.GetCookiesFromProtectedModeIE(out lpszCookieData, targetUrl, valueKey);
                     Trace.WriteLine(lpszCookieData != null
-                        ? string.Format("Win32Api.GetCookieFromProtectedModeIE success:{0}", hResult)
-                        : string.Format("Win32Api.GetCookieFromProtectedModeIE error:{0}", hResult));
+                        ? string.Format("Win32Api.GetCookieFromProtectedModeIE success: 0x{0}", hResult.ToString("x8"))
+                        : string.Format("Win32Api.GetCookieFromProtectedModeIE error: 0x{0}", hResult.ToString("x8")));
                 }
                 catch (Exception e) { Trace.WriteLine(e); }
+                finally { Trace.WriteLine(string.Empty); }
                 try
                 {
                     //Win32Api.IEGetProtectedModeCookie (No Flags)
                     string lpszCookieData;
                     var hResult = Win32Api.GetCookiesFromProtectedModeIE(out lpszCookieData, targetUrl, valueKey, 0);
                     Trace.WriteLine(lpszCookieData != null
-                        ? string.Format("Win32Api.GetCookieFromProtectedModeIE(no flags) success:{0}", hResult)
-                        : string.Format("Win32Api.GetCookieFromProtectedModeIE(no flags) error:{0}", hResult));
+                        ? string.Format("Win32Api.GetCookieFromProtectedModeIE(no flags) success: 0x{0}", hResult.ToString("x8"))
+                        : string.Format("Win32Api.GetCookieFromProtectedModeIE(no flags) error: 0x{0}", hResult.ToString("x8")));
                 }
                 catch (Exception e) { Trace.WriteLine(e); }
+                finally { Trace.WriteLine(string.Empty); }
                 try
                 {
                     //IEPMCookieImporter.InternalGetCookiesWinApiOnProxy
@@ -74,6 +76,7 @@ namespace ApiChecker
                     }
                 }
                 catch (Exception e) { Trace.WriteLine(e); }
+                finally { Trace.WriteLine(string.Empty); }
                 Console.WriteLine();
 
                 Trace.WriteLine("------------------------------");

@@ -45,7 +45,7 @@ namespace SunokoLibrary.Application.Browsers
             }
             catch (CookieImportException ex)
             {
-                TraceFail(this, "取得に失敗しました。", ex.ToString());
+                TraceError(this, "取得に失敗しました。", ex.ToString());
                 return new CookieImportResult(null, ex.Result);
             }
         }
