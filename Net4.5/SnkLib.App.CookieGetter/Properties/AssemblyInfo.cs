@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("namoshika")]
 [assembly: AssemblyProduct("SnkLib.App.CookieGetter")]
-[assembly: AssemblyCopyright("Copyright © 2014 namoshika")]
+[assembly: AssemblyCopyright("Copyright © 2015 namoshika")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

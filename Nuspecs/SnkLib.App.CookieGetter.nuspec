@@ -2,7 +2,7 @@
 <package>
     <metadata>
         <id>SnkLib.App.CookieGetter</id>
-        <version>2.1.0.0</version>
+        <version>2.2.0.0</version>
         <title>SnkLib.App.CookieGetter</title>
         <authors>namoshika</authors>
         <owners>namoshika</owners>
@@ -11,7 +11,7 @@
         <projectUrl>https://github.com/namoshika/SnkLib.App.CookieGetter</projectUrl>
         <licenseUrl>https://www.gnu.org/licenses/lgpl-2.1.txt</licenseUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <copyright>Copyright 2014 namoshika</copyright>
+        <copyright>Copyright 2015 namoshika</copyright>
         <tags>Browser Cookie Getter</tags>
         <references>
             <reference file="SnkLib.App.CookieGetter.dll" />
