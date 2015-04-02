@@ -133,6 +133,9 @@
     <Compile Include="..\SnkLib.App.CookieGetter\Factories\SmartImporterFactory.cs">
       <Link>Core\Factories\SmartImporterFactory.cs</Link>
     </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Factories\SpartanImporterFactory.cs">
+      <Link>Core\Factories\SpartanImporterFactory.cs</Link>
+    </Compile>
     <Compile Include="..\SnkLib.App.CookieGetter\Factories\TungstenImporterFactory.cs">
       <Link>Core\Factories\TungstenImporterFactory.cs</Link>
     </Compile>

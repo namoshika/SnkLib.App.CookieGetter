@@ -57,6 +57,7 @@
     <Compile Include="CookieSourceInfo.cs" />
     <Compile Include="CookieGetters.cs" />
     <Compile Include="CookieSourceSelector.cs" />
+    <Compile Include="Factories\SpartanImporterFactory.cs" />
     <Compile Include="Importers\IEFindCacheCookieImporter.cs" />
     <Compile Include="Importers\BlinkCookieImporter.cs" />
     <Compile Include="Importers\CookieImporterBase.cs" />

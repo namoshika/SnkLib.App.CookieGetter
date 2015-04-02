@@ -77,6 +77,20 @@ namespace ApiChecker
                 }
                 catch (Exception e) { Trace.WriteLine(e); }
                 finally { Trace.WriteLine(string.Empty); }
+                try
+                {
+                    //IEEPMCookieImporter
+                    if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+                    {
+                        var importer = new IEImporterFactory().GetIEEPMCookieImporter();
+                        var res = await importer.GetCookiesAsync(targetUrl);
+                        Trace.WriteLine(res.Status == CookieImportState.Success && res.Cookies.Count > 0
+                            ? string.Format("IEEPMCookieImporter success")
+                            : string.Format("IEEPMCookieImporter error"));
+                    }
+                }
+                catch (Exception e) { Trace.WriteLine(e); }
+                finally { Trace.WriteLine(string.Empty); }
                 Console.WriteLine();
 
                 Trace.WriteLine("------------------------------");
@@ -93,6 +107,8 @@ namespace ApiChecker
                             Trace.Indent();
                             var res = await getters[i].GetCookiesAsync(targetUrl);
                             Trace.WriteLine(string.Format("Status: {0}", res.Status));
+                            Trace.WriteLine(string.Format("Cookies.Count: {0}",
+                                res.Status == CookieImportState.Success ? res.Cookies.Count.ToString() : "None"));
                             Trace.Unindent();
                         }
                         catch (Exception e) { Trace.WriteLine(e); }
