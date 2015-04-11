@@ -12,7 +12,7 @@ namespace SunokoLibrary.Application.Browsers
 #pragma warning disable 1591
         public override IEnumerable<ICookieImporter> GetCookieImporters()
         {
-            var name = "Maxthon webkit";
+            var name = "Maxthon Webkit";
             var path = Utility.ReplacePathSymbols(COOKIEPATH);
             if (!System.IO.File.Exists(path))
                 path = null;

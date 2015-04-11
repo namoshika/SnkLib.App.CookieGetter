@@ -6,7 +6,7 @@
         <title>SnkLib.App.CookieGetter</title>
         <authors>namoshika</authors>
         <owners>namoshika</owners>
-        <summary>This is a library to use browser Cookies from your desktop apps.</summary>
+        <summary>This is a library to use browser Cookies by your desktop apps.</summary>
         <description>IEやChrome、Firefox、それらの派生ブラウザからCookieを取得し、.NETデスクトップアプリで扱うためのライブラリです。</description>
         <projectUrl>https://github.com/namoshika/SnkLib.App.CookieGetter</projectUrl>
         <licenseUrl>https://www.gnu.org/licenses/lgpl-2.1.txt</licenseUrl>

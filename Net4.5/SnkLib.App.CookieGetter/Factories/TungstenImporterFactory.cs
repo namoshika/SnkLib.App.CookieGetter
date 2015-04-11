@@ -11,7 +11,7 @@ namespace SunokoLibrary.Application.Browsers
     public class TungstenImporterFactory : BlinkImporterFactory
     {
 #pragma warning disable 1591
-        public TungstenImporterFactory() : base("TungstenBlink", "%APPDATA%\\Tungsten\\profile") { }
+        public TungstenImporterFactory() : base("Tungsten Blink", "%APPDATA%\\Tungsten\\profile") { }
 #pragma warning restore 1591
     }
 }
