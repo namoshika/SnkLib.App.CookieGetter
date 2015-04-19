@@ -17,15 +17,19 @@ namespace SunokoLibrary.Application
     public class CookieGetters : ICookieImporterManager
     {
         /// <summary>
-        /// CookieGettersを生成します。引数省略時にはCookieGettersのImporterFactories、ImporterGeneratorsが使用されます。
+        /// CookieGettersを生成します。
         /// </summary>
-        /// <param name="factories">対応させるブラウザ用のファクトリのシーケンス</param>
-        /// <exception cref="ArgumentException">引数generatorsに同一のEngineIdを持つ要素が含まれている場合にスローされます。</exception>
-        public CookieGetters(IEnumerable<ICookieImporterFactory> factories = null)
+        /// <param name="includeDefault">既定のFactoryを含めるか</param>
+        /// <param name="factories">追加で登録するFactory</param>
+        /// <exception cref="ArgumentException">引数factoriesに同一のEngineIdを持つ要素が含まれている場合にスローされます。</exception>
+        public CookieGetters(bool includeDefault = true, params ICookieImporterFactory[] factories)
         {
+            var args = includeDefault
+                ? factories != null ? _importerFactories.Concat(factories) : _importerFactories
+                : factories != null ? factories : Enumerable.Empty<ICookieImporterFactory>();
+            _factoryList = args.ToArray();
             try
             {
-                _factoryList = (factories ?? _importerFactories).ToArray();
                 _factoryDict = _factoryList
                     .SelectMany(item => item.EngineIds.Select(id => new { Importer = item, EngineId = id }))
                     .ToDictionary(item => item.EngineId, item => item.Importer);
@@ -135,7 +139,7 @@ namespace SunokoLibrary.Application
                 new SmartBlinkBrowserManager(),
                 new SmartGeckoBrowserManager(),
             };
-            Default = CookieGetters.Create();
+            Default = new CookieGetters();
         }
         static ICookieImporterFactory[] _importerFactories;
         static IEImporterFactory _ieFactory = new IEImporterFactory();
@@ -149,18 +153,6 @@ namespace SunokoLibrary.Application
         /// 既定のCookieGettersを取得します。
         /// </summary>
         public static ICookieImporterManager Default { get; private set; }
-        /// <summary>
-        /// ICookieImporterManagerの実装を生成します。
-        /// </summary>
-        /// <param name="includeDefault">既定のFactoryを含めるか</param>
-        /// <param name="factories">追加で登録するFactory</param>
-        public static ICookieImporterManager Create(bool includeDefault = true, params ICookieImporterFactory[] factories)
-        {
-            var res = includeDefault
-                ? factories != null ? _importerFactories.Concat(factories) : _importerFactories
-                : factories != null ? factories : Enumerable.Empty<ICookieImporterFactory>();
-            return new CookieGetters(res);
-        }
         /// <summary>
         /// ブラウザの既定ICookieImporterを提供します。
         /// </summary>

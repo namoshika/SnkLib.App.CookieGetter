@@ -61,7 +61,7 @@ namespace Hal.CookieGetterSharp
         static CookieGetter()
         {
             //対応させていないブラウザ、派生ブラウザとして省かれているブラウザを対応させる
-            _getters = CookieGetters.Create(
+            _getters = new CookieGetters(
                 true, new PaleMoonImporterFactory(), new SeaMonkeyImporterFactory());
 
             //コア部分にはBrowserTypeが無いため、ブラウザ名とBrowserTypeの対応関係を
