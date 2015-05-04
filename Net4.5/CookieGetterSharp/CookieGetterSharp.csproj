@@ -47,7 +47,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;IS_CGS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -60,7 +60,7 @@
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;IS_CGS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -221,7 +221,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Net4.0\SnkLib.App.CookieGetter.x86Proxy\bin\Release\SnkLib.App.CookieGetter.x86Proxy.exe">
-      <Link>SnkLib.App.CookieGetter.x86Proxy.exe</Link>
+      <Link>Win32\SnkLib.App.CookieGetter.x86Proxy.exe</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />

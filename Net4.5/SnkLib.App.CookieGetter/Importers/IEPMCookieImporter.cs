@@ -109,7 +109,11 @@ namespace SunokoLibrary.Application.Browsers
                         proxyProcess = Process.Start(
                             new System.Diagnostics.ProcessStartInfo()
                             {
-                                FileName = ".\\SnkLib.App.CookieGetter.x86Proxy.exe",
+#if IS_CGS
+                                FileName = @".\Win32\SnkLib.App.CookieGetter.x86Proxy.exe",
+#else
+                                FileName = @".\x86\SnkLib.App.CookieGetter.x86Proxy.exe",
+#endif
                                 //サービス側のendpointUrlに必要な情報をコマンドライン引数として渡す
                                 Arguments = string.Join(" ", new[] { processId, pipeServer.GetClientHandleAsString(), }),
                                 CreateNoWindow = true,

@@ -171,7 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\SnkLib.App.CookieGetter.x86Proxy\bin\Release\SnkLib.App.CookieGetter.x86Proxy.exe">
-      <Link>SnkLib.App.CookieGetter.x86Proxy.exe</Link>
+      <Link>x86\SnkLib.App.CookieGetter.x86Proxy.exe</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

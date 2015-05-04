@@ -1,44 +1,44 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <ItemGroup>
-        <!--追加で配置が必要なファイルを定義する-->
-        <!--EncloseFilesで同封したいファイル群を指定する。-->
-        <EnclosedFiles
-            Condition="'$(MSBuildThisFileDirectory)' != '' And HasTrailingSlash('$(MSBuildThisFileDirectory)')"
-            Include="$(MSBuildThisFileDirectory)SnkLib.App.CookieGetter.x86Proxy.exe" />
-    </ItemGroup>
+  <ItemGroup>
+    <!--追加で配置が必要なファイルを定義する-->
+    <!--EncloseFilesで同封したいファイル群を指定する。-->
+    <EnclosedFiles
+        Condition="'$(MSBuildThisFileDirectory)' != '' And HasTrailingSlash('$(MSBuildThisFileDirectory)')"
+        Include="$(MSBuildThisFileDirectory)SnkLib.App.CookieGetter.x86Proxy.exe" />
+  </ItemGroup>
 
-    <!--ファイルを配置する-->
-    <Target Name="CopyEnclosedFiles"
-            Condition="
-                '$(CopyEnclosedFiles)' != 'false' And
-                '$(OutputPath)' != '' And
-                HasTrailingSlash('$(OutputPath)') And Exists('$(OutputPath)')"
-            Inputs="@(EnclosedFiles)"
-            Outputs="@(EnclosedFiles -> '$(OutputPath)%(RecursiveDir)%(Filename)%(Extension)')">
+  <!--ファイルを配置する-->
+  <Target Name="CopyEnclosedFiles"
+          Condition="
+            '$(CopyEnclosedFiles)' != 'false' And
+            '$(OutputPath)' != '' And
+            HasTrailingSlash('$(OutputPath)') And Exists('$(OutputPath)')"
+          Inputs="@(EnclosedFiles)"
+          Outputs="@(EnclosedFiles -> '$(OutputPath)%(RecursiveDir)x86\%(Filename)%(Extension)')">
 
-        <Copy SourceFiles="@(EnclosedFiles)"
-              DestinationFiles="@(EnclosedFiles -> '$(OutputPath)%(RecursiveDir)%(Filename)%(Extension)')" />
-    </Target>
-    
-    <!--配置していたファイルを削除する-->
-    <Target Name="CleanEnclosedFiles"
-            Condition="
-                '$(CleanEnclosedFiles)' != 'false' And
-                '$(OutputPath)' != '' And
-                HasTrailingSlash('$(OutputPath)') And Exists('$(OutputPath)')">
+    <Copy SourceFiles="@(EnclosedFiles)"
+          DestinationFiles="@(EnclosedFiles -> '$(OutputPath)%(RecursiveDir)x86\%(Filename)%(Extension)')" />
+  </Target>
 
-        <Delete Files="@(EnclosedFiles -> '$(OutputPath)%(RecursiveDir)%(Filename)%(Extension)')" />
-    </Target>
+  <!--配置していたファイルを削除する-->
+  <Target Name="CleanEnclosedFiles"
+          Condition="
+            '$(CleanEnclosedFiles)' != 'false' And
+            '$(OutputPath)' != '' And
+            HasTrailingSlash('$(OutputPath)') And Exists('$(OutputPath)')">
 
-    <!--既存のBuild,Cleanに事後処理として任意のTargetを追加する-->
-    <PropertyGroup>
-        <BuildDependsOn>
-            $(BuildDependsOn);
-            CopySQLiteInteropFiles;
-        </BuildDependsOn>
-        <CleanDependsOn>
-            $(CleanDependsOn);
-            CleanSQLiteInteropFiles;
-        </CleanDependsOn>
-    </PropertyGroup>
+    <Delete Files="@(EnclosedFiles -> '$(OutputPath)%(RecursiveDir)x86\%(Filename)%(Extension)')" />
+  </Target>
+
+  <!--既存のBuild,Cleanに事後処理として任意のTargetを追加する-->
+  <PropertyGroup>
+    <BuildDependsOn>
+      $(BuildDependsOn);
+      CopyEnclosedFiles;
+    </BuildDependsOn>
+    <CleanDependsOn>
+      $(CleanDependsOn);
+      CleanEnclosedFiles;
+    </CleanDependsOn>
+  </PropertyGroup>
 </Project>

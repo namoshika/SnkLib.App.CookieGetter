@@ -2,7 +2,7 @@
 <package>
     <metadata>
         <id>SnkLib.App.CookieGetter</id>
-        <version>2.2.0.0</version>
+        <version>2.2.1.0</version>
         <title>SnkLib.App.CookieGetter</title>
         <authors>namoshika</authors>
         <owners>namoshika</owners>
@@ -33,12 +33,12 @@
         <!--.net4.5-->
         <file src="..\Net4.5\SnkLib.App.CookieGetter\bin\Release\SnkLib.App.CookieGetter.dll" target="lib\net45" />
         <file src="..\Net4.5\SnkLib.App.CookieGetter\bin\Release\SnkLib.App.CookieGetter.xml" target="lib\net45" />
-        <file src="..\Net4.5\SnkLib.App.CookieGetter\bin\Release\SnkLib.App.CookieGetter.x86Proxy.exe" target="build\net45" />
+        <file src="..\Net4.5\SnkLib.App.CookieGetter\bin\Release\x86\SnkLib.App.CookieGetter.x86Proxy.exe" target="build\net45" />
         <file src="SnkLib.App.CookieGetter.targets" target="build\net45" />
         <!--.net4.0-->
         <file src="..\Net4.0\SnkLib.App.CookieGetter\bin\Release\SnkLib.App.CookieGetter.dll" target="lib\net40" />
         <file src="..\Net4.0\SnkLib.App.CookieGetter\bin\Release\SnkLib.App.CookieGetter.xml" target="lib\net40" />
-        <file src="..\Net4.0\SnkLib.App.CookieGetter\bin\Release\SnkLib.App.CookieGetter.x86Proxy.exe" target="build\net40" />
+        <file src="..\Net4.0\SnkLib.App.CookieGetter\bin\Release\x86\SnkLib.App.CookieGetter.x86Proxy.exe" target="build\net40" />
         <file src="SnkLib.App.CookieGetter.targets" target="build\net40" />
     </files>
 </package>
