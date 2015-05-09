@@ -22,7 +22,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuspecs", "Nuspecs", "{25F6
 		Nuspecs\NuPacker.bat = Nuspecs\NuPacker.bat
 		Nuspecs\SnkLib.App.CookieGetter.Forms.nuspec = Nuspecs\SnkLib.App.CookieGetter.Forms.nuspec
 		Nuspecs\SnkLib.App.CookieGetter.nuspec = Nuspecs\SnkLib.App.CookieGetter.nuspec
-		Nuspecs\SnkLib.App.CookieGetter.targets = Nuspecs\SnkLib.App.CookieGetter.targets
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Net4.5\Sample\Sample\Sample.csproj", "{14A980C2-8B21-4C0C-B34D-0D188D8EE911}"

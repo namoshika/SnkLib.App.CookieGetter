@@ -4,7 +4,7 @@
     <!--EncloseFilesで同封したいファイル群を指定する。-->
     <EnclosedFiles
         Condition="'$(MSBuildThisFileDirectory)' != '' And HasTrailingSlash('$(MSBuildThisFileDirectory)')"
-        Include="$(MSBuildThisFileDirectory)SnkLib.App.CookieGetter.x86Proxy.exe" />
+        Include="$(MSBuildThisFileDirectory)x86\SnkLib.App.CookieGetter.x86Proxy.exe" />
   </ItemGroup>
 
   <!--ファイルを配置する-->
