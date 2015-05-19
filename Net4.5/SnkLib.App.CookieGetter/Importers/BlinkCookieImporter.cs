@@ -72,14 +72,23 @@ namespace SunokoLibrary.Application.Browsers
             if (formatVersion >= 7)
             {
                 var cipher = data[0] as byte[];
-                if (cipher == null || cipher.Length == 0)
+                if (cipher == null)
+                {
                     throw new CookieImportException(
                         "Cookieファイルから暗号化データを取得できませんでした。", CookieImportState.ConvertError);
-                var plain = Win32Api.DecryptProtectedData(cipher);
-                if (plain == null)
-                    throw new CookieImportException(
-                        "Cookieの暗号化データを復号化できませんでした。", CookieImportState.ConvertError);
-                baseObj.Value = Encoding.UTF8.GetString(plain);
+                }
+                else if (cipher.Length == 0)
+                {
+                    baseObj.Value = "";
+                }
+                else
+                {
+                    var plain = Win32Api.DecryptProtectedData(cipher);
+                    if (plain == null)
+                        throw new CookieImportException(
+                            "Cookieの暗号化データを復号化できませんでした。", CookieImportState.ConvertError);
+                    baseObj.Value = Encoding.UTF8.GetString(plain);
+                }
             }
             else
                 baseObj.Value = data[0] as string;
