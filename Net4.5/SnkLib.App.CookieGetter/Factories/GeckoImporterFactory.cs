@@ -78,28 +78,33 @@ namespace SunokoLibrary.Application.Browsers
 
                 using (var sr = new StreamReader(profileListPath))
                 {
-                    bool recheck = false;
-                    var line = "";
-                    while (!sr.EndOfStream)
+                    //セクション毎ループ
+                    var line = null as string;
+                    var recheck = false;
+                    while (!sr.EndOfStream || recheck)
                     {
-                        if (!recheck)
-                           line = sr.ReadLine();
-                        recheck = false;
+                        //行再処理フラグが立っていなければ行を進める
+                        if (recheck)
+                            recheck = false;
+                        else
+                            line = sr.ReadLine();
 
                         if (line.StartsWith("[Profile"))
                         {
+                            //設定値毎ループ
                             var prof = new UserProfile();
-
                             while (!sr.EndOfStream)
                             {
-                                var l = sr.ReadLine();
-                                if (l.StartsWith("["))
-                                {   // 次のセクションが開始 : このセクション終了
+                                //lineBが"["から始まっている場合、
+                                //前のセクション終了して次のセクションが開始した事を示す。
+                                //新セクションが開始したら何もせずに外ループからやり直す。
+                                line = sr.ReadLine();
+                                if (line.StartsWith("["))
+                                {
                                     recheck = true;
-                                    line = l;   // 次のセクションチェックのために入れておく
                                     break;
                                 }
-                                var pair = ParseKeyValuePair(l);
+                                var pair = ParseKeyValuePair(line);
                                 switch (pair.Key)
                                 {
                                     case "Name":
@@ -118,10 +123,11 @@ namespace SunokoLibrary.Application.Browsers
                                         break;
                                 }
                             }
-                            if (prof.IsDefault)
-                                results.Insert(0, prof);
-                            else
-                                results.Add(prof);
+                            if (string.IsNullOrEmpty(prof.Path) == false)
+                                if (prof.IsDefault)
+                                    results.Insert(0, prof);
+                                else
+                                    results.Add(prof);
                         }
                     }
                 }

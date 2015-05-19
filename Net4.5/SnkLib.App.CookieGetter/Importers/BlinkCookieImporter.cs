@@ -73,14 +73,11 @@ namespace SunokoLibrary.Application.Browsers
             {
                 var cipher = data[0] as byte[];
                 if (cipher == null)
-                {
                     throw new CookieImportException(
                         "Cookieファイルから暗号化データを取得できませんでした。", CookieImportState.ConvertError);
-                }
-                else if (cipher.Length == 0)
-                {
-                    baseObj.Value = "";
-                }
+
+                if (cipher.Length == 0)
+                    baseObj.Value = string.Empty;
                 else
                 {
                     var plain = Win32Api.DecryptProtectedData(cipher);
