@@ -77,9 +77,15 @@ namespace SunokoLibrary.Application.Browsers
                     return results.ToArray();
 
                 using (var sr = new StreamReader(profileListPath))
+                {
+                    bool recheck = false;
+                    var line = "";
                     while (!sr.EndOfStream)
                     {
-                        var line = sr.ReadLine();
+                        if (!recheck)
+                           line = sr.ReadLine();
+                        recheck = false;
+
                         if (line.StartsWith("[Profile"))
                         {
                             var prof = new UserProfile();
@@ -88,8 +94,10 @@ namespace SunokoLibrary.Application.Browsers
                             {
                                 var l = sr.ReadLine();
                                 if (l.StartsWith("["))
-                                {
-                                    break;  // 次のデータブロックが開始 : このデータ終了
+                                {   // 次のセクションが開始 : このセクション終了
+                                    recheck = true;
+                                    line = l;   // 次のセクションチェックのために入れておく
+                                    break;
                                 }
                                 var pair = ParseKeyValuePair(l);
                                 switch (pair.Key)
@@ -116,6 +124,7 @@ namespace SunokoLibrary.Application.Browsers
                                 results.Add(prof);
                         }
                     }
+                }
                 return results.ToArray();
             }
             static KeyValuePair<string, string> ParseKeyValuePair(string line)
