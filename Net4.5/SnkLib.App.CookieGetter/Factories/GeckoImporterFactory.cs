@@ -83,23 +83,32 @@ namespace SunokoLibrary.Application.Browsers
                         if (line.StartsWith("[Profile"))
                         {
                             var prof = new UserProfile();
-                            var pair = ParseKeyValuePair(line);
-                            switch (pair.Key)
+
+                            while (!sr.EndOfStream)
                             {
-                                case "Name":
-                                    prof.Name = pair.Value;
-                                    break;
-                                case "IsRelative":
-                                    prof.IsRelative = pair.Value == "1";
-                                    break;
-                                case "Path":
-                                    prof.Path = pair.Value.Replace('/', '\\');
-                                    if (prof.IsRelative)
-                                        prof.Path = System.IO.Path.Combine(moz_path, prof.Path);
-                                    break;
-                                case "Default":
-                                    prof.IsDefault = pair.Value == "1";
-                                    break;
+                                var l = sr.ReadLine();
+                                if (l.StartsWith("["))
+                                {
+                                    break;  // 次のデータブロックが開始 : このデータ終了
+                                }
+                                var pair = ParseKeyValuePair(l);
+                                switch (pair.Key)
+                                {
+                                    case "Name":
+                                        prof.Name = pair.Value;
+                                        break;
+                                    case "IsRelative":
+                                        prof.IsRelative = pair.Value == "1";
+                                        break;
+                                    case "Path":
+                                        prof.Path = pair.Value.Replace('/', '\\');
+                                        if (prof.IsRelative)
+                                            prof.Path = System.IO.Path.Combine(moz_path, prof.Path);
+                                        break;
+                                    case "Default":
+                                        prof.IsDefault = pair.Value == "1";
+                                        break;
+                                }
                             }
                             if (prof.IsDefault)
                                 results.Insert(0, prof);
