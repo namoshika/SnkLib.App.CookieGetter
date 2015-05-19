@@ -77,29 +77,46 @@ namespace SunokoLibrary.Application.Browsers
                     return results.ToArray();
 
                 using (var sr = new StreamReader(profileListPath))
+                {
+                    bool recheck = false;
+                    var line = "";
                     while (!sr.EndOfStream)
                     {
-                        var line = sr.ReadLine();
+                        if (!recheck)
+                           line = sr.ReadLine();
+                        recheck = false;
+
                         if (line.StartsWith("[Profile"))
                         {
                             var prof = new UserProfile();
-                            var pair = ParseKeyValuePair(line);
-                            switch (pair.Key)
+
+                            while (!sr.EndOfStream)
                             {
-                                case "Name":
-                                    prof.Name = pair.Value;
+                                var l = sr.ReadLine();
+                                if (l.StartsWith("["))
+                                {   // 次のセクションが開始 : このセクション終了
+                                    recheck = true;
+                                    line = l;   // 次のセクションチェックのために入れておく
                                     break;
-                                case "IsRelative":
-                                    prof.IsRelative = pair.Value == "1";
-                                    break;
-                                case "Path":
-                                    prof.Path = pair.Value.Replace('/', '\\');
-                                    if (prof.IsRelative)
-                                        prof.Path = System.IO.Path.Combine(moz_path, prof.Path);
-                                    break;
-                                case "Default":
-                                    prof.IsDefault = pair.Value == "1";
-                                    break;
+                                }
+                                var pair = ParseKeyValuePair(l);
+                                switch (pair.Key)
+                                {
+                                    case "Name":
+                                        prof.Name = pair.Value;
+                                        break;
+                                    case "IsRelative":
+                                        prof.IsRelative = pair.Value == "1";
+                                        break;
+                                    case "Path":
+                                        prof.Path = pair.Value.Replace('/', '\\');
+                                        if (prof.IsRelative)
+                                            prof.Path = System.IO.Path.Combine(moz_path, prof.Path);
+                                        break;
+                                    case "Default":
+                                        prof.IsDefault = pair.Value == "1";
+                                        break;
+                                }
                             }
                             if (prof.IsDefault)
                                 results.Insert(0, prof);
@@ -107,6 +124,7 @@ namespace SunokoLibrary.Application.Browsers
                                 results.Add(prof);
                         }
                     }
+                }
                 return results.ToArray();
             }
             static KeyValuePair<string, string> ParseKeyValuePair(string line)
