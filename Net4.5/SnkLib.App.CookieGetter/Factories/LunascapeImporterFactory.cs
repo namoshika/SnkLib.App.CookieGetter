@@ -44,12 +44,14 @@ namespace SunokoLibrary.Application.Browsers
                     return cookiePath;
 
                 var pluginDir = Utility.ReplacePathSymbols(LUNASCAPE_PLUGIN_FOLDER6);
-                cookiePath = null;
-                if (Directory.Exists(pluginDir))
+                try
+                {
                     cookiePath = Directory.EnumerateDirectories(pluginDir)
                         .Select(child => Path.Combine(child, COOKIEPATH))
                         .Where(child => File.Exists(child))
                         .FirstOrDefault();
+                }
+                catch (DirectoryNotFoundException) { }
                 return cookiePath;
             }
         }
@@ -74,11 +76,14 @@ namespace SunokoLibrary.Application.Browsers
             {
                 var pluginDir = Utility.ReplacePathSymbols(LUNASCAPE_PLUGIN_FOLDER);
                 string cookiePath = null;
-                if (System.IO.Directory.Exists(pluginDir))
+                try
+                {
                     cookiePath = Directory.EnumerateDirectories(pluginDir)
                         .Select(child => Path.Combine(child, COOKIEPATH))
                         .Where(child => File.Exists(child))
                         .FirstOrDefault();
+                }
+                catch (DirectoryNotFoundException) { }
                 return cookiePath;
             }
         }

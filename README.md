@@ -1,4 +1,5 @@
-﻿#SnkLib.App.CookieGetter
+﻿
+#SnkLib.App.CookieGetter
 
 ブラウザのCookieを.NETアプリで使えるようにするライブラリです。  
 <http://com.nicovideo.jp/community/co235502> で配布されているCookieGetterSharpを元に、設計の改善を施しています。.NET4.0以上で動きます。
@@ -24,7 +25,7 @@
 
 * NET2.0
   * NwhoisLoginSystem: 本家に付いてるデモアプリ。
-  * CookieGetterSharp:   
+  * CookieGetterSharp:
     本家との互換ライブラリ。本家が対応していないブラウザへの対応などを既存のアプリに提供する。
 * NET4.0
   * SnkLib.App.CookieGetter: 本体。
@@ -36,7 +37,7 @@
   * SnkLib.App.CookieGetter.Forms: ブラウザ選択UIなどの部品。
   * Sample: 新クラスに対応させたデモアプリ。
   * NwhoisLoginSystem: 本家に付いてるデモアプリ。
-  * CookieGetterSharp:   
+  * CookieGetterSharp:
     本家との互換ライブラリ。本家が対応していないブラウザへの対応などを既存のアプリに提供する。
 * Nuspecs: NuGetパッケージ生成関係。
 * Publish: 生成したnupkgの出力先
