@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ApiChecker
+namespace LibChecker
 {
     class Program
     {

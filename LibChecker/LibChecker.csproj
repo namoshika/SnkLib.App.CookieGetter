@@ -7,8 +7,8 @@
     <ProjectGuid>{C357C258-1DA6-4528-B522-A30A014E1E7A}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ApiChecker</RootNamespace>
-    <AssemblyName>ApiChecker</AssemblyName>
+    <RootNamespace>LibChecker</RootNamespace>
+    <AssemblyName>SnkLib.App.CookieGetter.LibChecker</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>8f7a5a92</NuGetPackageImportStamp>

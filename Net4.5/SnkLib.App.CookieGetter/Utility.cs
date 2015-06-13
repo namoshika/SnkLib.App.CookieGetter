@@ -99,11 +99,12 @@ namespace SunokoLibrary.Application
                 //復号化
                 var dammy = new DATA_BLOB();
                 var isSucc = Win32Api.CryptUnprotectData(ref input, null, ref dammy, IntPtr.Zero, IntPtr.Zero, 0, ref output);
-                Trace.Assert(isSucc,
-                    "SnkLib.App.CookieGetter: error",
-                    "DecryptProtectedData()でエラーが発生しました。データ復号化で予期せぬ失敗が発生しています。");
                 if (isSucc == false)
+                {
+                    Trace.TraceError("SnkLib.App.CookieGetter.dll:\r\n"
+                        + "DecryptProtectedData()でエラーが発生しました。データ復号化で予期せぬ失敗が発生しています。");
                     return null;
+                }
 
                 var decryptedBytes = new byte[output.cbData];
                 Marshal.Copy(output.pbData, decryptedBytes, 0, (int)output.cbData);
