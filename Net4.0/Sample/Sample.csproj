@@ -51,7 +51,7 @@
     </Reference>
     <Reference Include="SnkLib.App.CookieGetter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\SnkLib.App.CookieGetter.2.2.1.0\lib\net40\SnkLib.App.CookieGetter.dll</HintPath>
+      <HintPath>..\..\packages\SnkLib.App.CookieGetter.2.2.4.0\lib\net40\SnkLib.App.CookieGetter.dll</HintPath>
     </Reference>
     <Reference Include="SnkLib.App.CookieGetter.Forms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -140,12 +140,12 @@
     <PropertyGroup>
       <ErrorText>このプロジェクトは、このコンピューターにはない NuGet パッケージを参照しています。これらをダウンロードするには、NuGet パッケージの復元を有効にしてください。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。不足しているファイルは {0} です。</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\SnkLib.App.CookieGetter.2.2.1.0\build\net40\SnkLib.App.CookieGetter.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SnkLib.App.CookieGetter.2.2.1.0\build\net40\SnkLib.App.CookieGetter.targets'))" />
     <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
     <Error Condition="!Exists('..\..\packages\System.Data.SQLite.Core.1.0.97.0\build\net40\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\System.Data.SQLite.Core.1.0.97.0\build\net40\System.Data.SQLite.Core.targets'))" />
+    <Error Condition="!Exists('..\..\packages\SnkLib.App.CookieGetter.2.2.4.0\build\net40\SnkLib.App.CookieGetter.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SnkLib.App.CookieGetter.2.2.4.0\build\net40\SnkLib.App.CookieGetter.targets'))" />
   </Target>
-  <Import Project="..\..\packages\SnkLib.App.CookieGetter.2.2.1.0\build\net40\SnkLib.App.CookieGetter.targets" Condition="Exists('..\..\packages\SnkLib.App.CookieGetter.2.2.1.0\build\net40\SnkLib.App.CookieGetter.targets')" />
   <Import Project="..\..\packages\System.Data.SQLite.Core.1.0.97.0\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\..\packages\System.Data.SQLite.Core.1.0.97.0\build\net40\System.Data.SQLite.Core.targets')" />
+  <Import Project="..\..\packages\SnkLib.App.CookieGetter.2.2.4.0\build\net40\SnkLib.App.CookieGetter.targets" Condition="Exists('..\..\packages\SnkLib.App.CookieGetter.2.2.4.0\build\net40\SnkLib.App.CookieGetter.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -1,11 +1,4 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ItemGroup>
-    <!--追加で配置が必要なファイルを定義する-->
-    <!--EncloseFilesで同封したいファイル群を指定する。-->
-    <EnclosedFiles
-        Condition="'$(MSBuildThisFileDirectory)' != '' And HasTrailingSlash('$(MSBuildThisFileDirectory)')"
-        Include="$(MSBuildThisFileDirectory)x86\SnkLib.App.CookieGetter.x86Proxy.exe" />
-  </ItemGroup>
 
   <!--ファイルを配置する-->
   <Target Name="CopyEnclosedFiles"
@@ -13,11 +6,11 @@
             '$(CopyEnclosedFiles)' != 'false' And
             '$(OutputPath)' != '' And
             HasTrailingSlash('$(OutputPath)') And Exists('$(OutputPath)')"
-          Inputs="@(EnclosedFiles)"
-          Outputs="@(EnclosedFiles -> '$(OutputPath)%(RecursiveDir)x86\%(Filename)%(Extension)')">
+          Inputs="$(MSBuildThisFileDirectory)x86\SnkLib.App.CookieGetter.x86Proxy.exe"
+          Outputs="$(OutputPath)x86\SnkLib.App.CookieGetter.x86Proxy.exe">
 
-    <Copy SourceFiles="@(EnclosedFiles)"
-          DestinationFiles="@(EnclosedFiles -> '$(OutputPath)%(RecursiveDir)x86\%(Filename)%(Extension)')" />
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)x86\SnkLib.App.CookieGetter.x86Proxy.exe"
+          DestinationFiles="$(OutputPath)x86\SnkLib.App.CookieGetter.x86Proxy.exe" />
   </Target>
 
   <!--配置していたファイルを削除する-->
@@ -27,7 +20,7 @@
             '$(OutputPath)' != '' And
             HasTrailingSlash('$(OutputPath)') And Exists('$(OutputPath)')">
 
-    <Delete Files="@(EnclosedFiles -> '$(OutputPath)%(RecursiveDir)x86\%(Filename)%(Extension)')" />
+    <Delete Files="$(OutputPath)\x86\SnkLib.App.CookieGetter.x86Proxy.exe" />
   </Target>
 
   <!--既存のBuild,Cleanに事後処理として任意のTargetを追加する-->
