@@ -102,7 +102,8 @@ namespace SunokoLibrary.Application
                 if (isSucc == false)
                 {
                     Trace.TraceError("SnkLib.App.CookieGetter.dll:\r\n"
-                        + "DecryptProtectedData()でエラーが発生しました。データ復号化で予期せぬ失敗が発生しています。");
+                        + "DecryptProtectedData()でエラーが発生しました。データ復号化で予期せぬ失敗が発生しています。\r\n"
+                        + "output.cbData: " + output.cbData);
                     return null;
                 }
 
