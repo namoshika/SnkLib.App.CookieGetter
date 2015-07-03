@@ -153,10 +153,8 @@ namespace Hal.CookieGetterSharp
             try
             {
                 HttpWebRequest webReq = (HttpWebRequest)WebRequest.Create(url);
-
                 webReq.Timeout = defaultTimeout;
                 webReq.CookieContainer = cookies;
-                webReq.UserAgent = "CookieGetterSharp (+http://com.nicovideo.jp/community/co235502)";
 
                 try
                 {
