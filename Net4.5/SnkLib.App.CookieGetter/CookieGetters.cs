@@ -129,7 +129,7 @@ namespace SunokoLibrary.Application
         static CookieGetters()
         {
             _importerFactories = new ICookieImporterFactory[] {
-                _ieFactory, _spFactory, _ffFactory, _chFactory,
+                _ieFactory, _egFactory, _ffFactory, _chFactory,
                 new OperaWebkitImporterFactory(),
                 new ChromiumImporterFactory(),
                 new LunascapeImporterFactory(),
@@ -143,7 +143,7 @@ namespace SunokoLibrary.Application
         }
         static ICookieImporterFactory[] _importerFactories;
         static IEImporterFactory _ieFactory = new IEImporterFactory();
-        static SpartanImporterFactory _spFactory = new SpartanImporterFactory();
+        static EdgeImporterFactory _egFactory = new EdgeImporterFactory();
         static ChromeImporterFactory _chFactory = new ChromeImporterFactory();
         static FirefoxImporterFactory _ffFactory = new FirefoxImporterFactory();
         static ICookieImporter _chImporter;

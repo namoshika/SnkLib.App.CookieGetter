@@ -106,6 +106,9 @@
     <Compile Include="..\SnkLib.App.CookieGetter\Factories\ComplexImporterFactory.cs">
       <Link>Core\Factories\ComplexImporterFactory.cs</Link>
     </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Factories\EdgeImporterFactory.cs">
+      <Link>Core\Factories\EdgeImporterFactory.cs</Link>
+    </Compile>
     <Compile Include="..\SnkLib.App.CookieGetter\Factories\FirefoxImporterFactory.cs">
       <Link>Core\Factories\FirefoxImporterFactory.cs</Link>
     </Compile>
@@ -132,9 +135,6 @@
     </Compile>
     <Compile Include="..\SnkLib.App.CookieGetter\Factories\SmartImporterFactory.cs">
       <Link>Core\Factories\SmartImporterFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\SnkLib.App.CookieGetter\Factories\SpartanImporterFactory.cs">
-      <Link>Core\Factories\SpartanImporterFactory.cs</Link>
     </Compile>
     <Compile Include="..\SnkLib.App.CookieGetter\Factories\TungstenImporterFactory.cs">
       <Link>Core\Factories\TungstenImporterFactory.cs</Link>

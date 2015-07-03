@@ -8,25 +8,25 @@ namespace SunokoLibrary.Application.Browsers
     /// <summary>
     /// SpartanのICookieImporterを取得します。
     /// </summary>
-    public class SpartanImporterFactory : ImporterFactoryBase
+    public class EdgeImporterFactory : ImporterFactoryBase
     {
 #pragma warning disable 1591
-        public SpartanImporterFactory() : base() { }
+        public EdgeImporterFactory() : base() { }
         public override IEnumerable<ICookieImporter> GetCookieImporters()
         {
             if (_importer == null)
             {
                 var cookieFolder = Utility.ReplacePathSymbols(@"%LOCALAPPDATA%\Packages\");
                 IEnumerable<string> seq;
-                try { seq = System.IO.Directory.GetDirectories(cookieFolder, "Microsoft.Windows.Spartan_*"); }
+                try { seq = System.IO.Directory.GetDirectories(cookieFolder, "Microsoft.MicrosoftEdge_*"); }
                 catch (System.IO.DirectoryNotFoundException) { seq = Enumerable.Empty<string>(); }
 
                 cookieFolder = seq
-                    .DefaultIfEmpty(cookieFolder + @"Microsoft.Windows.Spartan_xxx")
+                    .DefaultIfEmpty(cookieFolder + @"Microsoft.MicrosoftEdge_xxx")
                     .FirstOrDefault();
-                cookieFolder += @"\AC\#!001\Spartan\Cookies";
+                cookieFolder += @"\AC\#!001\MicrosoftEdge\Cookies";
                 _importer = new IEFindCacheCookieImporter(
-                    new CookieSourceInfo("Spartan", "Default", cookieFolder, EngineIds[0], false), 0);
+                    new CookieSourceInfo("MicrosoftEdge", "Default", cookieFolder, EngineIds[0], false), 0);
             }
             return new[] { _importer };
         }
