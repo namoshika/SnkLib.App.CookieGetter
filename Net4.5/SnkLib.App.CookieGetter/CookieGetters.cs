@@ -148,6 +148,7 @@ namespace SunokoLibrary.Application
         static FirefoxImporterFactory _ffFactory = new FirefoxImporterFactory();
         static ICookieImporter _chImporter;
         static ICookieImporter _ffImporter;
+        static ICookieImporter _egImporter;
 
         /// <summary>
         /// 既定のCookieGettersを取得します。
@@ -173,6 +174,18 @@ namespace SunokoLibrary.Application
             /// </summary>
             public static ICookieImporter IEEnhancedProtected
             { get { return _ieFactory.GetIEEPMCookieImporter(); } }
+            /// <summary>
+            /// MicrosoftEdgeのICookieImporterを取得します。
+            /// </summary>
+            public static ICookieImporter MicrosoftEdge
+            {
+                get
+                {
+                    if (_egImporter == null)
+                        _egImporter = _egFactory.GetCookieImporters().FirstOrDefault();
+                    return _egImporter;
+                }
+            }
             /// <summary>
             /// FirefoxのICookieImporterを取得します。
             /// </summary>
