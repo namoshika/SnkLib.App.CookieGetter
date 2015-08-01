@@ -75,18 +75,6 @@ namespace SunokoLibrary.Application.Browsers
         /// </summary>
         IEnumerable<ICookieImporter> GetProfiles()
         {
-#if NET20
-            if (!Directory.Exists(_dataFolder))
-                return Enumerable.Empty<ICookieImporter>();
-
-            var paths = Directory.EnumerateDirectories(_dataFolder)
-                .Where(path => Path.GetFileName(path).StartsWith(_profileFolderStarts, StringComparison.OrdinalIgnoreCase))
-                .Select(path => Path.Combine(path, _cookieFileName))
-                .Where(path => File.Exists(path))
-                .Select(path => (ICookieImporter)new BlinkCookieImporter(new CookieSourceInfo(
-                    _name, Path.GetFileName(Path.GetDirectoryName(path)), path, EngineIds[0], false), _primaryLevel));
-            return paths;
-#else
             if (!Directory.Exists(_dataFolder))
                 return Enumerable.Empty<ICookieImporter>();
 
@@ -112,7 +100,6 @@ namespace SunokoLibrary.Application.Browsers
                 .Select(item => (ICookieImporter)new BlinkCookieImporter(new CookieSourceInfo(
                     _name, item.ProfName, item.CookiePath, EngineIds[0], false), _primaryLevel));
             return paths;
-#endif
         }
     }
 }

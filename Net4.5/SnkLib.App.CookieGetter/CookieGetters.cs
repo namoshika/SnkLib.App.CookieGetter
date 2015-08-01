@@ -47,17 +47,6 @@ namespace SunokoLibrary.Application
         /// 使用できるICookieImporterのリストを取得します。
         /// </summary>
         /// <param name="availableOnly">利用可能なものだけを出力するか指定します。</param>
-        #region // GetInstancesAsync(bool)
-#if NET20
-        public ICookieImporter[] GetInstances(bool availableOnly)
-        {
-            return _factoryList
-                .SelectMany(item => item.GetCookieImporters())
-                .GroupBy(item => item.SourceInfo)
-                .Select(grp => grp.First())
-                .Where(item => item.IsAvailable || !availableOnly).ToArray();
-        }
-#else
         public Task<ICookieImporter[]> GetInstancesAsync(bool availableOnly)
         {
             return Task.Factory.StartNew(() => _factoryList
@@ -66,8 +55,6 @@ namespace SunokoLibrary.Application
                 .Select(grp => grp.First())
                 .Where(item => item.IsAvailable || !availableOnly).ToArray());
         }
-#endif
-        #endregion
 
         /// <summary>
         /// 設定値を指定したICookieImporterを取得します。アプリ終了時に直前まで使用していた
@@ -76,31 +63,6 @@ namespace SunokoLibrary.Application
         /// </summary>
         /// <param name="targetInfo">再取得対象のブラウザの構成情報</param>
         /// <param name="allowDefault">取得不可の場合に既定のCookieImporterを返すかを指定できます。</param>
-        #region // GetInstanceAsync(CookieSourceInfo, bool)
-#if NET20
-        public ICookieImporter GetInstance(CookieSourceInfo targetInfo = null, bool allowDefault = true)
-        {
-            var foundImporter = null as ICookieImporter;
-            var importerList = GetInstances(false);
-
-            if (targetInfo != null)
-            {
-                //引数targetInfoと同一のImporterを探す。
-                //あればそのまま使う。なければ登録されたジェネレータから新たに生成する。
-                foundImporter = importerList.FirstOrDefault(item => item.SourceInfo == targetInfo);
-                ICookieImporterFactory foundFactory;
-                if (foundImporter == null && _factoryDict.TryGetValue(targetInfo.EngineId, out foundFactory))
-                {
-                    foundImporter = foundFactory.GetCookieImporter(targetInfo);
-                    foundImporter = foundImporter.IsAvailable ? foundImporter : null;
-                }
-            }
-            if (allowDefault && foundImporter == null)
-                foundImporter = importerList.FirstOrDefault(importer => importer.IsAvailable);
-
-            return foundImporter;
-        }
-#else
         public async Task<ICookieImporter> GetInstanceAsync(CookieSourceInfo targetInfo = null, bool allowDefault = true)
         {
             var foundImporter = null as ICookieImporter;
@@ -123,8 +85,6 @@ namespace SunokoLibrary.Application
 
             return foundImporter;
         }
-#endif
-        #endregion
 
         static CookieGetters()
         {

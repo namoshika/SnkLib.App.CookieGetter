@@ -49,16 +49,6 @@ namespace SunokoLibrary.Application.Browsers
             }
         }
         public abstract ICookieImporter Generate(CookieSourceInfo newInfo);
-        #region // GetCookiesAsync(Uri)
-#if NET20
-        public CookieImportResult GetCookies(Uri targetUrl)
-        {
-            //同期コンテキストが確実にUIスレッド以外になるようにする。
-            //awaitのある処理をUIスレッドでTask.Wait()した場合、デッドロックが発生する事がある。
-            //その対策としてここで別スレッドから呼び出す事を保証する。
-            return ProtectedGetCookies(targetUrl);
-        }
-#else
         public Task<CookieImportResult> GetCookiesAsync(Uri targetUrl)
         {
             //同期コンテキストが確実にUIスレッド以外になるようにする。
@@ -66,8 +56,6 @@ namespace SunokoLibrary.Application.Browsers
             //その対策としてここで別スレッドから呼び出す事を保証する。
             return Task.Factory.StartNew(() => ProtectedGetCookies(targetUrl));
         }
-#endif
-        #endregion
 #pragma warning restore 1591
 
         /// <summary>

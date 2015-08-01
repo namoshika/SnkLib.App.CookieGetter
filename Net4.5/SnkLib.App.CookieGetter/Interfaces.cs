@@ -41,11 +41,7 @@ namespace SunokoLibrary.Application
         /// </summary>
         /// <param name="targetUrl">通信先のURL</param>
         /// <returns>処理の成功不成功</returns>
-#if NET20
-        CookieImportResult GetCookies(Uri targetUrl);
-#else
         Task<CookieImportResult> GetCookiesAsync(Uri targetUrl);
-#endif
     }
     /// <summary>
     /// Cookie取得結果を扱うクラスです。
@@ -139,13 +135,7 @@ namespace SunokoLibrary.Application
         /// 使用できるICookieImporterのリストを取得します。
         /// </summary>
         /// <param name="availableOnly">利用可能なものに絞る</param>
-        #region // GetInstancesAsync(bool)
-#if NET20
-        ICookieImporter[] GetInstances(bool availableOnly);
-#else
         Task<ICookieImporter[]> GetInstancesAsync(bool availableOnly);
-#endif
-        #endregion
 
         /// <summary>
         /// 設定値を指定したICookieImporterを取得します。アプリ終了時に直前まで使用していた
@@ -154,13 +144,7 @@ namespace SunokoLibrary.Application
         /// </summary>
         /// <param name="targetSourceInfo">再取得対象のブラウザの構成情報</param>
         /// <param name="allowDefault">取得不可の場合に既定のCookieImporterを返すかを指定できます。</param>
-        #region // GetInstanceAsync(CookieSourceInfo, bool)
-#if NET20
-        ICookieImporter GetInstance(CookieSourceInfo targetSourceInfo, bool allowDefault);
-#else
         Task<ICookieImporter> GetInstanceAsync(CookieSourceInfo targetSourceInfo, bool allowDefault);
-#endif
-        #endregion
     }
 
     /// <summary>

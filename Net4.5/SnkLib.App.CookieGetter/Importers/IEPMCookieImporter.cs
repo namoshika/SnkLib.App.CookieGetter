@@ -46,16 +46,13 @@ namespace SunokoLibrary.Application.Browsers
                 var ieVersion = Win32Api.GetIEVersion();
                 if(ieVersion == null)
                     return new CookieImportResult(null, CookieImportState.AccessError);
-#if NET20
-                cookiesText = InternalGetCookiesWinApi(targetUrl, null);
-#else
                 if (ieVersion.Major >= 11 || ieVersion.Major >= 8 && Environment.Is64BitProcess == false)
                     cookiesText = InternalGetCookiesWinApi(targetUrl, null);
                 else if (ieVersion.Major >= 8 && Environment.OSVersion.Platform == PlatformID.Win32NT)
                     cookiesText = InternalGetCookiesWinApiOnProxy(targetUrl, null);
                 else
                     cookiesText = null;
-#endif
+
                 if (cookiesText != null)
                 {
                     var cookies = new CookieCollection();
@@ -82,9 +79,6 @@ namespace SunokoLibrary.Application.Browsers
         }
         internal static string InternalGetCookiesWinApiOnProxy(Uri url, string key)
         {
-#if NET20
-            throw new NotImplementedException();
-#else
             var processId = Process.GetCurrentProcess().Id.ToString();
             var endpointUrl = new Uri(string.Format("net.pipe://localhost/SnkLib.App.CookieGetter.x86Proxy/{0}/Service/", processId));
             string lpszCookieData = null;
@@ -124,7 +118,6 @@ namespace SunokoLibrary.Application.Browsers
                 }
                 finally { proxyFactory.Abort(); }
             return lpszCookieData;
-#endif
         }
     }
 }

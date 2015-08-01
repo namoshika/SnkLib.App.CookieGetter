@@ -28,11 +28,7 @@ namespace Hal.CookieGetterSharp
         {
             try
             {
-#if NET20
-                var res = Importer.GetCookies(url);
-#else
                 var res = Importer.GetCookiesAsync(url).Result;
-#endif
                 switch (res.Status)
                 {
                     case CookieImportState.Success:
@@ -66,22 +62,6 @@ namespace Hal.CookieGetterSharp
 
             //コア部分にはBrowserTypeが無いため、ブラウザ名とBrowserTypeの対応関係を
             //定義してBrowserType値の生成に使うする。
-#if NET20
-            _browserTypeDict = new Dictionary<string, BrowserType>() {
-                {"IE Normal",  BrowserType.IE},
-                {"IE Protected",  BrowserType.IESafemode},
-                {"Firefox",  BrowserType.Firefox3},
-                {"PaleMoon", BrowserType.PaleMoon},
-                {"GoogleChrome",  BrowserType.GoogleChrome3},
-                {"Lunascape Gecko",  BrowserType.Lunascape6Gecko},
-                {"Lunascape Webkit",  BrowserType.Lunascape6Webkit},
-                {"Chromium",  BrowserType.Chromium},
-            };
-            _equivalentTypeDict = new Dictionary<BrowserType, BrowserType>() {
-                { BrowserType.IEComponent, BrowserType.IE },
-                { BrowserType.Lunascape5Gecko, BrowserType.Lunascape6Gecko },
-            };
-#else
             _browserTypeDict = new Dictionary<string, BrowserType>() {
                 {"IE Normal",  BrowserType.IE},
                 {"IE Protected",  BrowserType.IESafemode},
@@ -107,7 +87,6 @@ namespace Hal.CookieGetterSharp
                 { BrowserType.IEComponent, BrowserType.IE },
                 { BrowserType.Sleipnir4Blink, BrowserType.Sleipnir5Blink },
             };
-#endif
         }
         public static Queue<Exception> Exceptions = new Queue<Exception>();
         static int _browserTypeLen = Enum.GetNames(typeof(BrowserType)).Length;
@@ -117,16 +96,9 @@ namespace Hal.CookieGetterSharp
 
         public static ICookieGetter[] CreateInstances(bool availableOnly)
         {
-#if NET20
-            var getters = _getters
-                .GetInstances(availableOnly)
-                .Select(importer => new CookieGetter(importer))
-                .ToArray();
-#else
             var getters = _getters.GetInstancesAsync(availableOnly)
                 .ContinueWith(tsk => tsk.Result.Select(importer => new CookieGetter(importer)))
                 .Result.ToArray();
-#endif
             return getters;
         }
         public static ICookieGetter CreateInstance(BrowserType type)
