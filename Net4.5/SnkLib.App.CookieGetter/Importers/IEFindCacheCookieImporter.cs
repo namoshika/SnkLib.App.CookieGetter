@@ -37,7 +37,10 @@ namespace SunokoLibrary.Application.Browsers
             try
             {
                 //関係のあるファイルだけ調べることによってパフォーマンスを向上させる
-                cookieList = Directory.EnumerateFiles(SourceInfo.CookiePath, "*.txt")
+                cookieList = 
+                    Enumerable.Concat(
+                        Directory.EnumerateFiles(SourceInfo.CookiePath, "*.txt"),
+                        Directory.EnumerateFiles(SourceInfo.CookiePath, "*.cookie"))
                     .Select(filePath => ReadAllTextIfHasSendableCookie(filePath, targetUrl))
                     .Where(data => string.IsNullOrEmpty(data) == false)
                     .SelectMany(data => ParseCookies(data))
